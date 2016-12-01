@@ -33,6 +33,8 @@ var pandocJSON = {
 function traverse(){
 	console.log(`Traversing docJSON`)
 	console.log(docJSON)
+
+
 	function scanFragment( fragment, position, depth) {
 		fragment.forEach((child, offset) => scan(child, position + offset, depth))
 	}
@@ -41,6 +43,15 @@ function traverse(){
 		console.log(`\nnodes at depth  ${depth}`)
 		console.log(node)
 		console.log('\n\n')
+
+		if (node.type.name === 'Heading'){
+			newNode.t = "Header";
+			newNode.c = [];
+			newNode.c[0] = level;
+			newNode.c[1] = ["",[],[]]; // Don't fully understand this lol
+			newNode.c[2] = [];
+		}
+
 		if ( node.isText ) {
 			console.log('looking at textnode')
 			console.log(node)
@@ -110,7 +121,7 @@ function visit(node){
 
 
 function finish(){
-	return write(outputFilePath, JSON.stringify(pandocJSON))
+	return write(outputFilePath, JSON.stringify(pandocJSON, null, "\t"))
 	.then(function(fn){
 		console.log('written')
 		return execPromise(`pandoc -f JSON pandocAST.json -t commonmark -o pandocAST.md`);
