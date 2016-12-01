@@ -2,8 +2,10 @@ var Promise = require('bluebird');
 var defaultMarkdownParser =  require('prosemirror-markdown').defaultMarkdownParser;
 var write = require('fs-writefile-promise')
 
+const execPromise = require('child-process-promise').exec;
+
 // var markdown = '# title paragraph\nParagraph stuff\n\nA new line with an image ![Image](http://commonmark.org/help/images/favicon.png)';
-var markdown = '# title paragraph';
+var markdown = '# Title\n\n#Another Title';
 
 var docJSON = defaultMarkdownParser.parse(markdown)
 
@@ -77,6 +79,8 @@ function visit(node){
 				}
 			}
 
+			console.log('\n\n PUSHING NEW NODE '+JSON.stringify(newNode))
+
 			pandocJSON.blocks.push(newNode);
 
 			break;
@@ -88,6 +92,11 @@ function finish(){
 	return write(outputFilePath, JSON.stringify(pandocJSON))
 	.then(function(fn){
 		console.log('written')
+		return execPromise(`pandoc -f JSON pandocAST.json -t commonmark -o pandocAST.md`);
+	})
+	.then(function(idk){
+		console.log(`done converting`)
+		// console.log(`return is ${JSON.stringify(idk)}`)
 	})
 	.catch((error)=>{
 		console.log("crap an erorr")

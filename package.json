@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.4.6",
+    "child-process-promise": "^2.2.0",
     "fs-writefile-promise": "^2.0.0",
     "prosemirror-markdown": "^0.14.0"
   }
