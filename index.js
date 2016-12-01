@@ -33,20 +33,21 @@ var pandocJSON = {
 function traverse(){
 	console.log(`Traversing docJSON`)
 	console.log(docJSON)
-	function scanFragment( fragment, position ) {
-		fragment.forEach((child, offset) => scan(child, position + offset))
+	function scanFragment( fragment, position, depth) {
+		fragment.forEach((child, offset) => scan(child, position + offset, depth))
 	}
-	function scan(node, position) {
-		console.log(`\nnode at position ${position} is`)
+	function scan(node, position, depth) {
+		depth++;
+		console.log(`\nnodes at depth  ${depth}`)
 		console.log(node)
 		console.log('\n\n')
 		if ( node.isText ) {
 			console.log('looking at textnode')
 			console.log(node)
 		}
-		scanFragment(node.content, position + 1)
+		scanFragment(node.content, position + 1, depth)
 	}
-	scanFragment(docJSON, 0)
+	scanFragment(docJSON, 0, 0)
 }
 
 function start(){
