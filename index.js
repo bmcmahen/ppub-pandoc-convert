@@ -2,10 +2,12 @@ var Promise = require('bluebird');
 var defaultMarkdownParser =  require('prosemirror-markdown').defaultMarkdownParser;
 var write = require('fs-writefile-promise')
 
+var colors = require('colors');
+
 const execPromise = require('child-process-promise').exec;
 
 // var markdown = '# title paragraph\nParagraph stuff\n\nA new line with an image ![Image](http://commonmark.org/help/images/favicon.png)';
-var markdown = '# Hello \n\n ![GitHub Logo](/images/logo.png)';
+var markdown = '*Italicss* \n\n**Boldss**';
 var docJSON = defaultMarkdownParser.parse(markdown)
 
 
@@ -15,26 +17,26 @@ let outputParentNodes = []; // stack for keeping track of the last output node
 
 let blocks = []; // blocks is eventually set to this array.
 
-var outputFilePath = 'pandocAST-Attempt.json'
+var outputFilePath = 'pandocAST-Attempt.json';
 
 // Initialize the output file
-var pandocJSON = {}
+var pandocJSON = {};
 
 function traverse(){
-	console.log(`Traversing docJSON`)
+	console.log(`Traversing docJSON`);
 	console.log(JSON.stringify(docJSON.toJSON()));
 
 
 	function scanFragment( fragment, position) {
 		parentNodes.push(fragment);
 		if (fragment.content){
-			fragment.content.forEach((child, offset) => scan(child, position + offset))
-
+			fragment.content.forEach((child, offset) => scan(child, position + offset));
 		}
-
 	}
-	function scan(node, position) {
 
+	function scan(node, position) {
+		console.log('Scanning')
+		green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(parentNodes)}\nOutputParentNodes:\t${JSON.stringify(outputParentNodes)}\n`)
 		let newNode = {};
 
 		if (node.type === 'heading'){
@@ -44,18 +46,42 @@ function traverse(){
 			newNode.c[0] = level;
 			newNode.c[1] = ["",[],[]]; // Don't fully understand this lol
 			newNode.c[2] = [];
-			// blocks.push(newNode);
+
 			createNode(newNode);
 			blocks.push(newNode);
-			// outputParentNodes.push(newNode);
+
 
 		}
+		let markCount = 0;
 
 		// Text becomes an array of nodes
 		if (node.type === 'text'){
+			if (node.marks){
+				green('Found marks')
+				for (let i = 0; i < node.marks.length; i++){
+					let newerNode;
+					if (node.marks[i].type === 'em'){
+						newerNode = {};
+						newerNode.t = "Emph";
+						newerNode.c = [];
+						createNode(newerNode);
+
+						markCount++;
+					}
+					if (node.marks[i].type === 'strong'){
+						newerNode = {};
+						newerNode.t = "Strong";
+						newerNode.c = [];
+						createNode(newerNode);
+
+						markCount++;
+					}
+				}
+			}
+
 			let newNodes = [];
 			// let words =  node.text.split(" ");
-			newNodes = generateTextNodes(node.text);
+			newNodes = createTextLeaves(node.text);
 			// blocks.push(newNodes); // ????? Nooo
 			// outputParentNodes.push(newNodes); ?? I think text is a leaf so don't have to push
 			for (var i in newNodes) {
@@ -68,7 +94,7 @@ function traverse(){
 			newNode.t = "Image";
 			newNode.c = [];
 			newNode.c[0] = ["",[],[]]; // Don't fully understand this lol
-			newNode.c[1] = generateTextNodes(node.attrs.alt)
+			newNode.c[1] = createTextLeaves(node.attrs.alt)
 			newNode.c[2] = [node.attrs.src, ""];
 			createNode(newNode)
 		}
@@ -80,13 +106,17 @@ function traverse(){
 
 			createNode(newNode);
 			blocks.push(newNode);
-			outputParentNodes.push(newNode);
 
 		}
 
-
-
 		scanFragment(node, position + 1)
+
+		while (markCount > 0){
+			markCount--;
+			outputParentNodes.pop();
+			parentNodes.pop();
+
+		}
 
 		if (node.type === 'paragraph' || node.type === 'heading'){
 			console.log("POPPING OUTPUT PARENT NODE WE HAVE " + JSON.stringify(outputParentNodes))
@@ -124,7 +154,7 @@ function finish(){
 	})
 }
 
-function generateTextNodes(words){
+function createTextLeaves(words){
 	let newNodes = [];
 	words = words.split(" ")
 	console.log('words is ' + words)
@@ -144,14 +174,26 @@ function createNode(newNode){
 	var parent = outputParentNodes[outputParentNodes.length-1];
 	console.log(`parent is ${JSON.stringify(parent)}`)
 	if (parent){
-		if (parent.t === "Para"){
+		if (parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
 			parent.c.push(newNode)
+			outputParentNodes.push(newNode)
 		} else {
 			parent.c[2].push(newNode);
 		}
-	} else {
+	}
+	else {
 		outputParentNodes.push(newNode)
 	}
+	parent = outputParentNodes[outputParentNodes.length-1];
+	yellow(`paren NOW is ${JSON.stringify(parent)}`)
+}
+
+function green(words){
+	console.log(colors.green(words));
+}
+
+function yellow(words){
+	console.log(colors.yellow(words));
 }
 
 
