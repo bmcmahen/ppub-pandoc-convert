@@ -3,3 +3,4 @@ sandbox/
 pandocAST.json
 pandocAST.md
 .atomignore
+pandocAST.docJSON
