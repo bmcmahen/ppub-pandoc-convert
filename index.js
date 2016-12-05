@@ -5,7 +5,7 @@ var write = require('fs-writefile-promise')
 const execPromise = require('child-process-promise').exec;
 
 // var markdown = '# title paragraph\nParagraph stuff\n\nA new line with an image ![Image](http://commonmark.org/help/images/favicon.png)';
-var markdown = '# Hello ![GitHub Logo](/images/logo.png)';
+var markdown = '# Hello \n\n ![GitHub Logo](/images/logo.png)';
 var docJSON = defaultMarkdownParser.parse(markdown)
 
 
@@ -29,7 +29,6 @@ function traverse(){
 		parentNodes.push(fragment);
 		if (fragment.content){
 			fragment.content.forEach((child, offset) => scan(child, position + offset))
-			outputParentNodes.pop();
 
 		}
 
@@ -39,7 +38,6 @@ function traverse(){
 		let newNode = {};
 
 		if (node.type === 'heading'){
-
 			let level = node.attrs.level;
 			newNode.t = "Header";
 			newNode.c = [];
@@ -49,14 +47,13 @@ function traverse(){
 			// blocks.push(newNode);
 			createNode(newNode);
 			blocks.push(newNode);
-			outputParentNodes.push(newNode);
+			// outputParentNodes.push(newNode);
 
 		}
 
-		let newNodes = [];
 		// Text becomes an array of nodes
 		if (node.type === 'text'){
-
+			let newNodes = [];
 			// let words =  node.text.split(" ");
 			newNodes = generateTextNodes(node.text);
 			// blocks.push(newNodes); // ????? Nooo
@@ -69,52 +66,61 @@ function traverse(){
 		if (node.type === 'image'){
 			console.log('an image')
 			newNode.t = "Image";
-			newNode.c = [
-
-			];
-			newNode.c[0] = ["",[
-
-			],[
-
-			]]; // Don't fully understand this lol
+			newNode.c = [];
+			newNode.c[0] = ["",[],[]]; // Don't fully understand this lol
 			newNode.c[1] = generateTextNodes(node.attrs.alt)
 			newNode.c[2] = [node.attrs.src, ""];
-			// blocks.push(newNode); // ????? Nooo
 			createNode(newNode)
-			// outputParentNodes.push(newNode);
+		}
+
+		if (node.type === 'paragraph'){
+			console.log('a paragraph')
+			newNode.t = "Para";
+			newNode.c = [];
+
+			createNode(newNode);
+			blocks.push(newNode);
+			outputParentNodes.push(newNode);
+
 		}
 
 
 
 		scanFragment(node, position + 1)
-		parentNodes.pop();
+
+		if (node.type === 'paragraph' || node.type === 'heading'){
+			console.log("POPPING OUTPUT PARENT NODE WE HAVE " + JSON.stringify(outputParentNodes))
+			outputParentNodes.pop();
+			parentNodes.pop();
+
+		}
 	}
 	scanFragment(docJSON.toJSON(), 0)
 	pandocJSON.blocks = blocks;
 	pandocJSON["pandoc-api-version"] = [
-			1,
-			17,
-			0,
-			4
-		];
-		pandocJSON.meta = {};
+		1,
+		17,
+		0,
+		4
+	];
+	pandocJSON.meta = {};
 
 	finish();
 }
 
 
 function finish(){
-	console.log('finish called')
+
 	return write(outputFilePath, JSON.stringify(pandocJSON, null, "\t"))
 	.then(function(fn){
 		console.log('written')
-		return execPromise(`pandoc -f JSON pandocAST.json -t commonmark -o pandocAST.md`);
+		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t commonmark -o pandocAST.md`);
 	})
 	.then(function(idk){
 		console.log(`done converting`)
 	})
 	.catch((error)=>{
-		console.log("crap an erorr")
+		console.log("crap an erorr " + error)
 	})
 }
 
@@ -134,10 +140,15 @@ function generateTextNodes(words){
 
 function createNode(newNode){
 	console.log(`blocks is ${JSON.stringify(blocks)}`)
+	console.log(newNode.t)
 	var parent = outputParentNodes[outputParentNodes.length-1];
 	console.log(`parent is ${JSON.stringify(parent)}`)
 	if (parent){
-		parent.c[2].push(newNode);
+		if (parent.t === "Para"){
+			parent.c.push(newNode)
+		} else {
+			parent.c[2].push(newNode);
+		}
 	} else {
 		outputParentNodes.push(newNode)
 	}
