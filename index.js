@@ -4,7 +4,7 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "*Italicss* \n\n**Boldss**\n\n---";
+var markdown = "[Link](http://a.com)";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -61,6 +61,14 @@ function buildPandocAST(){
 							newerNode = {};
 							newerNode.t = "Strong";
 							newerNode.c = [];
+							newerNodes.push(newerNode)
+							markCount++;
+						} else if (node.marks[i].type === "link"){
+							newerNode = {};
+							newerNode.t = "Link";
+							newerNode.c = [["",[],[ ]], [], [node.marks[i].attrs.href, node.marks[i].attrs.title || "" ]];
+
+
 							newerNodes.push(newerNode)
 							markCount++;
 						}
@@ -145,7 +153,10 @@ function addNode(newNode){
 	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
 		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}`)
-		if (parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
+		if (parent.t ==="Link"){
+			parent.c[1].push(newNode);
+		}
+		else if (parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
 			parent.c.push(newNode)
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
 			currentPandocNodeParents.push(newNode)
