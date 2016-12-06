@@ -1,31 +1,22 @@
 var Promise = require('bluebird');
 var defaultMarkdownParser =  require('prosemirror-markdown').defaultMarkdownParser;
 var write = require('fs-writefile-promise')
-
 var colors = require('colors');
+var execPromise = require('child-process-promise').exec;
 
-const execPromise = require('child-process-promise').exec;
-
-// var markdown = '# title paragraph\nParagraph stuff\n\nA new line with an image ![Image](http://commonmark.org/help/images/favicon.png)';
+var outputFilePath = 'pandocAST-Attempt.json';
 var markdown = '*Italicss* \n\n**Boldss**';
+var parentNodes = []; // stack for keeping track of the last node : )
+var outputParentNodes = []; // stack for keeping track of the last output node
+var blocks = []; // blocks is eventually set to this array.
+
+var pandocJSON = {};
 var docJSON = defaultMarkdownParser.parse(markdown)
 
 
-let parentNodes = []; // stack for keeping track of the last node : )
-let outputParentNodes = []; // stack for keeping track of the last output node
-// let outputParentNode = null;
-
-let blocks = []; // blocks is eventually set to this array.
-
-var outputFilePath = 'pandocAST-Attempt.json';
-
-// Initialize the output file
-var pandocJSON = {};
-
-function traverse(){
-	console.log(`Traversing docJSON`);
-	console.log(JSON.stringify(docJSON.toJSON()));
-
+function buildPandocAST(){
+	cyan(`Traversing docJSON`, true);
+	cyan(JSON.stringify(docJSON.toJSON()));
 
 	function scanFragment( fragment, position) {
 		parentNodes.push(fragment);
@@ -35,84 +26,78 @@ function traverse(){
 	}
 
 	function scan(node, position) {
-		console.log('Scanning')
 		green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(parentNodes)}\nOutputParentNodes:\t${JSON.stringify(outputParentNodes)}\n`)
 		let newNode = {};
-
-		if (node.type === 'heading'){
-			let level = node.attrs.level;
-			newNode.t = "Header";
-			newNode.c = [];
-			newNode.c[0] = level;
-			newNode.c[1] = ["",[],[]]; // Don't fully understand this lol
-			newNode.c[2] = [];
-
-			createNode(newNode);
-			blocks.push(newNode);
-
-
-		}
 		let markCount = 0;
 
-		// Text becomes an array of nodes
-		if (node.type === 'text'){
-			if (node.marks){
-				green('Found marks')
-				for (let i = 0; i < node.marks.length; i++){
-					let newerNode;
-					if (node.marks[i].type === 'em'){
-						newerNode = {};
-						newerNode.t = "Emph";
-						newerNode.c = [];
-						createNode(newerNode);
-
-						markCount++;
-					}
-					if (node.marks[i].type === 'strong'){
-						newerNode = {};
-						newerNode.t = "Strong";
-						newerNode.c = [];
-						createNode(newerNode);
-
-						markCount++;
+		switch(node.type){
+			case "heading":
+				let level = node.attrs.level;
+				newNode.t = "Header";
+				newNode.c = [];
+				newNode.c[0] = level;
+				newNode.c[1] = ["",[],[]]; // Don't fully understand this lol
+				newNode.c[2] = [];
+				createNode(newNode);
+				blocks.push(newNode);
+				break;
+			case "text":
+				if (node.marks){
+					for (let i = 0; i < node.marks.length; i++){
+						let newerNode;
+						if (node.marks[i].type === 'em'){
+							newerNode = {};
+							newerNode.t = "Emph";
+							newerNode.c = [];
+							createNode(newerNode);
+							markCount++;
+						}
+						if (node.marks[i].type === 'strong'){
+							newerNode = {};
+							newerNode.t = "Strong";
+							newerNode.c = [];
+							createNode(newerNode);
+							markCount++;
+						}
 					}
 				}
-			}
 
-			let newNodes = [];
-			// let words =  node.text.split(" ");
-			newNodes = createTextLeaves(node.text);
-			// blocks.push(newNodes); // ????? Nooo
-			// outputParentNodes.push(newNodes); ?? I think text is a leaf so don't have to push
-			for (var i in newNodes) {
-				createNode(newNodes[i])
-			}
-		}
+				let newNodes = [];
+				// let words =  node.text.split(" ");
+				newNodes = createTextLeaves(node.text);
+				// blocks.push(newNodes); // ????? Nooo
+				// outputParentNodes.push(newNodes); ?? I think text is a leaf so don't have to push
+				for (var i in newNodes) {
+					createNode(newNodes[i])
+				}
+				break;
+			case "image":
+				console.log('an image')
+				newNode.t = "Image";
+				newNode.c = [];
+				newNode.c[0] = ["",[],[]]; // Don't fully understand this lol
+				newNode.c[1] = createTextLeaves(node.attrs.alt)
+				newNode.c[2] = [node.attrs.src, ""];
+				createNode(newNode)
+				break;
+			case "paragraph":
+				console.log('a paragraph')
+				newNode.t = "Para";
+				newNode.c = [];
 
-		if (node.type === 'image'){
-			console.log('an image')
-			newNode.t = "Image";
-			newNode.c = [];
-			newNode.c[0] = ["",[],[]]; // Don't fully understand this lol
-			newNode.c[1] = createTextLeaves(node.attrs.alt)
-			newNode.c[2] = [node.attrs.src, ""];
-			createNode(newNode)
-		}
-
-		if (node.type === 'paragraph'){
-			console.log('a paragraph')
-			newNode.t = "Para";
-			newNode.c = [];
-
-			createNode(newNode);
-			blocks.push(newNode);
-
+				createNode(newNode);
+				blocks.push(newNode);
+				break;
+			default:
+				red(`Hit default, returning ( Unprocessable node of type ${node.type} )`);
+				return;
 		}
 
 		scanFragment(node, position + 1)
 
 		while (markCount > 0){
 			markCount--;
+			blue('popping output')
 			outputParentNodes.pop();
 			parentNodes.pop();
 
@@ -120,6 +105,7 @@ function traverse(){
 
 		if (node.type === 'paragraph' || node.type === 'heading'){
 			console.log("POPPING OUTPUT PARENT NODE WE HAVE " + JSON.stringify(outputParentNodes))
+			blue('popping output')
 			outputParentNodes.pop();
 			parentNodes.pop();
 
@@ -174,27 +160,82 @@ function createNode(newNode){
 	var parent = outputParentNodes[outputParentNodes.length-1];
 	console.log(`parent is ${JSON.stringify(parent)}`)
 	if (parent){
+		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(outputParentNodes)}`)
 		if (parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
 			parent.c.push(newNode)
+			blue(`1: pushing output to: \t${JSON.stringify(outputParentNodes)}`)
 			outputParentNodes.push(newNode)
 		} else {
 			parent.c[2].push(newNode);
 		}
 	}
 	else {
+		blue(`2: pushing output to: \t${JSON.stringify(outputParentNodes)}`)
 		outputParentNodes.push(newNode)
 	}
 	parent = outputParentNodes[outputParentNodes.length-1];
 	yellow(`paren NOW is ${JSON.stringify(parent)}`)
 }
 
-function green(words){
-	console.log(colors.green(words));
+buildPandocAST();
+
+
+
+
+
+
+
+
+/*** Debugging    utility functions ****************** * * * * *
+ *** *******    ************************************** * * * * *
+ *** *****    **************************************** * * * * *
+ *** ***    ****************************************** * * * * *
+ *** *    ******************************************** * * * * */
+
+function green(words, heading){
+	if (heading){
+		console.log('\n\t\t' + words.underline.green);
+		return;
+	}
+	console.log(colors.green(words) +'\n');
 }
 
-function yellow(words){
-	console.log(colors.yellow(words));
+function yellow(words, heading){
+	if (heading){
+		console.log('\n\t\t' + words.underline.yellow);
+		return;
+	}
+	console.log(colors.yellow(words) +'\n');
 }
 
+function red(words, heading){
+	if (heading){
+		console.log('\n\t\t' + words.underline.red);
+		return;
+	}
+	console.log(colors.red(words) +'\n');
+}
 
-traverse();
+function blue(words, heading){
+	if (heading){
+		console.log('\n\t\t' + words.underline.blue);
+		return;
+	}
+	console.log(colors.blue(words) +'\n');
+}
+
+function cyan(words, heading){
+	if (heading){
+		console.log('\n\t\t' + words.underline.cyan);
+		return;
+	}
+	console.log(colors.cyan(words) +'\n');
+}
+
+function white(words, heading){
+	if (heading){
+		console.log('\n\t\t' + words.underline.white);
+		return;
+	}
+	console.log(colors.white(words) +'\n');
+}
