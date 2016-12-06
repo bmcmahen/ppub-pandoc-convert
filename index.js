@@ -1,17 +1,17 @@
-var Promise = require('bluebird');
-var defaultMarkdownParser =  require('prosemirror-markdown').defaultMarkdownParser;
-var write = require('fs-writefile-promise')
-var colors = require('colors');
-var execPromise = require('child-process-promise').exec;
+var Promise = require("bluebird");
+var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownParser;
+var write = require("fs-writefile-promise")
+var colors = require("colors");
+var execPromise = require("child-process-promise").exec;
 
-var outputFilePath = 'pandocAST-Attempt.json';
-var markdown = '*Italicss* \n\n**Boldss**';
+var markdown = "*Italicss* \n\n**Boldss**";
+
 var currentParentNodes = []; // stack for keeping track of the last node : )
 var currentOutputParentNodes = []; // stack for keeping track of the last output node
-var blocks = []; // blocks is eventually set to this array.
+var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 
-var pandocJSON = {};
 var docJSON = defaultMarkdownParser.parse(markdown)
+var pandocJSON = {};
 
 /*********** **** **** **** **** **** **************************
  ********** * ** * ** * ** * ** * ** * *************************
@@ -30,120 +30,91 @@ function buildPandocAST(){
 	}
 
 	// Create a node
-	// If node is a root node, push it to blocks
+	// If node is a root node, push it to blocks array
+	// If not then just
 	function scan(node, position) {
 		green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentParentNodes)}\nOutputParentNodes:\t${JSON.stringify(currentOutputParentNodes)}\n`)
-		let newNode = {};
-		let markCount = 0;
+		var newNode = {c: []};
+		var newerNodes = []; // Used for strong and emphasis text
+		var markCount = 0; // count the number of strong or emphasis applied to text
 
 		switch(node.type){
 			case "heading":
-				let level = node.attrs.level;
+				var level = node.attrs.level;
 				newNode.t = "Header";
-				newNode.c = [];
 				newNode.c[0] = level;
 				newNode.c[1] = ["",[],[]]; // Don't fully understand this lol
 				newNode.c[2] = [];
-				addNode(newNode);
-				blocks.push(newNode);
 				break;
 			case "text":
 				if (node.marks){
-					for (let i = 0; i < node.marks.length; i++){
-						let newerNode;
-						if (node.marks[i].type === 'em'){
+					for (var i = 0; i < node.marks.length; i++){
+						var newerNode;
+						if (node.marks[i].type === "em"){
 							newerNode = {};
 							newerNode.t = "Emph";
-							newerNode.c = [];
-							addNode(newerNode);
+							newerNodes.push(newerNode)
+
 							markCount++;
-						}
-						if (node.marks[i].type === 'strong'){
+						} else if (node.marks[i].type === "strong"){
 							newerNode = {};
 							newerNode.t = "Strong";
 							newerNode.c = [];
-							addNode(newerNode);
+							newerNodes.push(newerNode)
 							markCount++;
 						}
 					}
 				}
-
-				let newNodes = [];
-				// let words =  node.text.split(" ");
-				newNodes = createTextNodes(node.text);
-				// blocks.push(newNodes); // ????? Nooo
-				// currentOutputParentNodes.push(newNodes); ?? I think text is a leaf so don't have to push
-				for (var i in newNodes) {
-					addNode(newNodes[i])
-				}
 				break;
 			case "image":
 				newNode.t = "Image";
-				newNode.c = [];
-				newNode.c[0] = ["",[],[]]; // Don't fully understand this lol
+				newNode.c[0] = ["",[],[]]; // Don"t fully understand this lol
 				newNode.c[1] = createTextNodes(node.attrs.alt)
 				newNode.c[2] = [node.attrs.src, ""];
-				addNode(newNode)
 				break;
 			case "paragraph":
 				newNode.t = "Para";
-				newNode.c = [];
-
-				addNode(newNode);
-				blocks.push(newNode);
 				break;
 			default:
 				red(`Hit default, returning ( Unprocessable node of type ${node.type} )`);
 				return;
-				break; // this probably isn't necessary lol
+				break;
 		}
 
+		for (var i = 0; i < newerNodes.length; i++){
+			addNode(newerNodes[i]);
+		}
+		if (node.type === "text"){
+			var newNodes = createTextNodes(node.text);
+			for (var i in newNodes) {
+				addNode(newNodes[i])
+			}
+		} else {
+			addNode(newNode);
+		}
 		scanFragment(node, position + 1)
 
 		while (markCount > 0){
 			markCount--;
-			blue('popping output: Mark')
+			blue("popping output: Mark")
 			currentOutputParentNodes.pop();
-			currentParentNodes.pop(); // Why do this?? Do you need to do this bc I don't think so
-			// ^^ Because these aren't parent Ndoes in docJSON
+			currentParentNodes.pop(); // Why do this?? Do you need to do this bc I don"t think so
+			// ^^ Because these aren"t parent Ndoes in docJSON
 		}
 
-		if (node.type === 'paragraph' || node.type === 'heading'){
-			blue('popping output: Paragraph or Heading')
+		if (node.type === "paragraph" || node.type === "heading"){
+			blue("popping output: Paragraph or Heading")
 			currentOutputParentNodes.pop();
 			currentParentNodes.pop();
 		}
 	}
 	scanFragment(docJSON.toJSON(), 0)
-	pandocJSON.blocks = blocks;
-	pandocJSON["pandoc-api-version"] = [
-		1,
-		17,
-		0,
-		4
-	];
-	pandocJSON.meta = {};
 
 	finish();
 }
 
-
-function finish(){
-	return write(outputFilePath, JSON.stringify(pandocJSON, null, "\t"))
-	.then(function(fn){
-		console.log('written')
-		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t commonmark -o pandocAST.md`);
-	})
-	.then(function(idk){
-		console.log(`done converting`)
-	})
-	.catch((error)=>{
-		console.log("crap an erorr " + error)
-	})
-}
-
 function createTextNodes(words){
-	let newNodes = [];
+	var newNodes = [];
 	words = words.trim().split(" ")
 	for (let i = 0; i < words.length; i++){
 		// if (words[i] == "") continue;
@@ -156,10 +127,10 @@ function createTextNodes(words){
 }
 
 function addNode(newNode){
-	console.log(`blocks is ${JSON.stringify(blocks)}`)
-	console.log(newNode.t)
+	yellow(`addNode: ${newNode.t}`, true)
+	yellow(`blocks: ${JSON.stringify(blocks)}`)
 	var parent = currentOutputParentNodes[currentOutputParentNodes.length-1];
-	console.log(`parent is ${JSON.stringify(parent)}`)
+	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
 		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentOutputParentNodes)}`)
 		if (parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
@@ -173,19 +144,38 @@ function addNode(newNode){
 	else {
 		blue(`2: pushing output to: \t${JSON.stringify(currentOutputParentNodes)}`)
 		currentOutputParentNodes.push(newNode)
+		blocks.push(newNode);
 	}
 	parent = currentOutputParentNodes[currentOutputParentNodes.length-1];
 	yellow(`parent is now ${JSON.stringify(parent)}`)
 }
 
+
+function finish(){
+	pandocJSON.blocks = blocks;
+	pandocJSON["pandoc-api-version"] = [
+		1,
+		17,
+		0,
+		4
+	];
+	pandocJSON.meta = {};
+
+	return write("pandocAST-Attempt.json", JSON.stringify(pandocJSON, null, "\t"))
+	.then(function(fn){
+		console.log("written")
+		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t commonmark -o pandocAST.md`);
+	})
+	.then(function(idk){
+		console.log(`done converting`)
+	})
+	.catch((error)=>{
+		console.log("crap an erorr " + error)
+	})
+}
+
+
 buildPandocAST();
-
-
-
-
-
-
-
 
 /*** Debugging    utility functions ****************** * * * * *
  *** *******    ************************************** * * * * *
@@ -195,48 +185,48 @@ buildPandocAST();
 
 function green(words, heading){
 	if (heading){
-		console.log('\n\t\t' + words.underline.green);
+		console.log("\n\t\t" + words.underline.green);
 		return;
 	}
-	console.log(colors.green(words) +'\n');
+	console.log(colors.green(words) +"\n");
 }
 
 function yellow(words, heading){
 	if (heading){
-		console.log('\n\t\t' + words.underline.yellow);
+		console.log("\n\t\t" + words.underline.yellow);
 		return;
 	}
-	console.log(colors.yellow(words) +'\n');
+	console.log(colors.yellow(words) +"\n");
 }
 
 function red(words, heading){
 	if (heading){
-		console.log('\n\t\t' + words.underline.red);
+		console.log("\n\t\t" + words.underline.red);
 		return;
 	}
-	console.log(colors.red(words) +'\n');
+	console.log(colors.red(words) +"\n");
 }
 
 function blue(words, heading){
 	if (heading){
-		console.log('\n\t\t' + words.underline.blue);
+		console.log("\n\t\t" + words.underline.blue);
 		return;
 	}
-	console.log(colors.blue(words) +'\n');
+	console.log(colors.blue(words) +"\n");
 }
 
 function cyan(words, heading){
 	if (heading){
-		console.log('\n\t\t' + words.underline.cyan);
+		console.log("\n\t\t" + words.underline.cyan);
 		return;
 	}
-	console.log(colors.cyan(words) +'\n');
+	console.log(colors.cyan(words) +"\n");
 }
 
 function white(words, heading){
 	if (heading){
-		console.log('\n\t\t' + words.underline.white);
+		console.log("\n\t\t" + words.underline.white);
 		return;
 	}
-	console.log(colors.white(words) +'\n');
+	console.log(colors.white(words) +"\n");
 }
