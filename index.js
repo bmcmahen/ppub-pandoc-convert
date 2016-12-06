@@ -4,7 +4,7 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "*Italicss* \n\n**Boldss**";
+var markdown = "*Italicss* \n\n**Boldss**\n\n---";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -76,6 +76,9 @@ function buildPandocAST(){
 			case "paragraph":
 				newNode.t = "Para";
 				break;
+			case "horizontal_rule":
+			newNode.t = "HorizontalRule";
+				break;
 			default:
 				red(`Hit default, returning ( Unprocessable node of type ${node.type} )`);
 				return;
@@ -106,8 +109,8 @@ function buildPandocAST(){
 		}
 
 		// This is NOT sufficient, I think. Blocks can be nested in blocks.
-		if (node.type === "paragraph" || node.type === "heading") {
-		// || node.type === "horizontal_rule" || node.type === "blockquote"){
+		if (node.type === "paragraph" || node.type === "heading"
+		 || node.type === "horizontal_rule" || node.type === "blockquote"){
 			blue("popping output: Paragraph / Header")
 			currentPandocNodeParents.pop();
 			currentDocJSONNodeParents.pop();
