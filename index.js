@@ -13,6 +13,10 @@ var blocks = []; // blocks is eventually set to this array.
 var pandocJSON = {};
 var docJSON = defaultMarkdownParser.parse(markdown)
 
+/*********** **** **** **** **** **** **************************
+ ********** * ** * ** * ** * ** * ** * *************************
+ *********** **** **** **** **** **** **************************
+ *************  ***  ***  ***  ***  ****************************/
 
 function buildPandocAST(){
 	cyan(`Traversing docJSON`, true);
@@ -25,6 +29,8 @@ function buildPandocAST(){
 		}
 	}
 
+	// Create a node
+	// If node is a root node, push it to blocks
 	function scan(node, position) {
 		green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(parentNodes)}\nOutputParentNodes:\t${JSON.stringify(outputParentNodes)}\n`)
 		let newNode = {};
@@ -72,7 +78,6 @@ function buildPandocAST(){
 				}
 				break;
 			case "image":
-				console.log('an image')
 				newNode.t = "Image";
 				newNode.c = [];
 				newNode.c[0] = ["",[],[]]; // Don't fully understand this lol
@@ -81,7 +86,6 @@ function buildPandocAST(){
 				createNode(newNode)
 				break;
 			case "paragraph":
-				console.log('a paragraph')
 				newNode.t = "Para";
 				newNode.c = [];
 
@@ -91,24 +95,23 @@ function buildPandocAST(){
 			default:
 				red(`Hit default, returning ( Unprocessable node of type ${node.type} )`);
 				return;
+				break; // this probably isn't necessary lol
 		}
 
 		scanFragment(node, position + 1)
 
 		while (markCount > 0){
 			markCount--;
-			blue('popping output')
+			blue('popping output: Mark')
 			outputParentNodes.pop();
-			parentNodes.pop();
-
+			parentNodes.pop(); // Why do this?? Do you need to do this bc I don't think so
+			// ^^ Because these aren't parent Ndoes in docJSON
 		}
 
 		if (node.type === 'paragraph' || node.type === 'heading'){
-			console.log("POPPING OUTPUT PARENT NODE WE HAVE " + JSON.stringify(outputParentNodes))
-			blue('popping output')
+			blue('popping output: Paragraph or Heading')
 			outputParentNodes.pop();
 			parentNodes.pop();
-
 		}
 	}
 	scanFragment(docJSON.toJSON(), 0)
@@ -142,10 +145,9 @@ function finish(){
 
 function createTextLeaves(words){
 	let newNodes = [];
-	words = words.split(" ")
-	console.log('words is ' + words)
+	words = words.trim().split(" ")
 	for (let i = 0; i < words.length; i++){
-		if (words[i] == "") continue;
+		// if (words[i] == "") continue;
 		newNodes.push({t: "Str", c: words[i]})
 		if (i < words.length - 1){
 			newNodes.push({t: "Space"})
