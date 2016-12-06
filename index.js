@@ -6,8 +6,8 @@ var execPromise = require("child-process-promise").exec;
 
 var markdown = "*Italicss* \n\n**Boldss**";
 
-var currentParentNodes = []; // stack for keeping track of the last node : )
-var currentOutputParentNodes = []; // stack for keeping track of the last output node
+var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
+var currentPandocNodeParents = []; // stack for keeping track of the last output node
 var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 
 var docJSON = defaultMarkdownParser.parse(markdown)
@@ -23,7 +23,7 @@ function buildPandocAST(){
 	cyan(JSON.stringify(docJSON.toJSON()));
 
 	function scanFragment( fragment, position) {
-		currentParentNodes.push(fragment);
+		currentDocJSONNodeParents.push(fragment);
 		if (fragment.content){
 			fragment.content.forEach((child, offset) => scan(child, position + offset));
 		}
@@ -33,8 +33,8 @@ function buildPandocAST(){
 	// If node is a root node, push it to blocks array
 	// If not then just
 	function scan(node, position) {
-		green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentParentNodes)}\nOutputParentNodes:\t${JSON.stringify(currentOutputParentNodes)}\n`)
-		var newNode = {c: []};
+		green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentDocJSONNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
+		var newNode = {t: undefined, c: []};
 		var newerNodes = []; // Used for strong and emphasis text
 		var markCount = 0; // count the number of strong or emphasis applied to text
 
@@ -53,6 +53,7 @@ function buildPandocAST(){
 						if (node.marks[i].type === "em"){
 							newerNode = {};
 							newerNode.t = "Emph";
+							newerNode.c = [];
 							newerNodes.push(newerNode)
 
 							markCount++;
@@ -84,6 +85,7 @@ function buildPandocAST(){
 		for (var i = 0; i < newerNodes.length; i++){
 			addNode(newerNodes[i]);
 		}
+
 		if (node.type === "text"){
 			var newNodes = createTextNodes(node.text);
 			for (var i in newNodes) {
@@ -92,20 +94,27 @@ function buildPandocAST(){
 		} else {
 			addNode(newNode);
 		}
+
 		scanFragment(node, position + 1)
 
 		while (markCount > 0){
 			markCount--;
 			blue("popping output: Mark")
-			currentOutputParentNodes.pop();
-			currentParentNodes.pop(); // Why do this?? Do you need to do this bc I don"t think so
+			currentPandocNodeParents.pop();
+			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don"t think so
 			// ^^ Because these aren"t parent Ndoes in docJSON
 		}
 
-		if (node.type === "paragraph" || node.type === "heading"){
-			blue("popping output: Paragraph or Heading")
-			currentOutputParentNodes.pop();
-			currentParentNodes.pop();
+		// This is NOT sufficient, I think. Blocks can be nested in blocks.
+		if (node.type === "paragraph" || node.type === "heading") {
+		// || node.type === "horizontal_rule" || node.type === "blockquote"){
+			blue("popping output: Paragraph / Header")
+			currentPandocNodeParents.pop();
+			currentDocJSONNodeParents.pop();
+		}
+		if (node.type === "text"){
+			currentPandocNodeParents.pop();
+			currentDocJSONNodeParents.pop();
 		}
 	}
 	scanFragment(docJSON.toJSON(), 0)
@@ -129,27 +138,31 @@ function createTextNodes(words){
 function addNode(newNode){
 	yellow(`addNode: ${newNode.t}`, true)
 	yellow(`blocks: ${JSON.stringify(blocks)}`)
-	var parent = currentOutputParentNodes[currentOutputParentNodes.length-1];
+	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
-		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentOutputParentNodes)}`)
+		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}`)
 		if (parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
 			parent.c.push(newNode)
-			blue(`1: pushing output to: \t${JSON.stringify(currentOutputParentNodes)}`)
-			currentOutputParentNodes.push(newNode)
+			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
+			currentPandocNodeParents.push(newNode)
 		} else {
 			parent.c[2].push(newNode);
 		}
 	}
 	else {
-		blue(`2: pushing output to: \t${JSON.stringify(currentOutputParentNodes)}`)
-		currentOutputParentNodes.push(newNode)
+		yellow(`2: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
+		currentPandocNodeParents.push(newNode)
 		blocks.push(newNode);
 	}
-	parent = currentOutputParentNodes[currentOutputParentNodes.length-1];
+	parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 	yellow(`parent is now ${JSON.stringify(parent)}`)
 }
 
+
+/* Write the file, and convert it back to make sure it was successful :D
+ *********************************************************************
+ *********************************************************************/
 
 function finish(){
 	pandocJSON.blocks = blocks;
