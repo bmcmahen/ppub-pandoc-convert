@@ -4,7 +4,7 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "[Link](http://a.com)";
+var markdown = "> bq";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -85,7 +85,10 @@ function buildPandocAST(){
 				newNode.t = "Para";
 				break;
 			case "horizontal_rule":
-			newNode.t = "HorizontalRule";
+				newNode.t = "HorizontalRule";
+				break;
+			case "blockquote":
+				newNode.t = "BlockQuote";
 				break;
 			default:
 				red(`Hit default, returning ( Unprocessable node of type ${node.type} )`);
@@ -156,7 +159,7 @@ function addNode(newNode){
 		if (parent.t ==="Link"){
 			parent.c[1].push(newNode);
 		}
-		else if (parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
+		else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
 			parent.c.push(newNode)
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
 			currentPandocNodeParents.push(newNode)
