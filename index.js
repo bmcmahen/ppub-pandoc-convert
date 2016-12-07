@@ -4,7 +4,7 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "> bq";
+var markdown = "* ul1 \n* ul2\n* ul3";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -82,6 +82,11 @@ function buildPandocAST(){
 				newNode.c[2] = [node.attrs.src, ""];
 				break;
 			case "paragraph":
+				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
+					// skip current node
+					newNode.t = "DoNotAddThisNode";
+					break;
+				}
 				newNode.t = "Para";
 				break;
 			case "horizontal_rule":
@@ -89,6 +94,12 @@ function buildPandocAST(){
 				break;
 			case "blockquote":
 				newNode.t = "BlockQuote";
+				break;
+			case "bullet_list":
+				newNode.t = "BulletList"
+				break;
+			case "list_item":
+				newNode.t = "Plain"
 				break;
 			default:
 				red(`Hit default, returning ( Unprocessable node of type ${node.type} )`);
@@ -105,7 +116,7 @@ function buildPandocAST(){
 			for (var i in newNodes) {
 				addNode(newNodes[i])
 			}
-		} else {
+		} else{
 			addNode(newNode);
 		}
 
@@ -121,8 +132,9 @@ function buildPandocAST(){
 
 		// This is NOT sufficient, I think. Blocks can be nested in blocks.
 		if (node.type === "paragraph" || node.type === "heading"
-		 || node.type === "horizontal_rule" || node.type === "blockquote"){
-			blue("popping output: Paragraph / Header")
+		 || node.type === "horizontal_rule" || node.type === "blockquote"
+		 || node.type === "bullet_list"){
+			blue("popping output")
 			currentPandocNodeParents.pop();
 			currentDocJSONNodeParents.pop();
 		}
@@ -150,16 +162,23 @@ function createTextNodes(words){
 }
 
 function addNode(newNode){
+	if (newNode.t === "DoNotAddThisNode"){
+		return;
+	}
 	yellow(`addNode: ${newNode.t}`, true)
 	yellow(`blocks: ${JSON.stringify(blocks)}`)
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
-		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}`)
+		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}, current node type is ${newNode.t}`)
 		if (parent.t ==="Link"){
 			parent.c[1].push(newNode);
-		}
-		else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong"){
+		} else if (parent.t === "BulletList"){
+			// parent.c[0] = [];
+			parent.c.push([newNode])
+			currentPandocNodeParents.push(newNode) // Ahh may be buggy
+
+		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
 			parent.c.push(newNode)
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
 			currentPandocNodeParents.push(newNode)
