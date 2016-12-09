@@ -4,7 +4,7 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "1. One \n2. Two \n3. Three";
+var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -67,8 +67,12 @@ function buildPandocAST(){
 							newerNode = {};
 							newerNode.t = "Link";
 							newerNode.c = [["",[],[ ]], [], [node.marks[i].attrs.href, node.marks[i].attrs.title || "" ]];
-
-
+							newerNodes.push(newerNode)
+							markCount++;
+						} else if (node.marks[i].type === "code"){
+							newerNode = {};
+							newerNode.t = "Code";
+							newerNode.c = [["",[],[ ]], node.text];
 							newerNodes.push(newerNode)
 							markCount++;
 						}
@@ -125,9 +129,20 @@ function buildPandocAST(){
 		}
 
 		if (node.type === "text"){
-			var newNodes = createTextNodes(node.text);
-			for (var i in newNodes) {
-				addNode(newNodes[i])
+			var isCode = false;
+			for (var i = 0; i < node.marks.length; i++){
+				if (node.marks[i].type === "code"){
+					green('is code! :D', true);
+					isCode = true;
+				}
+			}
+			if (isCode){
+
+			} else {
+				var newNodes = createTextNodes(node.text);
+				for (var i in newNodes) {
+					addNode(newNodes[i])
+				}
 			}
 		} else{
 			addNode(newNode);
@@ -184,7 +199,7 @@ function addNode(newNode){
 	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
 		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}, current node type is ${newNode.t}`)
-		if (parent.t ==="Link"){
+		if (parent.t ==="Link" || parent.t === "Code"){
 			parent.c[1].push(newNode);
 		} else if (parent.t === "BulletList"){
 			// parent.c[0] = [];
