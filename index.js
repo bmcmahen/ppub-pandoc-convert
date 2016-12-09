@@ -4,7 +4,7 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "* ul1 \n* ul2\n* ul3";
+var markdown = "- One \n- Two \n- Three";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -97,6 +97,18 @@ function buildPandocAST(){
 				break;
 			case "bullet_list":
 				newNode.t = "BulletList"
+
+				break;
+			case "ordered_list":
+				newNode.t = "OrderedList";
+				newNode.c[0] = [ // Not super sure this conversion is right
+					1, {
+						"t": "DefaultStyle"
+					},
+					{
+						"t": "Period"
+					}
+				]
 				break;
 			case "list_item":
 				newNode.t = "Plain"
@@ -133,7 +145,7 @@ function buildPandocAST(){
 		// This is NOT sufficient, I think. Blocks can be nested in blocks.
 		if (node.type === "paragraph" || node.type === "heading"
 		 || node.type === "horizontal_rule" || node.type === "blockquote"
-		 || node.type === "bullet_list"){
+		 || node.type === "bullet_list" || node.type === "ordered_list"){
 			blue("popping output")
 			currentPandocNodeParents.pop();
 			currentDocJSONNodeParents.pop();
@@ -175,10 +187,16 @@ function addNode(newNode){
 			parent.c[1].push(newNode);
 		} else if (parent.t === "BulletList"){
 			// parent.c[0] = [];
+			// parent.c[0] = [];
 			parent.c.push([newNode])
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 
-		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
+		} else if (parent.t === "OrderedList"){
+			parent.c[1] =[];
+			parent.c[1].push([newNode])
+			currentPandocNodeParents.push(newNode) // Ahh may be buggy
+
+		}else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
 			parent.c.push(newNode)
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
 			currentPandocNodeParents.push(newNode)
