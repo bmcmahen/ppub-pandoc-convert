@@ -4,7 +4,7 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "- One \n- Two \n- Three";
+var markdown = "1. One \n2. Two \n3. Three";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -109,6 +109,7 @@ function buildPandocAST(){
 						"t": "Period"
 					}
 				]
+				newNode.c[1] = [];
 				break;
 			case "list_item":
 				newNode.t = "Plain"
@@ -192,7 +193,6 @@ function addNode(newNode){
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 
 		} else if (parent.t === "OrderedList"){
-			parent.c[1] =[];
 			parent.c[1].push([newNode])
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 
