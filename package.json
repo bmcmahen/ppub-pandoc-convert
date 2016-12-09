@@ -1,6 +1,6 @@
 {
-  "name": "y",
-  "version": "0.0.1",
+  "name": "ProseMirror to Pandoc Converter",
+  "version": "0.1.0",
   "description": "Convert docJSON (ProseMirror) to Pandoc JSON AST",
   "main": "index.js",
   "scripts": {
