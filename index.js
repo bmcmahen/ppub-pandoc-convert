@@ -4,11 +4,14 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-var markdown = "`inline code goes here`";
+// var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
 var blocks = []; // blocks (pandoc AST) is eventually set to this array.
+
+var fs = require('fs');
+var markdown = fs.readFileSync('pandocAST.md').toString();
 
 var docJSON = defaultMarkdownParser.parse(markdown)
 var pandocJSON = {};
@@ -130,10 +133,12 @@ function buildPandocAST(){
 
 		if (node.type === "text"){
 			var isCode = false;
-			for (var i = 0; i < node.marks.length; i++){
-				if (node.marks[i].type === "code"){
-					green('is code! :D', true);
-					isCode = true;
+			if (node.marks){
+				for (var i = 0; i < node.marks.length; i++){
+					if (node.marks[i].type === "code"){
+						green('is code! :D', true);
+						isCode = true;
+					}
 				}
 			}
 			if (isCode){
@@ -211,10 +216,12 @@ function addNode(newNode){
 			parent.c[1].push([newNode])
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 
-		}else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
+		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
 			parent.c.push(newNode)
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
-			currentPandocNodeParents.push(newNode)
+			if (parent.t !== "Para"){
+				currentPandocNodeParents.push(newNode)
+			}
 		} else {
 			parent.c[2].push(newNode);
 		}
@@ -246,7 +253,7 @@ function finish(){
 	return write("pandocAST-Attempt.json", JSON.stringify(pandocJSON, null, "\t"))
 	.then(function(fn){
 		console.log("written")
-		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t commonmark -o pandocAST.md`);
+		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t commonmark -o pandocAST-Converted.md`);
 	})
 	.then(function(idk){
 		console.log(`done converting`)
