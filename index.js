@@ -3,7 +3,7 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-
+var docJSON = require('./docJSON.json');
 // var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
@@ -13,8 +13,10 @@ var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 var fs = require('fs');
 var markdown = fs.readFileSync('pandocAST.md').toString();
 
-var docJSON = defaultMarkdownParser.parse(markdown)
+// var docJSON = defaultMarkdownParser.parse(markdown)
 var pandocJSON = {};
+
+var inTable = false;
 
 /*********** **** **** **** **** **** **************************
  ********** * ** * ** * ** * ** * ** * *************************
@@ -23,7 +25,7 @@ var pandocJSON = {};
 
 function buildPandocAST(){
 	cyan(`Traversing docJSON`, true);
-	cyan(JSON.stringify(docJSON.toJSON()));
+	cyan(JSON.stringify(docJSON));
 
 	function scanFragment( fragment, position) {
 		currentDocJSONNodeParents.push(fragment);
@@ -85,7 +87,7 @@ function buildPandocAST(){
 			case "image":
 				newNode.t = "Image";
 				newNode.c[0] = ["",[],[]]; // Don"t fully understand this lol
-				newNode.c[1] = createTextNodes(node.attrs.alt)
+				newNode.c[1] = node.attrs.alt ? createTextNodes(node.attrs.alt) : [];
 				newNode.c[2] = [node.attrs.src, ""];
 				break;
 			case "paragraph":
@@ -119,10 +121,32 @@ function buildPandocAST(){
 				newNode.c[1] = [];
 				break;
 			case "list_item":
-				newNode.t = "Plain"
+				newNode.t = "Plain";
 				break;
+			case "table":
+				inTable = true;
+				newNode.t = "Table";
+				newNode.c[0] = [];
+				newNode.c[1] = []; // Should have {t: "AlignDefault"} for every column
+				newNode.c[2] = []; // Should have a 0 for every column
+				newNode.c[3] = []; // Column Titles
+				newNode.c[4] = []; //  Column content
+				var columns = node.attrs.columns;
+				for (let i = 0; i < columns; i++){
+					newNode.c[1].push({t: "AlignDefault"});
+					newNode.c[2].push(0);
+				}
+
+				break;
+			case "table_row":
+				newNode.t = "Plain";
+				break;
+			case "table_cell":
+				newNode.t = "Plain";
+				break;
+
 			default:
-				red(`Hit default, returning ( Unprocessable node of type ${node.type} )`);
+				red(`Unprocessable node of type ${node.type}`);
 				return;
 				break;
 		}
@@ -131,7 +155,7 @@ function buildPandocAST(){
 			addNode(newerNodes[i]);
 		}
 
-		if (node.type === "text"){
+		if (node.type === "text"){  // should this be or plain? o:
 			var isCode = false;
 			if (node.marks){
 				for (var i = 0; i < node.marks.length; i++){
@@ -175,8 +199,11 @@ function buildPandocAST(){
 			currentPandocNodeParents.pop();
 			currentDocJSONNodeParents.pop();
 		}
+		if (node.type === "table"){
+			inTable = false;
+		}
 	}
-	scanFragment(docJSON.toJSON(), 0)
+	scanFragment(docJSON, 0)
 
 	finish();
 }
