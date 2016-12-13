@@ -3,7 +3,7 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-var docJSON = require('./docJSON.json');
+// var docJSON = require('./docJSON.json');
 // var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
@@ -13,7 +13,9 @@ var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 var fs = require('fs');
 var markdown = fs.readFileSync('pandocAST.md').toString();
 
-// var docJSON = defaultMarkdownParser.parse(markdown)
+// var docJSON = require('./md.json');
+
+var docJSON = defaultMarkdownParser.parse(markdown).toJSON();
 var pandocJSON = {};
 
 var inTable = false;
@@ -181,7 +183,8 @@ function buildPandocAST(){
 
 		while (markCount > 0){
 			markCount--;
-			blue("popping output: Mark")
+			blue("popping output 1 " + JSON.stringify(currentPandocNodeParents))
+
 			currentPandocNodeParents.pop();
 			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don"t think so
 			// ^^ Because these aren"t parent Ndoes in docJSON
@@ -191,11 +194,22 @@ function buildPandocAST(){
 		if (node.type === "paragraph" || node.type === "heading"
 		 || node.type === "horizontal_rule" || node.type === "blockquote"
 		 || node.type === "bullet_list" || node.type === "ordered_list"){
-			blue("popping output")
-			currentPandocNodeParents.pop();
 			currentDocJSONNodeParents.pop();
 		}
+		if (newNode.t === "Para" || newNode.t=== "Header"
+			|| newNode.t === "HorizontalRule" || newNode.t ==="Blockquote"
+			|| newNode.t === "BulletList" || newNode.t === "OrderedList"){
+				blue(newNode.t)
+				blue("popping output 2 " + JSON.stringify(currentPandocNodeParents))
+
+			currentPandocNodeParents.pop();
+		}
+
 		if (node.type === "text"){
+			blue(newNode.t)
+
+			blue("popping output 3 " + JSON.stringify(currentPandocNodeParents))
+
 			currentPandocNodeParents.pop();
 			currentDocJSONNodeParents.pop();
 		}
@@ -246,7 +260,7 @@ function addNode(newNode){
 		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
 			parent.c.push(newNode)
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
-			if (parent.t !== "Para"){
+			if (parent.t !== "Para" && parent.t !== "Plain"){
 				currentPandocNodeParents.push(newNode)
 			}
 		} else {
