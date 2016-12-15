@@ -30,6 +30,8 @@ function buildPandocAST(){
 	cyan(JSON.stringify(docJSON));
 
 	function scanFragment( fragment, position) {
+		blue("Pushing:\t" + JSON.stringify(fragment.type));
+
 		currentDocJSONNodeParents.push(fragment);
 		if (fragment.content){
 			fragment.content.forEach((child, offset) => scan(child, position + offset));
@@ -93,11 +95,13 @@ function buildPandocAST(){
 				newNode.c[2] = [node.attrs.src, ""];
 				break;
 			case "paragraph":
+				red("HIT PARAGRAPH BRAH \n"+JSON.stringify(currentDocJSONNodeParents))
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
 					// skip current node
 					newNode.t = "DoNotAddThisNode";
 					break;
 				}
+				red("YERP")
 				newNode.t = "Para";
 				break;
 			case "horizontal_rule":
@@ -193,14 +197,16 @@ function buildPandocAST(){
 		// This is NOT sufficient, I think. Blocks can be nested in blocks.
 		if (node.type === "paragraph" || node.type === "heading"
 		 || node.type === "horizontal_rule" || node.type === "blockquote"
-		 || node.type === "bullet_list" || node.type === "ordered_list"){
+		 || node.type === "bullet_list" || node.type === "ordered_list"
+	 	 || node.type === "list_item"){
+			 blue("Popping:\t" + JSON.stringify(node.type));
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === "Para" || newNode.t=== "Header"
 			|| newNode.t === "HorizontalRule" || newNode.t ==="Blockquote"
 			|| newNode.t === "BulletList" || newNode.t === "OrderedList"){
 				blue(newNode.t)
-				blue("popping output 2 " + JSON.stringify(currentPandocNodeParents))
+				blue("popping:\t" + JSON.stringify(currentPandocNodeParents))
 
 			currentPandocNodeParents.pop();
 		}
@@ -208,7 +214,7 @@ function buildPandocAST(){
 		if (node.type === "text"){
 			blue(newNode.t)
 
-			blue("popping output 3 " + JSON.stringify(currentPandocNodeParents))
+			blue("Popping " + JSON.stringify(node.type));
 
 			currentPandocNodeParents.pop();
 			currentDocJSONNodeParents.pop();
@@ -239,6 +245,10 @@ function addNode(newNode){
 	if (newNode.t === "DoNotAddThisNode"){
 		return;
 	}
+
+		if (newNode.t === "Para"){
+			red('PARAPARA')
+		}
 	yellow(`addNode: ${newNode.t}`, true)
 	yellow(`blocks: ${JSON.stringify(blocks)}`)
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
