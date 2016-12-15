@@ -3,7 +3,7 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-// var docJSON = require('./docJSON.json');
+var docJSON = require('./docJSON.json');
 // var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
@@ -15,7 +15,7 @@ var markdown = fs.readFileSync('pandocAST.md').toString();
 
 // var docJSON = require('./md.json');
 
-var docJSON = defaultMarkdownParser.parse(markdown).toJSON();
+// var docJSON = defaultMarkdownParser.parse(markdown).toJSON();
 var pandocJSON = {};
 
 var inTable = false;
@@ -97,12 +97,15 @@ function buildPandocAST(){
 			case "paragraph":
 				red("HIT PARAGRAPH BRAH \n"+JSON.stringify(currentDocJSONNodeParents))
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
-					// skip current node
 					newNode.t = "DoNotAddThisNode";
 					break;
 				}
 				red("YERP")
-				newNode.t = "Para";
+				if (inTable){
+					newNode.t = "Plain";
+				} else {
+					newNode.t = "Para";
+				}
 				break;
 			case "horizontal_rule":
 				newNode.t = "HorizontalRule";
@@ -145,10 +148,14 @@ function buildPandocAST(){
 
 				break;
 			case "table_row":
-				newNode.t = "Plain";
+				// newNode.t = "Plain";
+				newNode.t = "DoNotAddThisNode";
 				break;
 			case "table_cell":
-				newNode.t = "Plain";
+				// newNode.t = "Plain";
+				// May have to change to plain, and remove the paragraph inTable -> plain
+				// change the paragraph in table plain to donotaddthisnode
+				newNode.t = "DoNotAddThisNode";
 				break;
 
 			default:
@@ -187,8 +194,6 @@ function buildPandocAST(){
 
 		while (markCount > 0){
 			markCount--;
-			blue("popping output 1 " + JSON.stringify(currentPandocNodeParents))
-
 			currentPandocNodeParents.pop();
 			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don"t think so
 			// ^^ Because these aren"t parent Ndoes in docJSON
@@ -198,22 +203,19 @@ function buildPandocAST(){
 		if (node.type === "paragraph" || node.type === "heading"
 		 || node.type === "horizontal_rule" || node.type === "blockquote"
 		 || node.type === "bullet_list" || node.type === "ordered_list"
-	 	 || node.type === "list_item"){
-			 blue("Popping:\t" + JSON.stringify(node.type));
+	 	 || node.type === "list_item" || node.type === "table"
+	 	 || node.type === "table_row" || node.type === "table_cell"){
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === "Para" || newNode.t=== "Header"
 			|| newNode.t === "HorizontalRule" || newNode.t ==="Blockquote"
 			|| newNode.t === "BulletList" || newNode.t === "OrderedList"){
-				blue(newNode.t)
 				blue("popping:\t" + JSON.stringify(currentPandocNodeParents))
 
 			currentPandocNodeParents.pop();
 		}
 
 		if (node.type === "text"){
-			blue(newNode.t)
-
 			blue("Popping " + JSON.stringify(node.type));
 
 			currentPandocNodeParents.pop();
@@ -246,16 +248,16 @@ function addNode(newNode){
 		return;
 	}
 
-		if (newNode.t === "Para"){
-			red('PARAPARA')
-		}
 	yellow(`addNode: ${newNode.t}`, true)
 	yellow(`blocks: ${JSON.stringify(blocks)}`)
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
 		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}, current node type is ${newNode.t}`)
-		if (parent.t ==="Link" || parent.t === "Code"){
+		if (parent.t ==="Table"){
+			parent.c[3].push([newNode]) // c3 is for header data.
+			currentPandocNodeParents.push(newNode)
+		} else if (parent.t ==="Link" || parent.t === "Code"){
 			parent.c[1].push(newNode);
 		} else if (parent.t === "BulletList"){
 			// parent.c[0] = [];
@@ -272,6 +274,8 @@ function addNode(newNode){
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
 			if (parent.t !== "Para" && parent.t !== "Plain"){
 				currentPandocNodeParents.push(newNode)
+			} else if (parent.t === "Plain" && inTable){
+				// currentPandocNodeParents.push(newNode)
 			}
 		} else {
 			parent.c[2].push(newNode);
@@ -304,7 +308,7 @@ function finish(){
 	return write("pandocAST-Attempt.json", JSON.stringify(pandocJSON, null, "\t"))
 	.then(function(fn){
 		console.log("written")
-		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t commonmark -o pandocAST-Converted.md`);
+		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t markdown-simple_tables+pipe_tables -o pandocAST-Converted.md`);
 	})
 	.then(function(idk){
 		console.log(`done converting`)
