@@ -11,7 +11,7 @@ var currentPandocNodeParents = []; // stack for keeping track of the last output
 var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 
 var fs = require('fs');
-var markdown = fs.readFileSync('pandocAST.md').toString();
+// var markdown = fs.readFileSync('pandocAST.md').toString();
 
 // var docJSON = require('./md.json');
 
@@ -210,13 +210,13 @@ function buildPandocAST(){
 		if (newNode.t === "Para" || newNode.t=== "Header"
 			|| newNode.t === "HorizontalRule" || newNode.t ==="Blockquote"
 			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
-			|| newNode.t === "Table"){
+			|| newNode.t === "Tableg"){
 				blue("popping:\t" + JSON.stringify(currentPandocNodeParents))
 
 			currentPandocNodeParents.pop();
 		} else if (inTable){
 			if (newNode.t === "Plain"){
-				// currentPandocNodeParents.pop();
+				currentPandocNodeParents.pop();
 			}
 		}
 
@@ -300,8 +300,10 @@ function addNode(newNode){
 			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
 			if (parent.t !== "Para" && parent.t !== "Plain"){
 				currentPandocNodeParents.push(newNode)
-			} else if (parent.t === "Plain" && inTable){
-				// currentPandocNodeParents.push(newNode)
+			} else if ((parent.t === "Plain" ) && inTable){
+				red("HELLO YES PUSHING THE PARANT LOL HAHA")
+
+				currentPandocNodeParents.push(newNode)
 			}
 		} else {
 			parent.c[2].push(newNode);
