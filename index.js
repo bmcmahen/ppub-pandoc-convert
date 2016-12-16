@@ -11,10 +11,9 @@ var currentPandocNodeParents = []; // stack for keeping track of the last output
 var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 
 var fs = require('fs');
-// var markdown = fs.readFileSync('pandocAST.md').toString();
 
 // var docJSON = require('./md.json');
-
+// var markdown = fs.readFileSync('pandocAST.md').toString();
 // var docJSON = defaultMarkdownParser.parse(markdown).toJSON();
 var pandocJSON = {};
 
@@ -210,7 +209,7 @@ function buildPandocAST(){
 		if (newNode.t === "Para" || newNode.t=== "Header"
 			|| newNode.t === "HorizontalRule" || newNode.t ==="Blockquote"
 			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
-			|| newNode.t === "Tableg"){
+			|| newNode.t === "Table" || newNode.t === "Image"){
 				blue("popping:\t" + JSON.stringify(currentPandocNodeParents))
 
 			currentPandocNodeParents.pop();
