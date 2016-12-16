@@ -209,11 +209,17 @@ function buildPandocAST(){
 		}
 		if (newNode.t === "Para" || newNode.t=== "Header"
 			|| newNode.t === "HorizontalRule" || newNode.t ==="Blockquote"
-			|| newNode.t === "BulletList" || newNode.t === "OrderedList"){
+			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
+			|| newNode.t === "Table"){
 				blue("popping:\t" + JSON.stringify(currentPandocNodeParents))
 
 			currentPandocNodeParents.pop();
+		} else if (inTable){
+			if (newNode.t === "Plain"){
+				// currentPandocNodeParents.pop();
+			}
 		}
+
 
 		if (node.type === "text"){
 			blue("Popping " + JSON.stringify(node.type));
@@ -254,7 +260,7 @@ function addNode(newNode){
 	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
 		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}, current node type is ${newNode.t}`)
-		if (parent.t ==="Table"){
+		if (parent.t === "Table"){
 			var numCols = parent.c[2].length; // how do you know that's columns and not rows
 			if (parent.c[3].length < numCols){
 				red("YESYEs", true)
