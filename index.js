@@ -255,7 +255,27 @@ function addNode(newNode){
 	if (parent){
 		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}, current node type is ${newNode.t}`)
 		if (parent.t ==="Table"){
-			parent.c[3].push([newNode]) // c3 is for header data.
+			var numCols = parent.c[2].length; // how do you know that's columns and not rows
+			if (parent.c[3].length < numCols){
+				red("YESYEs", true)
+				parent.c[3].push([newNode]) // c3 is for header data.
+			} else {
+				for (var i =0; i < 100 ; i++){
+					if (!parent.c[4][i]){
+						parent.c[4][i] = [];
+					}
+					if (parent.c[4][i].length < numCols){
+						parent.c[4][i].push([newNode])
+						break;
+					}
+				}
+				// if (parent.c[4][parent.c[4].length-1].length < numCols ){
+				//
+				// 	parent.c[4].push([[newNode]])
+				// } else {
+				//  parent.c[4].push([newNode])
+				// }
+			}
 			currentPandocNodeParents.push(newNode)
 		} else if (parent.t ==="Link" || parent.t === "Code"){
 			parent.c[1].push(newNode);
