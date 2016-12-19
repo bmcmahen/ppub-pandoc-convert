@@ -29,7 +29,6 @@ function buildPandocAST(){
 	cyan(JSON.stringify(docJSON));
 
 	function scanFragment( fragment, position) {
-		blue("Pushing:\t" + JSON.stringify(fragment.type));
 
 		currentDocJSONNodeParents.push(fragment);
 		if (fragment.content){
@@ -39,9 +38,8 @@ function buildPandocAST(){
 
 	// Create a node
 	// If node is a root node, push it to blocks array
-	// If not then just
 	function scan(node, position) {
-		green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentDocJSONNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
+		// green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentDocJSONNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
 		var newNode = {t: undefined, c: []};
 		var newerNodes = []; // Used for strong and emphasis text
 		var markCount = 0; // count the number of strong or emphasis applied to text
@@ -63,7 +61,6 @@ function buildPandocAST(){
 							newerNode.t = "Emph";
 							newerNode.c = [];
 							newerNodes.push(newerNode)
-
 							markCount++;
 						} else if (node.marks[i].type === "strong"){
 							newerNode = {};
@@ -94,12 +91,10 @@ function buildPandocAST(){
 				newNode.c[2] = [node.attrs.src, ""];
 				break;
 			case "paragraph":
-				red("HIT PARAGRAPH BRAH \n"+JSON.stringify(currentDocJSONNodeParents))
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
 					newNode.t = "DoNotAddThisNode";
 					break;
 				}
-				red("YERP")
 				if (inTable){
 					newNode.t = "Plain";
 				} else {
@@ -138,7 +133,7 @@ function buildPandocAST(){
 				newNode.c[1] = []; // Should have {t: "AlignDefault"} for every column
 				newNode.c[2] = []; // Should have a 0 for every column
 				newNode.c[3] = []; // Column Titles
-				newNode.c[4] = []; //  Column content
+				newNode.c[4] = []; // Column content
 				var columns = node.attrs.columns;
 				for (let i = 0; i < columns; i++){
 					newNode.c[1].push({t: "AlignDefault"});
@@ -172,7 +167,6 @@ function buildPandocAST(){
 			if (node.marks){
 				for (var i = 0; i < node.marks.length; i++){
 					if (node.marks[i].type === "code"){
-						green('is code! :D', true);
 						isCode = true;
 					}
 				}
@@ -191,41 +185,42 @@ function buildPandocAST(){
 
 		scanFragment(node, position + 1)
 
+		// This is NOT sufficient, I think. Blocks can be nested in blocks.
+		if (node.type === "paragraph" || node.type === "heading"
+		 || node.type === "horizontal_rule" || node.type === "blockquote"
+		 || node.type === "bullet_list" || node.type === "ordered_list"
+	 	 || node.type === "list_item" || node.type === "table"
+	 	 || node.type === "table_row" || node.type === "table_cell"
+	 	|| node.type === "text"){
+			currentDocJSONNodeParents.pop();
+		}
+		if (newNode.t === "Para" || newNode.t=== "Header"
+			|| newNode.t === "HorizontalRule" || newNode.t === "Blockquote"
+			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
+			|| newNode.t === "Table" || newNode.t === "Image"){
+				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
+			currentPandocNodeParents.pop();
+		} else if (inTable) {
+			if (newNode.t === "Plain"){
+				blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
+				currentPandocNodeParents.pop();
+			}
+		}
+		if (node.type === "text"){ // Text creates a STR node in addition to newNode
+			if (!isCode){ // Ehh.. Not 100% sure about this
+				blue(`Popping 3 - (text/Str)`)
+				currentPandocNodeParents.pop();
+			}
+		}
+
 		while (markCount > 0){
+			blue('Popping mark')
 			markCount--;
 			currentPandocNodeParents.pop();
 			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don"t think so
 			// ^^ Because these aren"t parent Ndoes in docJSON
 		}
 
-		// This is NOT sufficient, I think. Blocks can be nested in blocks.
-		if (node.type === "paragraph" || node.type === "heading"
-		 || node.type === "horizontal_rule" || node.type === "blockquote"
-		 || node.type === "bullet_list" || node.type === "ordered_list"
-	 	 || node.type === "list_item" || node.type === "table"
-	 	 || node.type === "table_row" || node.type === "table_cell"){
-			currentDocJSONNodeParents.pop();
-		}
-		if (newNode.t === "Para" || newNode.t=== "Header"
-			|| newNode.t === "HorizontalRule" || newNode.t ==="Blockquote"
-			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
-			|| newNode.t === "Table" || newNode.t === "Image"){
-				blue("popping:\t" + JSON.stringify(currentPandocNodeParents))
-
-			currentPandocNodeParents.pop();
-		} else if (inTable){
-			if (newNode.t === "Plain"){
-				currentPandocNodeParents.pop();
-			}
-		}
-
-
-		if (node.type === "text"){
-			blue("Popping " + JSON.stringify(node.type));
-
-			currentPandocNodeParents.pop();
-			currentDocJSONNodeParents.pop();
-		}
 		if (node.type === "table"){
 			inTable = false;
 		}
@@ -253,16 +248,11 @@ function addNode(newNode){
 		return;
 	}
 
-	yellow(`addNode: ${newNode.t}`, true)
-	yellow(`blocks: ${JSON.stringify(blocks)}`)
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
-	yellow(`parent: ${JSON.stringify(parent)}`)
 	if (parent){
-		yellow(`parent type is ${parent.t}, parent is ${JSON.stringify(parent)}, outerParentNodes is ${JSON.stringify(currentPandocNodeParents)}, current node type is ${newNode.t}`)
 		if (parent.t === "Table"){
 			var numCols = parent.c[2].length; // how do you know that's columns and not rows
 			if (parent.c[3].length < numCols){
-				red("YESYEs", true)
 				parent.c[3].push([newNode]) // c3 is for header data.
 			} else {
 				for (var i =0; i < 100 ; i++){
@@ -281,40 +271,48 @@ function addNode(newNode){
 				//  parent.c[4].push([newNode])
 				// }
 			}
+			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode)
 		} else if (parent.t ==="Link" || parent.t === "Code"){
 			parent.c[1].push(newNode);
+			currentPandocNodeParents.push(newNode); // hmm not totally sure
 		} else if (parent.t === "BulletList"){
 			// parent.c[0] = [];
 			// parent.c[0] = [];
 			parent.c.push([newNode])
+			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 
 		} else if (parent.t === "OrderedList"){
 			parent.c[1].push([newNode])
+			green(`pushing ${JSON.stringify(newNode)}`)
+
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 
 		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
 			parent.c.push(newNode)
-			yellow(`1: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
 			if (parent.t !== "Para" && parent.t !== "Plain"){
+				green(`pushing ${JSON.stringify(newNode)}`)
 				currentPandocNodeParents.push(newNode)
 			} else if ((parent.t === "Plain" ) && inTable){
-				red("HELLO YES PUSHING THE PARANT LOL HAHA")
-
+				green(`pushing ${JSON.stringify(newNode)}`)
+				currentPandocNodeParents.push(newNode)
+			} else if ( parent.t === "Emph" || parent.t === "Strong"){
 				currentPandocNodeParents.push(newNode)
 			}
+
+
+
 		} else {
 			parent.c[2].push(newNode);
 		}
 	}
 	else {
-		yellow(`2: pushing output to: \t${JSON.stringify(currentPandocNodeParents)}`)
+		green(`pushing ${JSON.stringify(newNode)}`)
 		currentPandocNodeParents.push(newNode)
 		blocks.push(newNode);
 	}
-	parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
-	yellow(`parent is now ${JSON.stringify(parent)}`)
+	// parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 }
 
 
