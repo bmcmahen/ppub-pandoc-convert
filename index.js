@@ -297,19 +297,19 @@ function addNode(newNode){
 
 				parent.c[3][col].push(newNode)
 			} else {
-				if (!parent.c[4][row]){
-					parent.c[4][row] = [];
+				if (!parent.c[4][row-1]){
+					parent.c[4][row-1] = [];
 				}
-				if (!parent.c[4][row][col]){
-					parent.c[4][row][col] = [];
+				if (!parent.c[4][row-1][col]){
+					parent.c[4][row-1][col] = [];
 				}
-				console.log(`inserting at c[4][${row}][${col}]`)
+				console.log(`inserting at c[4][${row-1c}][${col}]`)
 
 				if( row == 1 && col == 0){
 					console.log(JSON.stringify(newNode))
 				}
 
-				parent.c[4][row][col].push(newNode)
+				parent.c[4][row-1][col].push(newNode)
 
 			}
 			green(`pushing ${JSON.stringify(newNode)}`)
