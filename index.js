@@ -18,6 +18,8 @@ var fs = require('fs');
 var pandocJSON = {};
 
 var inTable = false;
+var col;
+var row;
 
 /*********** **** **** **** **** **** **************************
  ********** * ** * ** * ** * ** * ** * *************************
@@ -28,23 +30,29 @@ function buildPandocAST(){
 	cyan(`Traversing docJSON`, true);
 	cyan(JSON.stringify(docJSON));
 
-	function scanFragment( fragment, position) {
+	function scanFragment( fragment) {
 
 		currentDocJSONNodeParents.push(fragment);
 		if (fragment.content){
-			fragment.content.forEach((child, offset) => scan(child, position + offset));
+			fragment.content.forEach((child, offset) => scan(child));
 		}
 	}
 
 	// Create a node
 	// If node is a root node, push it to blocks array
-	function scan(node, position) {
+	function scan(node) {
 		// green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentDocJSONNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
 		var newNode = {t: undefined, c: []};
 		var newerNodes = []; // Used for strong and emphasis text
 		var markCount = 0; // count the number of strong or emphasis applied to text
 
 		switch(node.type){
+			case "block_embed": // Cases: Image in table
+				newNode.t = "Image";
+				newNode.c[0] = ["",[],[]]; // Don"t fully understand this lol
+				newNode.c[1] = [];
+				newNode.c[2] = [node.attrs.data.content.url, ""];
+				break;
 			case "heading":
 				var level = node.attrs.level;
 				newNode.t = "Header";
@@ -128,6 +136,8 @@ function buildPandocAST(){
 				break;
 			case "table":
 				inTable = true;
+				col = -1;
+				row = -1;
 				newNode.t = "Table";
 				newNode.c[0] = [];
 				newNode.c[1] = []; // Should have {t: "AlignDefault"} for every column
@@ -144,8 +154,11 @@ function buildPandocAST(){
 			case "table_row":
 				// newNode.t = "Plain";
 				newNode.t = "DoNotAddThisNode";
+				row++;
+				col = -1;
 				break;
 			case "table_cell":
+				col++;
 				// newNode.t = "Plain";
 				// May have to change to plain, and remove the paragraph inTable -> plain
 				// change the paragraph in table plain to donotaddthisnode
@@ -158,9 +171,23 @@ function buildPandocAST(){
 				break;
 		}
 
+		// Wrap all images in a div block, PubPub doesn't do inline images
+		if (newNode.t === "Image"){
+			red("divdiv")
+			var div = {}; // Not sure any of this is correct, not sure how to compare to actual output
+			div.t = "Div";
+			div.c = [];
+			div.c[0] = {}; // Attributes
+			div.c[1] = []; // Contents
+			newerNodes.push(div);
+
+		}
+
 		for (var i = 0; i < newerNodes.length; i++){
 			addNode(newerNodes[i]);
 		}
+
+
 
 		if (node.type === "text"){  // should this be or plain? o:
 			var isCode = false;
@@ -182,8 +209,14 @@ function buildPandocAST(){
 		} else{
 			addNode(newNode);
 		}
-
-		scanFragment(node, position + 1)
+		// context is some global variable
+		// const oldContext = context.clone();
+		// if (node.type === "table_cell") {
+		// 	context.column = columns++;
+		// 	context.row = rows++;
+		// }
+		scanFragment(node)
+		// context = oldContext;
 
 		// This is NOT sufficient, I think. Blocks can be nested in blocks.
 		if (node.type === "paragraph" || node.type === "heading"
@@ -191,7 +224,7 @@ function buildPandocAST(){
 		 || node.type === "bullet_list" || node.type === "ordered_list"
 	 	 || node.type === "list_item" || node.type === "table"
 	 	 || node.type === "table_row" || node.type === "table_cell"
-	 	|| node.type === "text"){
+	 	|| node.type === "text" || node.type === "block_embed"){
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === "Para" || newNode.t=== "Header"
@@ -251,25 +284,33 @@ function addNode(newNode){
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 	if (parent){
 		if (parent.t === "Table"){
+			console.log("Yeah parent is table")
+			console.log(`pushing to ${row}, ${col}`)
 			var numCols = parent.c[2].length; // how do you know that's columns and not rows
-			if (parent.c[3].length < numCols){
-				parent.c[3].push([newNode]) // c3 is for header data.
-			} else {
-				for (var i =0; i < 100 ; i++){
-					if (!parent.c[4][i]){
-						parent.c[4][i] = [];
-					}
-					if (parent.c[4][i].length < numCols){
-						parent.c[4][i].push([newNode])
-						break;
-					}
+			if (row < 1){
+
+				// parent.c[3].push([newNode]) // c3 is for header data.
+				if (!parent.c[3][col]){
+					parent.c[3][col] = [];
 				}
-				// if (parent.c[4][parent.c[4].length-1].length < numCols ){
-				//
-				// 	parent.c[4].push([[newNode]])
-				// } else {
-				//  parent.c[4].push([newNode])
-				// }
+				console.log(`inserting at c[3][${col}]`)
+
+				parent.c[3][col].push(newNode)
+			} else {
+				if (!parent.c[4][row]){
+					parent.c[4][row] = [];
+				}
+				if (!parent.c[4][row][col]){
+					parent.c[4][row][col] = [];
+				}
+				console.log(`inserting at c[4][${row}][${col}]`)
+
+				if( row == 1 && col == 0){
+					console.log(JSON.stringify(newNode))
+				}
+
+				parent.c[4][row][col].push(newNode)
+
 			}
 			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode)
@@ -298,11 +339,12 @@ function addNode(newNode){
 				green(`pushing ${JSON.stringify(newNode)}`)
 				currentPandocNodeParents.push(newNode)
 			} else if ( parent.t === "Emph" || parent.t === "Strong"){
+				green(`pushing ${JSON.stringify(newNode)}`)
+
 				currentPandocNodeParents.push(newNode)
 			}
-
-
-
+		} else if (parent.t === "Div") {
+			parent.c[1].push(newNode);
 		} else {
 			parent.c[2].push(newNode);
 		}
