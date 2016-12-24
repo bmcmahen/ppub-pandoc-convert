@@ -3,7 +3,7 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-var docJSON = require('./docJSON.json');
+var docJSON = require('./joi-extract.json');
 // var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
@@ -61,6 +61,7 @@ function buildPandocAST(){
 				newNode.c[2] = [];
 				break;
 			case "text":
+
 				if (node.marks){
 					for (var i = 0; i < node.marks.length; i++){
 						var newerNode;
@@ -167,7 +168,7 @@ function buildPandocAST(){
 				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
-				return;
+				newNode.t = "DoNotAddThisNode";
 				break;
 		}
 
@@ -201,10 +202,16 @@ function buildPandocAST(){
 			if (isCode){
 
 			} else {
+				console.log("CREATING TEXT NODE :D " + node.text)
+
+				newNode.t = "Para"
+				addNode(newNode);
+
 				var newNodes = createTextNodes(node.text);
 				for (var i in newNodes) {
 					addNode(newNodes[i])
 				}
+
 			}
 		} else{
 			addNode(newNode);
@@ -224,7 +231,8 @@ function buildPandocAST(){
 		 || node.type === "bullet_list" || node.type === "ordered_list"
 	 	 || node.type === "list_item" || node.type === "table"
 	 	 || node.type === "table_row" || node.type === "table_cell"
-	 	|| node.type === "text" || node.type === "block_embed"){
+	 || node.type === "block_embed"){
+		 // may want to move 	|| node.type === "text"  back into here
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === "Para" || newNode.t=== "Header"
@@ -242,7 +250,7 @@ function buildPandocAST(){
 		if (node.type === "text"){ // Text creates a STR node in addition to newNode
 			if (!isCode){ // Ehh.. Not 100% sure about this
 				blue(`Popping 3 - (text/Str)`)
-				currentPandocNodeParents.pop();
+				// currentPandocNodeParents.pop();
 			}
 		}
 
@@ -316,6 +324,7 @@ function addNode(newNode){
 			currentPandocNodeParents.push(newNode)
 		} else if (parent.t ==="Link" || parent.t === "Code"){
 			parent.c[1].push(newNode);
+			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode); // hmm not totally sure
 		} else if (parent.t === "BulletList"){
 			// parent.c[0] = [];
@@ -342,10 +351,13 @@ function addNode(newNode){
 				green(`pushing ${JSON.stringify(newNode)}`)
 
 				currentPandocNodeParents.push(newNode)
+			} else if ( parent.t === "Para"){
+				currentPandocNodeParents.push(newNode)
 			}
 		} else if (parent.t === "Div") {
 			parent.c[1].push(newNode);
 		} else {
+			console.log(`parent.t: ${parent.t}`)
 			parent.c[2].push(newNode);
 		}
 	}
