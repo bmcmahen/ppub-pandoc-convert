@@ -103,11 +103,15 @@ function buildPandocAST(){
 					newNode.t = "DoNotAddThisNode";
 					break;
 				}
-				if (inTable){
-					newNode.t = "Plain";
+				if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === "Plain" && currentPandocNodeParents[currentPandocNodeParents.length-2].t === "Table"){
+					red("OHOHOH ", true)
+					newNode.t = "DoNotAddThisNode";
+
 				} else {
+				// 	newNode.t = "Para";
 					newNode.t = "Para";
 				}
+
 				break;
 			case "horizontal_rule":
 				newNode.t = "HorizontalRule";
@@ -159,27 +163,23 @@ function buildPandocAST(){
 				break;
 			case "table_cell":
 				col++;
-				// newNode.t = "Plain";
-				// May have to change to plain, and remove the paragraph inTable -> plain
-				// change the paragraph in table plain to donotaddthisnode
-				newNode.t = "DoNotAddThisNode";
+				newNode.t = "Plain";
 				break;
-
 			default:
-				red(`Unprocessable node of type ${node.type}`);
+				red(`Uh oh...Unprocessed node of type ${node.type}`);
 				return;
 				break;
 		}
 
 		// Wrap all images in a div block, PubPub doesn't do inline images
 		if (newNode.t === "Image"){
-			red("divdiv")
-			var div = {}; // Not sure any of this is correct, not sure how to compare to actual output
-			div.t = "Div";
-			div.c = [];
-			div.c[0] = {}; // Attributes
-			div.c[1] = []; // Contents
-			newerNodes.push(div);
+			// red("divdiv")
+			// var div = {}; // Not sure any of this is correct, not sure how to compare to actual output
+			// div.t = "Div";
+			// div.c = [];
+			// div.c[0] = ["", [], []]; // Attributes
+			// div.c[1] = []; // Contents
+			// newerNodes.push(div);
 
 		}
 
@@ -303,7 +303,7 @@ function addNode(newNode){
 				if (!parent.c[4][row-1][col]){
 					parent.c[4][row-1][col] = [];
 				}
-				console.log(`inserting at c[4][${row-1c}][${col}]`)
+				console.log(`inserting at c[4][${(row-1)}][${col}]`)
 
 				if( row == 1 && col == 0){
 					console.log(JSON.stringify(newNode))
