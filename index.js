@@ -21,6 +21,7 @@ var inTable = false;
 var col; // used when within a table, to keep track of current pandoc col
 var row; // used when within a table, to keep track of current pandoc row
 var footNotes = []; // Used to store all of the footnotes
+
 /*********** **** **** **** **** **** **************************
  ********** * ** * ** * ** * ** * ** * *************************
  *********** **** **** **** **** **** **************************
@@ -210,7 +211,27 @@ function buildPandocAST(){
 			if (isCode){
 
 			} else {
-				addNode(newNode); // Changed this from adding a Paragraph node at Para, to adding one at Text
+				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
+
+				yellow(JSON.stringify(currentPandocNodeParents))
+				if (parent.c[0]){
+					// Close the parent Paragraph node and open a new one.
+					// Because this will create a newline, and is how Pandoc does it
+					blue("YEs HERE, parent is " + JSON.stringify(parent), true)
+					var _newNode = {t: "Para", c: []}
+					currentPandocNodeParents.pop();
+					addNode (_newNode);
+					// parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
+					// blue("YEs now..parent is " + JSON.stringify(parent), true)
+					// parent.c.push(_newNode);
+
+					// currentPandocNodeParents.push(_newNode);
+
+					// parent = akcurrentPandocNodeParents[currentPandocNodeParents.length-1];
+					// parent.c.push(_newNode)
+					// parent.c.push(_newNode)
+
+				}
 
 				var newNodes = createTextNodes(node.text);
 				for (var i in newNodes) {
@@ -358,7 +379,6 @@ function addNode(newNode){
 
 				currentPandocNodeParents.push(newNode)
 			} else if (parent.t === "Para"){
-				red("Parent is Para.. why do I do this?? " + newNode.t)
 				if (newNode.t === "Str" || newNode.t === "Space"){
 					// These are leaf nodes, and don't need to be pushed.
 					// There may be other types of leaf nodes..
@@ -372,6 +392,7 @@ function addNode(newNode){
 		} else if (parent.t === "Div") {
 			parent.c[1].push(newNode);
 		} else {
+			yellow("PARENT : " + parent.t)
 			parent.c[2].push(newNode);
 		}
 	}
