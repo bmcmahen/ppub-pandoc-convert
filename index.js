@@ -18,9 +18,9 @@ var fs = require('fs');
 var pandocJSON = {};
 
 var inTable = false;
-var col;
-var row;
-
+var col; // used when within a table, to keep track of current pandoc col
+var row; // used when within a table, to keep track of current pandoc row
+var footNotes = []; // Used to store all of the footnotes
 /*********** **** **** **** **** **** **************************
  ********** * ** * ** * ** * ** * ** * *************************
  *********** **** **** **** **** **** **************************
@@ -30,10 +30,10 @@ function buildPandocAST(){
 	cyan(`Traversing docJSON`, true);
 	cyan(JSON.stringify(docJSON));
 
-	function scanFragment( fragment) {
+	function scanFragment(fragment) {
 
 		currentDocJSONNodeParents.push(fragment);
-		if (fragment.content){
+		if (fragment.content) {
 			fragment.content.forEach((child, offset) => scan(child));
 		}
 	}
@@ -43,8 +43,8 @@ function buildPandocAST(){
 	function scan(node) {
 		// green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentDocJSONNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
 		var newNode = {t: undefined, c: []};
-		var newerNodes = []; // Used for strong and emphasis text
-		var markCount = 0; // count the number of strong or emphasis applied to text
+		var newerNodes = []; // Used primarily for strong, emphasis, link, code text
+		var markCount = 0; // Used to count strong, emphasis, link, code text, the reason being that you can have newer nodes that aren't marks
 
 		switch(node.type){
 			case "block_embed": // Cases: Image in table
@@ -61,7 +61,7 @@ function buildPandocAST(){
 				newNode.c[2] = [];
 				break;
 			case "text":
-
+				// Marks are handled here and the rest of it is handled later
 				if (node.marks){
 					for (var i = 0; i < node.marks.length; i++){
 						var newerNode;
@@ -92,6 +92,7 @@ function buildPandocAST(){
 						}
 					}
 				}
+
 				break;
 			case "image":
 				newNode.t = "Image";
@@ -100,16 +101,16 @@ function buildPandocAST(){
 				newNode.c[2] = [node.attrs.src, ""];
 				break;
 			case "paragraph":
+				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
 					newNode.t = "DoNotAddThisNode";
 					break;
 				}
 				if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === "Plain" && currentPandocNodeParents[currentPandocNodeParents.length-2].t === "Table"){
-					red("OHOHOH ", true)
 					newNode.t = "DoNotAddThisNode";
-
 				} else {
-				// 	newNode.t = "Para";
+					// This is the proper way to handle Para -- one to one with docJSOn paragraph
+					// Because otherwise have issues with Para : [text, text]
 					newNode.t = "Para";
 				}
 
@@ -166,6 +167,15 @@ function buildPandocAST(){
 				col++;
 				newNode.t = "Plain";
 				break;
+			case "embed":
+				//Adding support for footnotes
+				if (node.attrs.mode === "cite"){
+					newNode.t = "Note";
+					newNode.c[0] = { t: "Para", c: [createTextNodes(node.attrs.data.content.note)]}
+				}
+
+				// footNotes.push(newNode) // Not sure this is necessary..
+				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
 				newNode.t = "DoNotAddThisNode";
@@ -188,9 +198,7 @@ function buildPandocAST(){
 			addNode(newerNodes[i]);
 		}
 
-
-
-		if (node.type === "text"){  // should this be or plain? o:
+		if (node.type === "text") {  // should this be or plain? o:
 			var isCode = false;
 			if (node.marks){
 				for (var i = 0; i < node.marks.length; i++){
@@ -202,10 +210,7 @@ function buildPandocAST(){
 			if (isCode){
 
 			} else {
-				console.log("CREATING TEXT NODE :D " + node.text)
-
-				newNode.t = "Para"
-				addNode(newNode);
+				addNode(newNode); // Changed this from adding a Paragraph node at Para, to adding one at Text
 
 				var newNodes = createTextNodes(node.text);
 				for (var i in newNodes) {
@@ -213,7 +218,7 @@ function buildPandocAST(){
 				}
 
 			}
-		} else{
+		} else {
 			addNode(newNode);
 		}
 		// context is some global variable
@@ -231,14 +236,15 @@ function buildPandocAST(){
 		 || node.type === "bullet_list" || node.type === "ordered_list"
 	 	 || node.type === "list_item" || node.type === "table"
 	 	 || node.type === "table_row" || node.type === "table_cell"
-	 || node.type === "block_embed"){
+	 	 || node.type === "block_embed"){
 		 // may want to move 	|| node.type === "text"  back into here
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === "Para" || newNode.t=== "Header"
 			|| newNode.t === "HorizontalRule" || newNode.t === "Blockquote"
 			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
-			|| newNode.t === "Table" || newNode.t === "Image"){
+			|| newNode.t === "Table" || newNode.t === "Image"
+			|| newNode.t === "Note"){
 				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
 			currentPandocNodeParents.pop();
 		} else if (inTable) {
@@ -288,15 +294,18 @@ function addNode(newNode){
 	if (newNode.t === "DoNotAddThisNode"){
 		return;
 	}
-
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
+
+
+
+
 	if (parent){
+
 		if (parent.t === "Table"){
 			console.log("Yeah parent is table")
 			console.log(`pushing to ${row}, ${col}`)
 			var numCols = parent.c[2].length; // how do you know that's columns and not rows
 			if (row < 1){
-
 				// parent.c[3].push([newNode]) // c3 is for header data.
 				if (!parent.c[3][col]){
 					parent.c[3][col] = [];
@@ -318,11 +327,10 @@ function addNode(newNode){
 				}
 
 				parent.c[4][row-1][col].push(newNode)
-
 			}
 			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode)
-		} else if (parent.t ==="Link" || parent.t === "Code"){
+		} else if (parent.t === "Link" || parent.t === "Code"){
 			parent.c[1].push(newNode);
 			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode); // hmm not totally sure
@@ -336,9 +344,7 @@ function addNode(newNode){
 		} else if (parent.t === "OrderedList"){
 			parent.c[1].push([newNode])
 			green(`pushing ${JSON.stringify(newNode)}`)
-
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
-
 		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
 			parent.c.push(newNode)
 			if (parent.t !== "Para" && parent.t !== "Plain"){
@@ -347,26 +353,33 @@ function addNode(newNode){
 			} else if ((parent.t === "Plain" ) && inTable){
 				green(`pushing ${JSON.stringify(newNode)}`)
 				currentPandocNodeParents.push(newNode)
-			} else if ( parent.t === "Emph" || parent.t === "Strong"){
+			} else if (parent.t === "Emph" || parent.t === "Strong"){
 				green(`pushing ${JSON.stringify(newNode)}`)
 
 				currentPandocNodeParents.push(newNode)
-			} else if ( parent.t === "Para"){
+			} else if (parent.t === "Para"){
+				red("Parent is Para.. why do I do this?? " + newNode.t)
+				if (newNode.t === "Str" || newNode.t === "Space"){
+					// These are leaf nodes, and don't need to be pushed.
+					// There may be other types of leaf nodes..
+				} else {
+					currentPandocNodeParents.push(newNode)
+				}
+			} else if (parent.t === "Note"){
+				blue("pushing Note : D")
 				currentPandocNodeParents.push(newNode)
 			}
 		} else if (parent.t === "Div") {
 			parent.c[1].push(newNode);
 		} else {
-			console.log(`parent.t: ${parent.t}`)
 			parent.c[2].push(newNode);
 		}
 	}
 	else {
-		green(`pushing ${JSON.stringify(newNode)}`)
-		currentPandocNodeParents.push(newNode)
+		green(`pushing ${JSON.stringify(newNode)}`);
+		currentPandocNodeParents.push(newNode);
 		blocks.push(newNode);
 	}
-	// parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 }
 
 
@@ -393,7 +406,7 @@ function finish(){
 		console.log(`done converting`)
 	})
 	.catch((error)=>{
-		console.log("crap an erorr " + error)
+		console.log(`error: ${error}`)
 	})
 }
 
