@@ -20,7 +20,6 @@ var pandocJSON = {};
 var inTable = false;
 var col; // used when within a table, to keep track of current pandoc col
 var row; // used when within a table, to keep track of current pandoc row
-var footNotes = []; // Used to store all of the footnotes
 
 /*********** **** **** **** **** **** **************************
  ********** * ** * ** * ** * ** * ** * *************************
@@ -78,12 +77,22 @@ function buildPandocAST(){
 							newerNode.c = [];
 							newerNodes.push(newerNode)
 							markCount++;
-						} else if (node.marks[i].type === "link"){
+						} else if (node.marks[i].type === "link" ){
 							newerNode = {};
 							newerNode.t = "Link";
-							newerNode.c = [["",[],[ ]], [], [node.marks[i].attrs.href, node.marks[i].attrs.title || "" ]];
+							newerNode.c = [["",[],[ ]], [], [node.content.text, node.marks[i].attrs.title || "" ]];
 							newerNodes.push(newerNode)
 							markCount++;
+						} else if (node.marks[i]._ === "link"){
+							// the ._ is weird, but in this pub: https://www.pubpub.org/pub/joichi-itos-research-statement---march-2016
+							// the link within the ordered list a the bottom isn't under type..
+
+							newerNode = {};
+							newerNode.t = "Link";
+							newerNode.c = [["",[],[ ]], [/*Should get populated in addNode*/], [node.marks[i].href, node.marks[i].title || "" ]];
+							newerNodes.push(newerNode)
+							markCount++;
+
 						} else if (node.marks[i].type === "code"){
 							newerNode = {};
 							newerNode.t = "Code";
@@ -175,7 +184,6 @@ function buildPandocAST(){
 					newNode.c[0] = { t: "Para", c: createTextNodes(node.attrs.data.content.note)}
 				}
 
-				// footNotes.push(newNode) // Not sure this is necessary..
 				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
@@ -213,10 +221,11 @@ function buildPandocAST(){
 			} else {
 				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
-				yellow(JSON.stringify(currentPandocNodeParents))
-				if (parent.c[0]){
+				yellow(`PARENT: ${JSON.stringify(parent)}`)
+				if (parent.c[0] && parent.t === "Para"){
 					// Close the parent Paragraph node and open a new one.
 					// Because this will create a newline, and is how Pandoc does it
+					// Not doing it for plain, because of an edge case when its in OL->[Link, Str]
 					blue("YEs HERE, parent is " + JSON.stringify(parent), true)
 					var _newNode = {t: "Para", c: []}
 					currentPandocNodeParents.pop();
@@ -253,11 +262,12 @@ function buildPandocAST(){
 		 // may want to move 	|| node.type === "text"  back into here
 			currentDocJSONNodeParents.pop();
 		}
-		if (newNode.t === "Para" || newNode.t=== "Header"
+		if (newNode.t === "Para" || newNode.t === "Plain" || newNode.t === "Header"
 			|| newNode.t === "HorizontalRule" || newNode.t === "Blockquote"
 			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
 			|| newNode.t === "Table" || newNode.t === "Image"
-			|| newNode.t === "Note"){
+			|| newNode.t === "Note" || newNode.t === "Link" || newNode.t === "Code"){
+				// Link is for the case UL->[Link, Str]
 				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
 			currentPandocNodeParents.pop();
 		} else if (inTable) {
@@ -291,10 +301,17 @@ function buildPandocAST(){
 }
 
 function createTextNodes(words){
+	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
+
+
 	var newNodes = [];
-	words = words.trim().split(" ")
+	// words = words.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
+	words = words.split(" ")
+
+	console.log(parent.c.length, words)
 	for (let i = 0; i < words.length; i++){
 		// if (words[i] == "") continue;
+
 		newNodes.push({t: "Str", c: words[i]})
 		if (i < words.length - 1){
 			newNodes.push({t: "Space"})
@@ -345,8 +362,12 @@ function addNode(newNode){
 			currentPandocNodeParents.push(newNode)
 		} else if (parent.t === "Link" || parent.t === "Code"){
 			parent.c[1].push(newNode);
-			green(`pushing ${JSON.stringify(newNode)}`)
-			currentPandocNodeParents.push(newNode); // hmm not totally sure
+			green(`SWEH: pushing ${JSON.stringify(newNode)}`)
+			if (newNode.t === "Str" || newNode.t === "Space"){
+
+			} else {
+				currentPandocNodeParents.push(newNode); // hmm not totally sure
+			}
 		} else if (parent.t === "BulletList"){
 			// parent.c[0] = [];
 			// parent.c[0] = [];
@@ -359,6 +380,7 @@ function addNode(newNode){
 			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
+
 			parent.c.push(newNode)
 			if (parent.t !== "Para" && parent.t !== "Plain"){
 				green(`pushing ${JSON.stringify(newNode)}`)
@@ -366,15 +388,21 @@ function addNode(newNode){
 			} else if ((parent.t === "Plain" ) && inTable){
 				green(`pushing ${JSON.stringify(newNode)}`)
 				currentPandocNodeParents.push(newNode)
-			} else if (parent.t === "Emph" || parent.t === "Strong"){
+			} else if (parent.t === "Emph" || parent.t === "Strong" ){
 				green(`pushing ${JSON.stringify(newNode)}`)
+				red("Herp derp")
 
 				currentPandocNodeParents.push(newNode)
-			} else if (parent.t === "Para"){
+			} else if (parent.t === "Para" || parent.t === "Plain"){
+				// Wasn't doing this to Plain before, not sure why.
 				if (newNode.t === "Str" || newNode.t === "Space"){
 					// These are leaf nodes, and don't need to be pushed.
 					// There may be other types of leaf nodes..
 				} else {
+					console.log("HIP HIP OK " + JSON.stringify(newNode))
+
+					green(`pushing a ${JSON.stringify(newNode)}`)
+
 					currentPandocNodeParents.push(newNode)
 				}
 			} else if (parent.t === "Note"){
@@ -413,7 +441,7 @@ function finish(){
 	return write("pandocAST-Attempt.json", JSON.stringify(pandocJSON, null, "\t"))
 	.then(function(fn){
 		console.log("written")
-		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t markdown-simple_tables+pipe_tables -o pandocAST-Converted.md`);
+		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t markdown-simple_tables+pipe_tables --atx-headers -o pandocAST-Converted.md`);
 	})
 	.then(function(idk){
 		console.log(`done converting`)
