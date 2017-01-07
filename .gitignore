@@ -4,3 +4,5 @@ pandocAST.json
 pandocAST.md
 .atomignore
 pandocAST.docJSON
+.DS_Store
+npm-debug.log

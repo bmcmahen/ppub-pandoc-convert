@@ -1,18 +1,75 @@
 {
    "type":"doc",
    "content":[
-      {
-         "type":"paragraph",
-         "content":[
-            {
-               "type":"text",
-               "text":"Science, engineering, design, and art can together be viewed as a circle where the output of one is the input of another."
-            },
-            {
-               "type":"text",
-               "text":"Cybernetics spawned many exciting new disciplines but, as a field, it fragmented, with the offspring of the intellectual leadership ending up in many of these newly established fields.  My aim is to develop a movement agile, engaging, and antidisciplinary enough not only to survive but to thrive on its own even as new disciplines spin off."
-            }
-         ]
-      }
+     {
+        "type":"paragraph",
+        "content":[
+           {
+              "type":"text",
+              "text":"2016."
+           }
+        ]
+     },
+     {
+        "type":"horizontal_rule"
+     },
+     {
+        "type":"paragraph",
+        "content":[
+           {
+              "type":"text",
+              "text":"Science"
+           },
+           {
+              "type":"embed",
+              "attrs":{
+                 "source":"57a22c3a5a4037b8e01ad066",
+                 "className":"",
+                 "id":"57a22c3a5a4037b8e01ad066",
+                 "align":"full",
+                 "size":"",
+                 "caption":"",
+                 "mode":"cite",
+                 "data":{
+                    "_id":"57a22c3a5a4037b8e01ad066",
+                    "type":"reference",
+                    "message":"",
+                    "parent":{
+                       "_id":"57a22b6f5a4037b8e01a284a",
+                       "type":"reference",
+                       "slug":"57a22b6f5a4037b8e01a284a",
+                       "title":"Reference: Age of Entanglement",
+                       "previewImage":"https://assets.pubpub.org/_site/pub.png",
+                       "createDate":"2016-06-12T15:14:51.354Z",
+                       "lastUpdated":"2016-06-12T15:14:51.354Z",
+                       "isPublished":true,
+                       "versions":[
+
+                       ],
+                       "tags":[
+
+                       ]
+                    },
+                    "content":{
+                       "title":"Age of Entanglement",
+                       "url":"http://jods.mitpress.mit.edu/pub/AgeOfEntanglement",
+                       "author":"Neri Oxman",
+                       "journal":"Journal of Design and Science",
+                       "volume":"",
+                       "number":"",
+                       "pages":"",
+                       "year":"2016",
+                       "publisher":"",
+                       "note":"One challenge yolo."
+                    }
+                 }
+              }
+           },
+           {
+              "type":"text",
+              "text":" Design and science pls."
+           }
+        ]
+     }
    ]
 }

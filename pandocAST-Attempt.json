@@ -4,159 +4,49 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Para",
-					"c": []
-				},
+					"t": "Str",
+					"c": "2016."
+				}
+			]
+		},
+		{
+			"t": "HorizontalRule",
+			"c": []
+		},
+		{
+			"t": "Para",
+			"c": [
 				{
 					"t": "Str",
-					"c": "Science,"
+					"c": "Science"
 				},
 				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "engineering,"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "design,"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "and"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "art"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "can"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "together"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "be"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "viewed"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "as"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "a"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "circle"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "where"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "the"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "output"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "of"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "one"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "is"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "the"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "input"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "of"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "another."
+					"t": "Note",
+					"c": [
+						{
+							"t": "Para",
+							"c": [
+								{
+									"t": "Str",
+									"c": "One"
+								},
+								{
+									"t": "Space"
+								},
+								{
+									"t": "Str",
+									"c": "challenge"
+								},
+								{
+									"t": "Space"
+								},
+								{
+									"t": "Str",
+									"c": "yolo."
+								}
+							]
+						}
+					]
 				}
 			]
 		},
@@ -165,266 +55,7 @@
 			"c": [
 				{
 					"t": "Str",
-					"c": "Cybernetics"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "spawned"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "many"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "exciting"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "new"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "disciplines"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "but,"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "as"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "a"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "field,"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "it"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "fragmented,"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "with"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "the"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "offspring"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "of"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "the"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "intellectual"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "leadership"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "ending"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "up"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "in"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "many"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "of"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "these"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "newly"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "established"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "fields."
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": ""
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "My"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "aim"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "is"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "to"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "develop"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "a"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "movement"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "agile,"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "engaging,"
+					"c": "Design"
 				},
 				{
 					"t": "Space"
@@ -438,126 +69,14 @@
 				},
 				{
 					"t": "Str",
-					"c": "antidisciplinary"
+					"c": "science"
 				},
 				{
 					"t": "Space"
 				},
 				{
 					"t": "Str",
-					"c": "enough"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "not"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "only"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "to"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "survive"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "but"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "to"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "thrive"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "on"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "its"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "own"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "even"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "as"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "new"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "disciplines"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "spin"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "off."
+					"c": "pls."
 				}
 			]
 		}
