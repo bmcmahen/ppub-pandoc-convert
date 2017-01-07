@@ -172,7 +172,7 @@ function buildPandocAST(){
 				//Adding support for footnotes
 				if (node.attrs.mode === "cite"){
 					newNode.t = "Note";
-					newNode.c[0] = { t: "Para", c: [createTextNodes(node.attrs.data.content.note)]}
+					newNode.c[0] = { t: "Para", c: createTextNodes(node.attrs.data.content.note)}
 				}
 
 				// footNotes.push(newNode) // Not sure this is necessary..
@@ -221,15 +221,7 @@ function buildPandocAST(){
 					var _newNode = {t: "Para", c: []}
 					currentPandocNodeParents.pop();
 					addNode (_newNode);
-					// parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
-					// blue("YEs now..parent is " + JSON.stringify(parent), true)
-					// parent.c.push(_newNode);
-
-					// currentPandocNodeParents.push(_newNode);
-
-					// parent = akcurrentPandocNodeParents[currentPandocNodeParents.length-1];
-					// parent.c.push(_newNode)
-					// parent.c.push(_newNode)
+					blue("OK NOW parent is " + JSON.stringify(parent), true)
 
 				}
 
