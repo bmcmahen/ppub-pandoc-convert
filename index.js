@@ -3,7 +3,7 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-var docJSON = require('./joi-extract2.json');
+var docJSON = require('./nested-list-extract.json');
 // var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
@@ -31,8 +31,6 @@ function buildPandocAST(){
 	cyan(JSON.stringify(docJSON));
 
 	function scanFragment(fragment) {
-
-		blue("doc pushing " + fragment.type)
 		currentDocJSONNodeParents.push(fragment);
 		if (fragment.content) {
 			fragment.content.forEach((child, offset) => scan(child));
@@ -126,8 +124,7 @@ function buildPandocAST(){
 					red("PARENT IS LIST ITEM")
 					newNode.t = "DoNotAddThisNode";
 					break;
-				}
-				if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === "Plain" && currentPandocNodeParents[currentPandocNodeParents.length-2].t === "Table"){
+				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === "Plain" && currentPandocNodeParents[currentPandocNodeParents.length-2].t === "Table"){
 					newNode.t = "DoNotAddThisNode";
 				} else {
 					// This is the proper way to handle Para -- one to one with docJSOn paragraph
@@ -163,6 +160,7 @@ function buildPandocAST(){
 				break;
 			case "table":
 				inTable = true;
+				// This doesn't work for nested tables.
 				col = -1;
 				row = -1;
 				newNode.t = "Table";
@@ -179,7 +177,6 @@ function buildPandocAST(){
 
 				break;
 			case "table_row":
-				// newNode.t = "Plain";
 				newNode.t = "DoNotAddThisNode";
 				row++;
 				col = -1;
@@ -189,10 +186,12 @@ function buildPandocAST(){
 				newNode.t = "Plain";
 				break;
 			case "embed":
-				//Adding support for footnotes
+				// Footnotes
 				if (node.attrs.mode === "cite"){
 					newNode.t = "Note";
 					newNode.c[0] = { t: "Para", c: createTextNodes(node.attrs.data.content.note)}
+				} else {
+					red("Unimplemented embed type")
 				}
 
 				break;
@@ -205,7 +204,7 @@ function buildPandocAST(){
 		// Wrap all images in a div block, PubPub doesn't do inline images
 		if (newNode.t === "Image"){
 			// red("divdiv")
-			// var div = {}; // Not sure any of this is correct, not sure how to compare to actual output
+			// var div = {};
 			// div.t = "Div";
 			// div.c = [];
 			// div.c[0] = ["", [], []]; // Attributes
@@ -214,6 +213,8 @@ function buildPandocAST(){
 
 		}
 
+		// If there are any node to add before the target node, like mark nodes,
+		// add them here
 		for (var i = 0; i < newerNodes.length; i++){
 			addNode(newerNodes[i]);
 		}
@@ -266,18 +267,16 @@ function buildPandocAST(){
 		// }
 		scanFragment(node)
 		// context = oldContext;
+		red("HEH YEP")
 
-		// This is NOT sufficient, I think. Blocks can be nested in blocks.
 		if (node.type === "paragraph" || node.type === "heading"
 		 || node.type === "horizontal_rule" || node.type === "blockquote"
 		 || node.type === "bullet_list" || node.type === "ordered_list"
 	 	 || node.type === "list_item" || node.type === "table"
 	 	 || node.type === "table_row" || node.type === "table_cell"
-	 	 || node.type === "block_embed" || node.type === "text" ){
-			 // Just moved text back into here..
-		 	red("doc: popping " + node.type)
+	 	 || node.type === "block_embed" || node.type === "text"
+	 	 || node.type ==="embed"){
 			currentDocJSONNodeParents.pop();
-			red("Now parent is " + currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type)
 		}
 		if (newNode.t === "Para" || newNode.t === "Plain"
 		  || newNode.t === "Header" || newNode.t === "Code"
@@ -286,11 +285,11 @@ function buildPandocAST(){
 			|| newNode.t === "Table" || newNode.t === "Image"
 			|| newNode.t === "Note" || newNode.t === "Link"){
 				// Link is for the case UL->[Link, Str]
-				// blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
-			currentPandocNodeParents.pop();
+				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
+				currentPandocNodeParents.pop();
 		} else if (inTable) {
 			if (newNode.t === "Plain"){
-				// blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
+				blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
 				currentPandocNodeParents.pop();
 			}
 		}
@@ -302,7 +301,7 @@ function buildPandocAST(){
 		}
 
 		while (markCount > 0){
-			// blue('Popping mark')
+			blue('Popping mark')
 			markCount--;
 			currentPandocNodeParents.pop();
 			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don"t think so
@@ -318,25 +317,29 @@ function buildPandocAST(){
 	finish();
 }
 
-function createTextNodes(words){
+/* Pandoc has a Str node for each word and space, this function converts
+ * strings to Pandocs format
+ */
+function createTextNodes(str){
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
 
 	var newNodes = [];
-	// words = words.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
-	words = words.split(" ")
-	console.log(words)
-	for (let i = 0; i < words.length; i++){
-		// if (words[i] == "") continue;
+	// str = str.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
+	str = str.split(" ")
+	console.log(str)
+	for (let i = 0; i < str.length; i++){
+		// if (str[i] == "") continue;
 
-		newNodes.push({t: "Str", c: words[i]})
-		if (i < words.length - 1){
+		newNodes.push({t: "Str", c: str[i]})
+		if (i < str.length - 1){
 			newNodes.push({t: "Space"})
 		}
 	}
 	return newNodes;
 }
 
+// Link a node to a parent node, or make it a parent
 function addNode(newNode){
 	if (newNode.t === "DoNotAddThisNode"){
 		return;
@@ -344,7 +347,6 @@ function addNode(newNode){
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
 	if (parent){
-
 		if (parent.t === "Table"){
 			console.log("Yeah parent is table")
 			console.log(`pushing to ${row}, ${col}`)
@@ -425,7 +427,7 @@ function addNode(newNode){
 					currentPandocNodeParents.push(newNode)
 				}
 			} else if (parent.t === "Note"){
-				// blue("pushing Note : D")
+				blue("pushing Note : D")
 				currentPandocNodeParents.push(newNode)
 			}
 		} else if (parent.t === "Div") {
