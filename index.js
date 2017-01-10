@@ -71,6 +71,15 @@ function buildPandocAST(){
 							newerNode.c = [];
 							newerNodes.push(newerNode)
 							markCount++;
+						} else if (node.marks[i]._ === "em"){
+							// the ._ is weird, but in this pub: https://www.pubpub.org/pub/joichi-itos-research-statement---march-2016
+							// the Salon des Refuses uses _ instead of type
+							newerNode = {};
+							newerNode.t = "Emph";
+							newerNode.c = [];
+							newerNodes.push(newerNode)
+							markCount++;
+
 						} else if (node.marks[i].type === "strong"){
 							newerNode = {};
 							newerNode.t = "Strong";
@@ -326,9 +335,6 @@ function addNode(newNode){
 	}
 	var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
-
-
-
 	if (parent){
 
 		if (parent.t === "Table"){
@@ -383,13 +389,18 @@ function addNode(newNode){
 
 			parent.c.push(newNode)
 			if (parent.t !== "Para" && parent.t !== "Plain"){
-				green(`pushing ${JSON.stringify(newNode)}`)
-				currentPandocNodeParents.push(newNode)
+				if (newNode.t === "Str" || newNode.t === "Space"){
+					// These are leaf nodes, and don't need to be pushed.
+					// There may be other types of leaf nodes..
+				} else {
+					green(`pushing a ${JSON.stringify(newNode)}`)
+					currentPandocNodeParents.push(newNode)
+				}
 			} else if ((parent.t === "Plain" ) && inTable){
-				green(`pushing ${JSON.stringify(newNode)}`)
+				green(`pushing2: ${JSON.stringify(newNode)}`)
 				currentPandocNodeParents.push(newNode)
 			} else if (parent.t === "Emph" || parent.t === "Strong" ){
-				green(`pushing ${JSON.stringify(newNode)}`)
+				green(`pushing3: ${JSON.stringify(newNode)}`)
 				red("Herp derp")
 
 				currentPandocNodeParents.push(newNode)
