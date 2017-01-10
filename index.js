@@ -235,10 +235,14 @@ function buildPandocAST(){
 					// Close the parent Paragraph node and open a new one.
 					// Because this will create a newline, and is how Pandoc does it
 					// Not doing it for plain, because of an edge case when its in OL->[Link, Str]
+
+					// Okay this is breaking a period after an emphasis, or whenevr there is
+					// [Text, Text with marks, Text], because it puts a newline after text with marks
+
 					blue("YEs HERE, parent is " + JSON.stringify(parent), true)
-					var _newNode = {t: "Para", c: []}
-					currentPandocNodeParents.pop();
-					addNode (_newNode);
+					// var _newNode = {t: "Para", c: []}
+					// currentPandocNodeParents.pop();
+					// addNode (_newNode);
 					blue("OK NOW parent is " + JSON.stringify(parent), true)
 
 				}
