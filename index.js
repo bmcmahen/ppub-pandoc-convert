@@ -3,7 +3,7 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-var docJSON = require('./joi-extract.json');
+var docJSON = require('./joi-extract2.json');
 // var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
@@ -32,6 +32,7 @@ function buildPandocAST(){
 
 	function scanFragment(fragment) {
 
+		blue("doc pushing " + fragment.type)
 		currentDocJSONNodeParents.push(fragment);
 		if (fragment.content) {
 			fragment.content.forEach((child, offset) => scan(child));
@@ -122,6 +123,7 @@ function buildPandocAST(){
 			case "paragraph":
 				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
+					red("PARENT IS LIST ITEM")
 					newNode.t = "DoNotAddThisNode";
 					break;
 				}
@@ -231,7 +233,7 @@ function buildPandocAST(){
 				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
 				yellow(`PARENT: ${JSON.stringify(parent)}`)
-				if (parent.c[0] && parent.t === "Para"){
+				if (parent && parent.c[0] && parent.t === "Para"){
 					// Close the parent Paragraph node and open a new one.
 					// Because this will create a newline, and is how Pandoc does it
 					// Not doing it for plain, because of an edge case when its in OL->[Link, Str]
@@ -239,11 +241,11 @@ function buildPandocAST(){
 					// Okay this is breaking a period after an emphasis, or whenevr there is
 					// [Text, Text with marks, Text], because it puts a newline after text with marks
 
-					blue("YEs HERE, parent is " + JSON.stringify(parent), true)
+					// blue("YEs HERE, parent is " + JSON.stringify(parent), true)
 					// var _newNode = {t: "Para", c: []}
 					// currentPandocNodeParents.pop();
 					// addNode (_newNode);
-					blue("OK NOW parent is " + JSON.stringify(parent), true)
+					// blue("OK NOW parent is " + JSON.stringify(parent), true)
 
 				}
 
@@ -271,33 +273,36 @@ function buildPandocAST(){
 		 || node.type === "bullet_list" || node.type === "ordered_list"
 	 	 || node.type === "list_item" || node.type === "table"
 	 	 || node.type === "table_row" || node.type === "table_cell"
-	 	 || node.type === "block_embed"){
-		 // may want to move 	|| node.type === "text"  back into here
+	 	 || node.type === "block_embed" || node.type === "text" ){
+			 // Just moved text back into here..
+		 	red("doc: popping " + node.type)
 			currentDocJSONNodeParents.pop();
+			red("Now parent is " + currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type)
 		}
-		if (newNode.t === "Para" || newNode.t === "Plain" || newNode.t === "Header"
+		if (newNode.t === "Para" || newNode.t === "Plain"
+		  || newNode.t === "Header" || newNode.t === "Code"
 			|| newNode.t === "HorizontalRule" || newNode.t === "Blockquote"
 			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
 			|| newNode.t === "Table" || newNode.t === "Image"
-			|| newNode.t === "Note" || newNode.t === "Link" || newNode.t === "Code"){
+			|| newNode.t === "Note" || newNode.t === "Link"){
 				// Link is for the case UL->[Link, Str]
-				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
+				// blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
 			currentPandocNodeParents.pop();
 		} else if (inTable) {
 			if (newNode.t === "Plain"){
-				blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
+				// blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
 				currentPandocNodeParents.pop();
 			}
 		}
 		if (node.type === "text"){ // Text creates a STR node in addition to newNode
 			if (!isCode){ // Ehh.. Not 100% sure about this
-				blue(`Popping 3 - (text/Str)`)
+				// blue(`Popping 3 - (text/Str)`)
 				// currentPandocNodeParents.pop();
 			}
 		}
 
 		while (markCount > 0){
-			blue('Popping mark')
+			// blue('Popping mark')
 			markCount--;
 			currentPandocNodeParents.pop();
 			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don"t think so
@@ -320,8 +325,7 @@ function createTextNodes(words){
 	var newNodes = [];
 	// words = words.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
 	words = words.split(" ")
-
-	console.log(parent.c.length, words)
+	console.log(words)
 	for (let i = 0; i < words.length; i++){
 		// if (words[i] == "") continue;
 
@@ -382,12 +386,12 @@ function addNode(newNode){
 			// parent.c[0] = [];
 			// parent.c[0] = [];
 			parent.c.push([newNode])
-			green(`pushing ${JSON.stringify(newNode)}`)
+			green(`pushing5 ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 
 		} else if (parent.t === "OrderedList"){
 			parent.c[1].push([newNode])
-			green(`pushing ${JSON.stringify(newNode)}`)
+			green(`pushing6 ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode) // Ahh may be buggy
 		} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
 
@@ -421,7 +425,7 @@ function addNode(newNode){
 					currentPandocNodeParents.push(newNode)
 				}
 			} else if (parent.t === "Note"){
-				blue("pushing Note : D")
+				// blue("pushing Note : D")
 				currentPandocNodeParents.push(newNode)
 			}
 		} else if (parent.t === "Div") {
@@ -432,7 +436,7 @@ function addNode(newNode){
 		}
 	}
 	else {
-		green(`pushing ${JSON.stringify(newNode)}`);
+		green(`pushing10 ${JSON.stringify(newNode)}`);
 		currentPandocNodeParents.push(newNode);
 		blocks.push(newNode);
 	}
