@@ -6,33 +6,28 @@ var expect = chai.expect;    // Using Expect style
 describe('Convert docJSON to PandocAST', function() {
   describe(', successful to: ', function() {
     it('simple bold', (done) => {
-      convert('test/bold.json').then( (result) => {
+      convert('test/bold.json').then((result) => {
         expect(result).to.equal(true);
-        done();
       }).then(done, done);
     })
-    it('simple italic', function() {
-      convert('test/italic.json').then( (result) => {
+    it('simple italic', (done) => {
+      convert('test/italic.json').then((result) => {
         expect(result).to.equal(true);
-        done();
       }).then(done, done);
     });
-    it('simple bold-italic', function() {
-      convert('test/bold-italic.json').then( (result) => {
+    it('simple bold-italic', (done) => {
+      convert('test/bold-italic.json').then((result) => {
         expect(result).to.equal(true);
-        done();
       }).then(done, done);
     });
-    it('simple heading one', function() {
-      convert('test/heading-one.json').then( (result) => {
+    it('simple heading one', (done) => {
+      convert('test/heading-one.json').then((result) => {
         expect(result).to.equal(true);
-        done();
       }).then(done, done);
     });
-    it('simple strikethrough', function() {
-      convert('test/strikethrough.json').then( (result) => {
+    it('simple strikethrough', (done) => {
+      convert('test/strikethrough.json').then((result) => {
         expect(result).to.equal(true);
-        done();
       }).then(done, done);
     });
   });
