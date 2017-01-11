@@ -3,10 +3,6 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-var docJSON = require('./nested-list-extract.json');
-docJSON = require('./md.json');
-
-// var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -14,9 +10,6 @@ var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 
 var fs = require('fs');
 
-// var docJSON = require('./md.json');
-// var markdown = fs.readFileSync('pandocAST.md').toString();
-// var docJSON = defaultMarkdownParser.parse(markdown).toJSON();
 var pandocJSON = {};
 
 var inTable = false;
@@ -28,8 +21,13 @@ var row; // used when within a table, to keep track of current pandoc row
  *********** **** **** **** **** **** **************************
  *************  ***  ***  ***  ***  ****************************/
 
-function buildPandocAST(){
+function buildPandocAST(fl) {
 	cyan(`Traversing docJSON`, true);
+	if (!fl) {
+		throw new Error('Specify a file')
+	}
+	var docJSON = require(`./${fl}`);
+
 	cyan(JSON.stringify(docJSON));
 
 	function scanFragment(fragment) {
@@ -340,7 +338,7 @@ function buildPandocAST(){
 	}
 	scanFragment(docJSON, 0)
 
-	finish();
+	finish(fl);
 }
 
 /* Pandoc has a Str node for each word and space, this function converts
@@ -475,7 +473,7 @@ function addNode(newNode){
  *********************************************************************
  *********************************************************************/
 
-function finish(){
+function finish(fl){
 	pandocJSON.blocks = blocks;
 	pandocJSON["pandoc-api-version"] = [
 		1,
@@ -484,22 +482,20 @@ function finish(){
 		4
 	];
 	pandocJSON.meta = {};
+	var newFile = fl.split(".")[0] + "-converted.json";
 
-	return write("pandocAST-Attempt.json", JSON.stringify(pandocJSON, null, "\t"))
+	return write(newFile, JSON.stringify(pandocJSON, null, "\t"))
 	.then(function(fn){
-		console.log("written")
+		console.log("written to " + fn)
 		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t markdown-simple_tables+pipe_tables --atx-headers -o pandocAST-Converted.md`);
 	})
 	.then(function(idk){
 		console.log(`done converting`)
 	})
 	.catch((error)=>{
-		console.log(`error: ${error}`)
+		console.log(`${error}`)
 	})
 }
-
-
-buildPandocAST();
 
 /*** Debugging    utility functions ****************** * * * * *
  *** *******    ************************************** * * * * *
@@ -554,3 +550,5 @@ function white(words, heading){
 	}
 	console.log(colors.white(words) +"\n");
 }
+
+module.exports = buildPandocAST;
