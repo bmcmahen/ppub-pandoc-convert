@@ -71,15 +71,6 @@ function buildPandocAST(fl) {
 							newerNode.c = [];
 							newerNodes.push(newerNode)
 							markCount++;
-						} else if (node.marks[i]._ === "em"){
-							// the ._ is weird, but in this pub: https://www.pubpub.org/pub/joichi-itos-research-statement---march-2016
-							// the Salon des Refuses uses _ instead of type
-							newerNode = {};
-							newerNode.t = "Emph";
-							newerNode.c = [];
-							newerNodes.push(newerNode)
-							markCount++;
-
 						} else if (node.marks[i].type === "strong"){
 							newerNode = {};
 							newerNode.t = "Strong";
@@ -92,22 +83,15 @@ function buildPandocAST(fl) {
 							newerNode.c = [["",[],[ ]], [], [node.content.text, node.marks[i].attrs.title || "" ]];
 							newerNodes.push(newerNode)
 							markCount++;
-						} else if (node.marks[i]._ === "link"){
-							// the ._ is weird, but in this pub: https://www.pubpub.org/pub/joichi-itos-research-statement---march-2016
-							// the link within the ordered list a the bottom isn't under type..
-
-							newerNode = {};
-							newerNode.t = "Link";
-							newerNode.c = [["",[],[ ]], [/*Should get populated in addNode*/], [node.marks[i].href, node.marks[i].title || "" ]];
-							newerNodes.push(newerNode)
-							markCount++;
-
 						} else if (node.marks[i].type === "code"){
 							newerNode = {};
 							newerNode.t = "Code";
 							newerNode.c = [["",[],[ ]], node.text];
 							newerNodes.push(newerNode)
 							markCount++;
+						} else if (node.marks[i].type === "strike"){
+							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
+							newNode.t = "Strikeout";
 						}
 					}
 				}
@@ -208,16 +192,44 @@ function buildPandocAST(fl) {
 
 				break;
 			case "citations":
-				// Footers. This is untested and copy pasted.
-				red("Hit a citation. Unimplemented..", true)
-				newNode.t = "Note";
-				var content;
-				console.log(JSON.stringify(node))
+				//Crete a Para parent
+				// newNode.t = "Para";
+				// var childNode = {};
+				// newNode.c[0] = childNode;
+				// childNode.t = "Cite";
+				// childNode.c =[{
+				// 	{
+				// 		 citationSuffix:[
 				//
-				// if (node.content[0].attrs.caption)
-				// 	content = createTextNodes(node.attrs.caption);
-				// }
-				newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
+				// 		 ],
+				// 		 citationNoteNum:0,
+				// 		 citationMode:{
+				// 				t:"AuthorInText"
+				// 		 },
+				// 		 citationPrefix:[
+				//
+				// 		 ],
+				// 		 citationId:"Book",
+				// 		 citationHash:0
+				// 	}
+				// }, [
+				// 	{
+				// 		t: "Str",
+				// 		c: "@Book" //May not necessarily be book
+				// 	}
+				// ]]
+
+
+				// Footers stuf fis copy pasted below. This is untested and copy pasted.
+				// red("Hit a citation. Unimplemented..", true)
+				// newNode.t = "Note";
+				// var content;
+				// console.log(JSON.stringify(node))
+				// //
+				// // if (node.content[0].attrs.caption)
+				// // 	content = createTextNodes(node.attrs.caption);
+				// // }
+				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
@@ -244,7 +256,11 @@ function buildPandocAST(fl) {
 			addNode(newerNodes[i]);
 		}
 
-		if (node.type === "text") {  // should this be or plain? o:
+		if (newNode.t === "Strikeout") {
+			// Strikeout is handled differently than other text nodes
+			newNode.c = createTextNodes(node.text);
+			addNode(newNode);
+		} else if (node.type === "text" ) {  // should this be or plain? o:
 			var isCode = false;
 			if (node.marks){
 				for (var i = 0; i < node.marks.length; i++){
@@ -401,7 +417,7 @@ function addNode(newNode){
 			}
 			green(`pushing ${JSON.stringify(newNode)}`)
 			currentPandocNodeParents.push(newNode)
-		} else if (parent.t === "Link" || parent.t === "Code"){
+		} else if (parent.t === "Link" || parent.t === "Code" || parent.t === "Strikeout"){
 			parent.c[1].push(newNode);
 			green(`SWEH: pushing ${JSON.stringify(newNode)}`)
 			if (newNode.t === "Str" || newNode.t === "Space"){
@@ -483,12 +499,13 @@ function finish(fl){
 		4
 	];
 	pandocJSON.meta = {};
-	var newFile = fl.split(".")[0] + "-converted.json";
+	var newFile = fl.split(".")[0] + "-pandoc.json";
+	var mdFile = fl.split(".")[0] + "-converted.md";
 
 	return write(newFile, JSON.stringify(pandocJSON, null, "\t"))
 	.then(function(fn){
 		console.log("written to " + fn)
-		return execPromise(`pandoc -f JSON pandocAST-Attempt.json -t markdown-simple_tables+pipe_tables --atx-headers -o pandocAST-Converted.md`);
+		return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${mdFile}`);
 	})
 	.then(function(idk){
 		console.log(`done converting`)
