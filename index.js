@@ -473,8 +473,17 @@ function buildPandocAST(fl) {
 			4
 		];
 		pandocJSON.meta = {};
-		var newFile = fl.split(".")[0] + "-pandoc.json";
-		var mdFile = fl.split(".")[0] + "-converted.md";
+		var newFile;
+		var mdFile;
+
+		if (fl.search('test/') !== -1){
+			newFile = fl.split(".")[0].replace('test/','test/pandoc/') + ".json";
+			mdFile = fl.split(".")[0].replace('test/', 'test/md/') + ".md";
+		} else {
+			var newFile = fl.split(".")[0] + "-pandoc.json";
+			var mdFile = fl.split(".")[0] + "-converted.md";
+
+		}
 
 		return write(newFile, JSON.stringify(pandocJSON, null, "\t"))
 		.then(function(fn){

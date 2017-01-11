@@ -1,7 +1,11 @@
 # ProseMirror to Pandoc Converter
 
-Convert from ProseMirrors format (docJSON) to Pandocs format (JSON)
+Convert from PuPubs ProseMirror format (docJSON) to Pandocs format (JSON)
 
 ---
 
-* Codeblocks not yet supported
+### Test
+
+`npm test`
+
+
