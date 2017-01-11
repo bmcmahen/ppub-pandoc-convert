@@ -23,9 +23,10 @@ var row; // used when within a table, to keep track of current pandoc row
 
 function buildPandocAST(fl) {
 	cyan(`Traversing docJSON`, true);
-	if (!fl) {
-		throw new Error('Specify a file')
+	if (!fl){
+		throw new Error("Needs an input file")
 	}
+
 	var docJSON = require(`./${fl}`);
 
 	cyan(JSON.stringify(docJSON));
@@ -551,4 +552,8 @@ function white(words, heading){
 	console.log(colors.white(words) +"\n");
 }
 
-module.exports = buildPandocAST;
+if (process.argv[2]){
+	buildPandocAST(process.argv[2]);
+} else {
+	module.exports = buildPandocAST;
+}
