@@ -35,6 +35,17 @@ describe('Convert docJSON to PandocAST', function() {
         expect(result).to.equal(true);
       }).then(done, done);
     });
+
+    it('simple code', (done) => {
+      convert('test/code.json').then((result) => {
+        expect(result).to.equal(true);
+      }).then(done, done);
+    });
+    it('text before first word', (done) => {
+      convert('test/text-before-paragraph.json').then((result) => {
+        expect(result).to.equal(true);
+      }).then(done, done);
+    });
     it('simple table', (done) => {
       convert('test/table.json').then((result) => {
         expect(result).to.equal(true);
