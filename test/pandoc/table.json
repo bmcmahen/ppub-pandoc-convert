@@ -1,0 +1,101 @@
+{
+	"blocks": [
+		{
+			"t": "Para",
+			"c": [
+				{
+					"t": "Str",
+					"c": ""
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": ""
+				}
+			]
+		},
+		{
+			"t": "Table",
+			"c": [
+				[],
+				[
+					{
+						"t": "AlignDefault"
+					},
+					{
+						"t": "AlignDefault"
+					}
+				],
+				[
+					0,
+					0
+				],
+				[
+					[
+						{
+							"t": "Plain",
+							"c": [
+								{
+									"t": "Str",
+									"c": "simple"
+								},
+								{
+									"t": "Plain",
+									"c": [
+										{
+											"t": "Para",
+											"c": [
+												{
+													"t": "Str",
+													"c": "table"
+												}
+											]
+										}
+									]
+								},
+								{
+									"t": "Plain",
+									"c": [
+										{
+											"t": "Para",
+											"c": [
+												{
+													"t": "Str",
+													"c": "example"
+												}
+											]
+										}
+									]
+								},
+								{
+									"t": "Plain",
+									"c": [
+										{
+											"t": "Para",
+											"c": [
+												{
+													"t": "Str",
+													"c": "okpls"
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				],
+				[]
+			]
+		}
+	],
+	"pandoc-api-version": [
+		1,
+		17,
+		0,
+		4
+	],
+	"meta": {}
+}
