@@ -97,19 +97,19 @@ function buildPandocAST(fl) {
 				}
 
 				break;
-			case "image":
-				newNode.t = "Image";
-				newNode.c[0] = ["",[],[]];
-				// if has width & height
-				if (newNode.attrs.size) { // Images in the newer editor use embe not image
-					var widthHeightPercentage = "" + newNode.attrs.size;
-					newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
-
-				}
-
-				newNode.c[1] = node.attrs.alt ? createTextNodes(node.attrs.alt) : [];
-				newNode.c[2] = [node.attrs.src, ""];
-				break;
+			// case "image":
+			// 	newNode.t = "Image";
+			// 	newNode.c[0] = ["",[],[]];
+			// 	// if has width & height
+			// 	if (newNode.attrs.size) { // Images in the newer editor use embe not image
+			// 		var widthHeightPercentage = "" + newNode.attrs.size;
+			// 		newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
+			//
+			// 	}
+			//
+			// 	newNode.c[1] = node.attrs.alt ? createTextNodes(node.attrs.alt) : [];
+			// 	newNode.c[2] = [node.attrs.src, ""];
+			// 	break;
 			case "paragraph":
 				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
@@ -181,8 +181,8 @@ function buildPandocAST(fl) {
 					newNode.t = "Image";
 					newNode.c[0] = ["",[],[]];
 					// if has width & height
-					if (newNode.attrs && newNode.attrs.size) { // Images in the newer editor use embe not image
-						var widthHeightPercentage = "" + newNode.attrs.size;
+					if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
+						var widthHeightPercentage = "" + node.attrs.size;
 						newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
 					}
 					newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];

@@ -30,6 +30,11 @@ describe('Convert docJSON to PandocAST', function() {
         expect(result).to.equal(true);
       }).then(done, done);
     });
+    it('simple image', (done) => {
+      convert('test/image.json').then((result) => {
+        expect(result).to.equal(true);
+      }).then(done, done);
+    });
   });
   // describe(', failure to: ', function() {
   //   it('simple bold', (done) => {
