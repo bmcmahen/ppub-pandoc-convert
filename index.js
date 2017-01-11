@@ -204,18 +204,21 @@ function buildPandocAST(){
 
 					}
 
-					newNode.c[1] = node.attrs.alt ? createTextNodes(node.attrs.alt) : [];
-					newNode.c[2] = [node.attrs.src, ""];
-
-				// } else {
-				// 	red("Unimplemented embed type")
-				// }
+					newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];
+					newNode.c[2] = [node.attrs.url, node.attrs.figureName || ""];
 
 				break;
 			case "citations":
 				// Footers. This is untested and copy pasted.
+				red("Hit a citation. Unimplemented..", true)
 				newNode.t = "Note";
-				newNode.c[0] = { t: "Para", c: createTextNodes(node.attrs.data.content.note)}
+				var content;
+				console.log(JSON.stringify(node))
+				//
+				// if (node.content[0].attrs.caption)
+				// 	content = createTextNodes(node.attrs.caption);
+				// }
+				newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
@@ -223,16 +226,17 @@ function buildPandocAST(){
 				break;
 		}
 
-		// Wrap all images in a div block, PubPub doesn't do inline images
+		// Wrap all images in a para block, because Pandoc seems to do this,
+		// at least in does it in files where there is just an image. It'll break if you don't
 		if (newNode.t === "Image"){
 			// red("divdiv")
-			// var div = {};
-			// div.t = "Div";
-			// div.c = [];
-			// div.c[0] = ["", [], []]; // Attributes
-			// div.c[1] = []; // Contents
-			// newerNodes.push(div);
-
+			var para = {};
+			para.t = "Para";
+			para.c = [];
+			// para.c[0] = ["", [], []]; // Attributes
+			// para.c[1] = []; // Contents
+			newerNodes.push(para);
+			markCount++;
 		}
 
 		// If there are any node to add before the target node, like mark nodes,
