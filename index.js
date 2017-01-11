@@ -4,6 +4,8 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 var docJSON = require('./nested-list-extract.json');
+docJSON = require('./md.json');
+
 // var markdown = "`inline code goes here`";
 
 var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
@@ -193,14 +195,27 @@ function buildPandocAST(){
 				newNode.t = "Plain";
 				break;
 			case "embed":
-				// Footnotes
-				if (node.attrs.mode === "cite"){
-					newNode.t = "Note";
-					newNode.c[0] = { t: "Para", c: createTextNodes(node.attrs.data.content.note)}
-				} else {
-					red("Unimplemented embed type")
-				}
+					newNode.t = "Image";
+					newNode.c[0] = ["",[],[]];
+					// if has width & height
+					if (newNode.attrs && newNode.attrs.size) { // Images in the newer editor use embe not image
+						var widthHeightPercentage = "" + newNode.attrs.size;
+						newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
 
+					}
+
+					newNode.c[1] = node.attrs.alt ? createTextNodes(node.attrs.alt) : [];
+					newNode.c[2] = [node.attrs.src, ""];
+
+				// } else {
+				// 	red("Unimplemented embed type")
+				// }
+
+				break;
+			case "citations":
+				// Footers. This is untested and copy pasted.
+				newNode.t = "Note";
+				newNode.c[0] = { t: "Para", c: createTextNodes(node.attrs.data.content.note)}
 				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
