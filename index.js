@@ -192,6 +192,8 @@ function buildPandocAST(fl) {
 
 				break;
 			case "citations":
+				newNode.t = "DoNotAddThisNode";
+
 				//Crete a Para parent
 				// newNode.t = "Para";
 				// var childNode = {};
