@@ -1,1 +1,1 @@
-
+~~strikethrough text~~

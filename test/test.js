@@ -15,8 +15,8 @@ describe('Convert docJSON to PandocAST', function() {
         expect(result).to.equal(true);
       }).then(done, done);
     });
-    it('simple bold-italic', (done) => {
-      convert('test/bold-italic.json').then((result) => {
+    it('simple bold and italic', (done) => {
+      convert('test/bold-and-italic.json').then((result) => {
         expect(result).to.equal(true);
       }).then(done, done);
     });

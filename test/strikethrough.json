@@ -1,34 +1,22 @@
 {
-   "blocks":[
+   "type":"doc",
+   "content":[
       {
-         "t":"Para",
-         "c":[
+         "type":"paragraph",
+         "content":[
             {
-               "t":"Strikeout",
-               "c":[
+               "type":"text",
+               "marks":[
                   {
-                     "t":"Str",
-                     "c":"Strikethrough"
-                  },
-                  {
-                     "t":"Space"
-                  },
-                  {
-                     "t":"Str",
-                     "c":"this"
+                     "type":"strike"
                   }
-               ]
+               ],
+               "text":"strikethrough text"
             }
          ]
+      },
+      {
+         "type":"citations"
       }
-   ],
-   "pandoc-api-version":[
-      1,
-      17,
-      0,
-      4
-   ],
-   "meta":{
-
-   }
+   ]
 }
