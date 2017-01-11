@@ -1,0 +1,34 @@
+{
+   "blocks":[
+      {
+         "t":"Para",
+         "c":[
+            {
+               "t":"Strikeout",
+               "c":[
+                  {
+                     "t":"Str",
+                     "c":"Strikethrough"
+                  },
+                  {
+                     "t":"Space"
+                  },
+                  {
+                     "t":"Str",
+                     "c":"this"
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+   "pandoc-api-version":[
+      1,
+      17,
+      0,
+      4
+   ],
+   "meta":{
+
+   }
+}

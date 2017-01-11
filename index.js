@@ -4,7 +4,6 @@ var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
 
-
 var fs = require('fs');
 
 
@@ -460,16 +459,48 @@ function buildPandocAST(fl) {
 		}
 	}
 
+	/* Write the file, and convert it back to make sure it was successful :D
+	 *********************************************************************
+	 *********************************************************************/
+
+	function finish(fl) {
+		console.log("returning finish")
+		pandocJSON.blocks = blocks;
+		pandocJSON["pandoc-api-version"] = [
+			1,
+			17,
+			0,
+			4
+		];
+		pandocJSON.meta = {};
+		var newFile = fl.split(".")[0] + "-pandoc.json";
+		var mdFile = fl.split(".")[0] + "-converted.md";
+
+		return write(newFile, JSON.stringify(pandocJSON, null, "\t"))
+		.then(function(fn){
+			console.log("written to " + fn)
+			return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${mdFile}`);
+		})
+		.then(function(idk){
+			console.log(`done converting`)
+			return true;
+		})
+		.catch((error)=>{
+			// MAYBE this should throw an error instead of returning
+			console.log(`${error}`);
+			return false;
+		})
+	}
+
 	scanFragment(docJSON, 0)
 
-	return finish(fl, blocks, pandocJSON);
+	return finish(fl);
 }
 
 /* Pandoc has a Str node for each word and space, this function converts
  * strings to Pandocs format
  */
 function createTextNodes(str){
-
 
 	var newNodes = [];
 	// str = str.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
@@ -487,40 +518,6 @@ function createTextNodes(str){
 }
 
 
-
-
-/* Write the file, and convert it back to make sure it was successful :D
- *********************************************************************
- *********************************************************************/
-
-function finish(fl, blocks, pandocJSON){
-	console.log("returning finish")
-	pandocJSON.blocks = blocks;
-	pandocJSON["pandoc-api-version"] = [
-		1,
-		17,
-		0,
-		4
-	];
-	pandocJSON.meta = {};
-	var newFile = fl.split(".")[0] + "-pandoc.json";
-	var mdFile = fl.split(".")[0] + "-converted.md";
-
-	return write(newFile, JSON.stringify(pandocJSON, null, "\t"))
-	.then(function(fn){
-		console.log("written to " + fn)
-		return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${mdFile}`);
-	})
-	.then(function(idk){
-		console.log(`done converting`)
-		return true;
-	})
-	.catch((error)=>{
-		// MAYBE this should throw an error instead of returning
-		console.log(`${error}`);
-		return false;
-	})
-}
 
 /*** Debugging    utility functions ****************** * * * * *
  *** *******    ************************************** * * * * *

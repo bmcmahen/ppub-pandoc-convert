@@ -6,17 +6,18 @@
          "content":[
             {
                "type":"text",
+               "text":" "
+            },
+            {
+               "type":"text",
                "marks":[
                   {
-                     "type":"em"
+                     "type":"sup"
                   }
                ],
-               "text":" Simple italic example"
+               "text":"superscript"
             }
          ]
-      },
-      {
-         "type":"citations"
       }
    ]
 }
