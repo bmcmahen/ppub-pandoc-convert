@@ -480,9 +480,8 @@ function buildPandocAST(fl) {
 			newFile = fl.split(".")[0].replace('test/','test/pandoc/') + ".json";
 			mdFile = fl.split(".")[0].replace('test/', 'test/md/') + ".md";
 		} else {
-			var newFile = fl.split(".")[0] + "-pandoc.json";
-			var mdFile = fl.split(".")[0] + "-converted.md";
-
+			newFile = fl.split(".")[0] + "-pandoc.json";
+			mdFile = fl.split(".")[0] + "-converted.md";
 		}
 
 		return write(newFile, JSON.stringify(pandocJSON, null, "\t"))
