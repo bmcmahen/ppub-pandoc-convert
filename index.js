@@ -125,10 +125,10 @@ function buildPandocAST(fl) {
 				newNode.t = 'OrderedList';
 				newNode.c[0] = [ // Not super sure this conversion is right
 					1, {
-						't': 'DefaultStyle'
+						t: 'DefaultStyle'
 					},
 					{
-						't': 'Period'
+						t: 'Period'
 					}
 				]
 				newNode.c[1] = [];
@@ -148,8 +148,8 @@ function buildPandocAST(fl) {
 				newNode.c[3] = []; // Column Titles
 				newNode.c[4] = []; // Column content
 				var columns = node.attrs.columns;
-				for (let i = 0; i < columns; i++){
-					newNode.c[1].push({t: 'AlignDefault'});
+				for (let i = 0; i < columns; i++) {
+					newNode.c[1].push({ t: 'AlignDefault' });
 					newNode.c[2].push(0);
 				}
 
@@ -165,14 +165,14 @@ function buildPandocAST(fl) {
 				break;
 			case 'embed':
 				newNode.t = 'Image';
-				newNode.c[0] = ["",[],[]];
+				newNode.c[0] = ['',[],[]];
 				// if has width & height
 				if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
-					var widthHeightPercentage = "" + node.attrs.size;
-					newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
+					var widthHeightPercentage = '' + node.attrs.size;
+					newNode.c[0][2]=[['width', widthHeightPercentage], ['height', widthHeightPercentage]]
 				}
 				newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];
-				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ""];
+				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
 
 				break;
 			case 'citations':
@@ -248,14 +248,14 @@ function buildPandocAST(fl) {
 			addNode(newNode);
 		} else if (node.type === 'text') {  // should this be or plain? o:
 			var isCode = false;
-			if (node.marks){
+			if (node.marks) {
 				for (var i = 0; i < node.marks.length; i++) {
 					if (node.marks[i].type === 'code') {
 						isCode = true;
 					}
 				}
 			}
-			if (isCode){
+			if (isCode) {
 
 			} else {
 				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
@@ -292,9 +292,8 @@ function buildPandocAST(fl) {
 		// 	context.column = columns++;
 		// 	context.row = rows++;
 		// }
-		scanFragment(node)
+		scanFragment(node);
 		// context = oldContext;
-		red("HEH YEP")
 
 		if (node.type === 'paragraph' || node.type === 'heading'
 		|| node.type === 'horizontal_rule' || node.type === 'blockquote'
@@ -302,7 +301,7 @@ function buildPandocAST(fl) {
 		|| node.type === 'list_item' || node.type === 'table'
 		|| node.type === 'table_row' || node.type === 'table_cell'
 		|| node.type === 'block_embed' || node.type === 'text'
-		|| node.type ==='embed') {
+		|| node.type === 'embed') {
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === 'Para' || newNode.t === 'Plain'
@@ -398,34 +397,34 @@ function buildPandocAST(fl) {
 				// parent.c[0] = [];
 				parent.c.push([newNode])
 				green(`pushing5 ${JSON.stringify(newNode)}`)
-				currentPandocNodeParents.push(newNode) // Ahh may be buggy
+				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 
-			} else if (parent.t === "OrderedList"){
-				parent.c[1].push([newNode])
-				green(`pushing6 ${JSON.stringify(newNode)}`)
-				currentPandocNodeParents.push(newNode) // Ahh may be buggy
-			} else if (parent.t === "BlockQuote" || parent.t === "Para" || parent.t === "Emph" || parent.t === "Strong" || parent.t === "Plain"){
+			} else if (parent.t === 'OrderedList'){
+				parent.c[1].push([newNode]);
+				green(`pushing6 ${JSON.stringify(newNode)}`);
+				currentPandocNodeParents.push(newNode); // Ahh may be buggy
+			} else if (parent.t === 'BlockQuote' || parent.t === 'Para' || parent.t === 'Emph' || parent.t === 'Strong' || parent.t === 'Plain') {
 
-				parent.c.push(newNode)
-				if (parent.t !== "Para" && parent.t !== "Plain"){
-					if (newNode.t === "Str" || newNode.t === "Space"){
+				parent.c.push(newNode);
+				if (parent.t !== 'Para' && parent.t !== 'Plain') {
+					if (newNode.t === 'Str' || newNode.t === 'Space') {
 						// These are leaf nodes, and don't need to be pushed.
 						// There may be other types of leaf nodes..
 					} else {
-						green(`pushing a ${JSON.stringify(newNode)}`)
-						currentPandocNodeParents.push(newNode)
+						green(`pushing a ${JSON.stringify(newNode)}`);
+						currentPandocNodeParents.push(newNode);
 					}
-				} else if ((parent.t === "Plain" ) && inTable){
-					green(`pushing2: ${JSON.stringify(newNode)}`)
-					currentPandocNodeParents.push(newNode)
-				} else if (parent.t === "Emph" || parent.t === "Strong" ){
-					green(`pushing3: ${JSON.stringify(newNode)}`)
-					red("Herp derp")
+				} else if ((parent.t === 'Plain' ) && inTable) {
+					green(`pushing2: ${JSON.stringify(newNode)}`);
+					currentPandocNodeParents.push(newNode);
+				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
+					green(`pushing3: ${JSON.stringify(newNode)}`);
+					red("Herp derp");
 
 					currentPandocNodeParents.push(newNode)
-				} else if (parent.t === "Para" || parent.t === "Plain"){
+				} else if (parent.t === 'Para' || parent.t === 'Plain') {
 					// Wasn't doing this to Plain before, not sure why.
-					if (newNode.t === "Str" || newNode.t === "Space"){
+					if (newNode.t === 'Str' || newNode.t === 'Space') {
 						// These are leaf nodes, and don't need to be pushed.
 						// There may be other types of leaf nodes..
 					} else {
@@ -433,20 +432,19 @@ function buildPandocAST(fl) {
 
 						green(`pushing a ${JSON.stringify(newNode)}`);
 
-						currentPandocNodeParents.push(newNode)
+						currentPandocNodeParents.push(newNode);
 					}
-				} else if (parent.t === "Note"){
-					blue("pushing Note : D")
-					currentPandocNodeParents.push(newNode)
+				} else if (parent.t === 'Note'){
+					blue('pushing Note : D')
+					currentPandocNodeParents.push(newNode);
 				}
-			} else if (parent.t === "Div") {
+			} else if (parent.t === 'Div') {
 				parent.c[1].push(newNode);
 			} else {
-				yellow("PARENT : " + parent.t)
+				yellow('PARENT : ' + parent.t);
 				parent.c[2].push(newNode);
 			}
-		}
-		else {
+		} else {
 			green(`pushing10 ${JSON.stringify(newNode)}`);
 			currentPandocNodeParents.push(newNode);
 			blocks.push(newNode);
@@ -458,9 +456,9 @@ function buildPandocAST(fl) {
 	*********************************************************************/
 
 	function finish(fl) {
-		console.log("returning finish")
+		console.log('returning finish')
 		pandocJSON.blocks = blocks;
-		pandocJSON["pandoc-api-version"] = [
+		pandocJSON['pandoc-api-version'] = [
 			1,
 			17,
 			0,
@@ -565,14 +563,6 @@ function cyan(words, heading) {
 		return;
 	}
 	console.log(colors.cyan(words) +"\n");
-}
-
-function white(words, heading) {
-	if (heading) {
-		console.log("\n\t\t" + words.underline.white);
-		return;
-	}
-	console.log(colors.white(words) +"\n");
 }
 
 if (process.argv[2]) {
