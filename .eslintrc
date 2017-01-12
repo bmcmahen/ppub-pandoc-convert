@@ -65,7 +65,7 @@
 		"no-trailing-spaces": 0,
 		"no-tabs": 0,
 		"space-before-function-paren": 0,
-		"indent": [2, "tab"],
+		"indent": [2, "tab", { "SwitchCase": 1 }],
 		"new-cap": 0,
 		"no-unused-vars": [1, {"vars": "local", "args": "none"}],
 		"id-length": [2, {"exceptions": ["_"]}]
