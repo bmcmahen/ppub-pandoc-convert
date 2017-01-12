@@ -304,21 +304,21 @@ function buildPandocAST(fl) {
 		// context = oldContext;
 		red("HEH YEP")
 
-		if (node.type === "paragraph" || node.type === "heading"
-		|| node.type === "horizontal_rule" || node.type === "blockquote"
-		|| node.type === "bullet_list" || node.type === "ordered_list"
-		|| node.type === "list_item" || node.type === "table"
-		|| node.type === "table_row" || node.type === "table_cell"
-		|| node.type === "block_embed" || node.type === "text"
-		|| node.type ==="embed"){
+		if (node.type === 'paragraph' || node.type === 'heading'
+		|| node.type === 'horizontal_rule' || node.type === 'blockquote'
+		|| node.type === 'bullet_list' || node.type === 'ordered_list'
+		|| node.type === 'list_item' || node.type === 'table'
+		|| node.type === 'table_row' || node.type === 'table_cell'
+		|| node.type === 'block_embed' || node.type === 'text'
+		|| node.type ==='embed') {
 			currentDocJSONNodeParents.pop();
 		}
-		if (newNode.t === "Para" || newNode.t === "Plain"
-		|| newNode.t === "Header" || newNode.t === "Code"
-		|| newNode.t === "HorizontalRule" || newNode.t === "Blockquote"
-		|| newNode.t === "BulletList" || newNode.t === "OrderedList"
-		|| newNode.t === "Table" || newNode.t === "Image"
-		|| newNode.t === "Note" || newNode.t === "Link"){
+		if (newNode.t === 'Para' || newNode.t === 'Plain'
+		|| newNode.t === 'Header' || newNode.t === 'Code'
+		|| newNode.t === 'HorizontalRule' || newNode.t === 'Blockquote'
+		|| newNode.t === 'BulletList' || newNode.t === 'OrderedList'
+		|| newNode.t === 'Table' || newNode.t === 'Image'
+		|| newNode.t === 'Note' || newNode.t === 'Link') {
 			// Link is for the case UL->[Link, Str]
 			blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
 			currentPandocNodeParents.pop();
