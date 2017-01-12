@@ -367,8 +367,7 @@ function buildPandocAST(fl) {
 					if (!parent.c[3][col]) {
 						parent.c[3][col] = [];
 					}
-					console.log(`inserting at c[3][${col}]`)
-
+					console.log(`inserting at c[3][${col}]`);
 					parent.c[3][col].push(newNode)
 				} else {
 					if (!parent.c[4][row - 1]) {
@@ -430,7 +429,6 @@ function buildPandocAST(fl) {
 
 				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
 					green(`pushing3: ${JSON.stringify(newNode)}`);
-					red('Herp derp');
 
 					currentPandocNodeParents.push(newNode)
 				} else if (parent.t === 'Para' || parent.t === 'Plain') {
@@ -450,11 +448,15 @@ function buildPandocAST(fl) {
 					currentPandocNodeParents.push(newNode);
 				}
 				break;
+			case 'Note':
+				parent.c.push(newNode);
+				currentPandocNodeParents.push(newNode);
+				break;
 			case 'Div':
 				parent.c[1].push(newNode);
-
+				break;
 			default:
-				red('Reached Defautl on ' + JSON.stringify(newNode))
+				red('Reached Default on: ' + JSON.stringify(newNode))
 				parent.c[2].push(newNode);
 				break;
 		}
@@ -528,6 +530,12 @@ function createTextNodes(str) {
 	return newNodes;
 }
 
+function isLeafNode(node) {
+	if (node.t === 'Str' || node.t === 'Space') {
+		return true;
+	}
+	return false;
+}
 
 /*** Debugging    utility functions ****************** * * * * *
 *** *******    ************************************** * * * * *
