@@ -359,93 +359,104 @@ function buildPandocAST(fl) {
 			return;
 		}
 
+		switch (parent.t) {
+			case 'Table':
+				console.log(`pushing to ${row}, ${col}`)
+				if (row < 1) {
+					// parent.c[3].push([newNode]) // c3 is for header data.
+					if (!parent.c[3][col]) {
+						parent.c[3][col] = [];
+					}
+					console.log(`inserting at c[3][${col}]`)
 
-		if (parent.t === 'Table') {
-			console.log(`pushing to ${row}, ${col}`)
-			if (row < 1) {
-				// parent.c[3].push([newNode]) // c3 is for header data.
-				if (!parent.c[3][col]) {
-					parent.c[3][col] = [];
-				}
-				console.log(`inserting at c[3][${col}]`)
-
-				parent.c[3][col].push(newNode)
-			} else {
-				if (!parent.c[4][row - 1]) {
-					parent.c[4][row - 1] = [];
-				}
-				if (!parent.c[4][row - 1][col]) {
-					parent.c[4][row - 1][col] = [];
-				}
-				console.log(`inserting at c[4][${(row-1)}][${col}]`);
-
-				parent.c[4][row - 1][col].push(newNode);
-			}
-			green(`pushing ${JSON.stringify(newNode)}`);
-			currentPandocNodeParents.push(newNode)
-		} else if (parent.t === 'Link' || parent.t === 'Code' || parent.t === 'Strikeout') {
-			parent.c[1].push(newNode);
-			green(`SWEH: pushing ${JSON.stringify(newNode)}`)
-			if (newNode.t === 'Str' || newNode.t === 'Space') {
-
-			} else {
-				currentPandocNodeParents.push(newNode); // hmm not totally sure
-			}
-		} else if (parent.t === 'BulletList') {
-			// parent.c[0] = [];
-			// parent.c[0] = [];
-			parent.c.push([newNode])
-			green(`pushing5 ${JSON.stringify(newNode)}`)
-			currentPandocNodeParents.push(newNode); // Ahh may be buggy
-
-		} else if (parent.t === 'OrderedList') {
-			parent.c[1].push([newNode]);
-			green(`pushing6 ${JSON.stringify(newNode)}`);
-			currentPandocNodeParents.push(newNode); // Ahh may be buggy
-		} else if (parent.t === 'BlockQuote' || parent.t === 'Para' || parent.t === 'Emph' || parent.t === 'Strong' || parent.t === 'Plain') {
-			console.log("YEP heh " + JSON.stringify(newNode))
-			parent.c.push(newNode);
-			if (parent.t !== 'Para' && parent.t !== 'Plain') {
-				if (newNode.t === 'Str' || newNode.t === 'Space') {
-					// These are leaf nodes, and don't need to be pushed.
-					// There may be other types of leaf nodes..
+					parent.c[3][col].push(newNode)
 				} else {
-					green(`pushing a ${JSON.stringify(newNode)}`);
-					currentPandocNodeParents.push(newNode);
-				}
-			} else if (parent.t === 'Plain' && inTable) {
-				if (newNode.t === 'Str' || newNode.t === 'Space') {
-				} else {
-					green(`pushing2: ${JSON.stringify(newNode)}`);
-					currentPandocNodeParents.push(newNode);
-				}
+					if (!parent.c[4][row - 1]) {
+						parent.c[4][row - 1] = [];
+					}
+					if (!parent.c[4][row - 1][col]) {
+						parent.c[4][row - 1][col] = [];
+					}
+					console.log(`inserting at c[4][${(row - 1)}][${col}]`);
 
-			} else if (parent.t === 'Emph' || parent.t === 'Strong') {
-				green(`pushing3: ${JSON.stringify(newNode)}`);
-				red('Herp derp');
-
+					parent.c[4][row - 1][col].push(newNode);
+				}
+				green(`pushing ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode)
-			} else if (parent.t === 'Para' || parent.t === 'Plain') {
-				// Wasn't doing this to Plain before, not sure why.
+				break;
+			case 'Link':
+			case 'Code':
+			case 'Strikeout':
+				parent.c[1].push(newNode);
+				green(`SWEH: pushing ${JSON.stringify(newNode)}`);
 				if (newNode.t === 'Str' || newNode.t === 'Space') {
-					// These are leaf nodes, and don't need to be pushed.
-					// There may be other types of leaf nodes..
+
 				} else {
-					console.log('HIP HIP OK ' + JSON.stringify(newNode))
+					currentPandocNodeParents.push(newNode); // hmm not totally sure
+				}
+				break;
+			case 'BulletList':
+				parent.c.push([newNode])
+				green(`pushing5 ${JSON.stringify(newNode)}`)
+				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 
-					green(`pushing a ${JSON.stringify(newNode)}`);
+				break;
+			case 'OrderedList':
+				parent.c[1].push([newNode]);
+				green(`pushing6 ${JSON.stringify(newNode)}`);
+				currentPandocNodeParents.push(newNode); // Ahh may be buggy
+				break;
+			case 'BlockQuote':
+			case 'Para':
+			case 'Emph':
+			case 'Strong':
+			case 'Plain':
+				console.log("YEP heh " + JSON.stringify(newNode))
+				parent.c.push(newNode);
+				if (parent.t !== 'Para' && parent.t !== 'Plain') {
+					if (newNode.t === 'Str' || newNode.t === 'Space') {
+						// These are leaf nodes, and don't need to be pushed.
+						// There may be other types of leaf nodes..
+					} else {
+						green(`pushing a ${JSON.stringify(newNode)}`);
+						currentPandocNodeParents.push(newNode);
+					}
+				} else if (parent.t === 'Plain' && inTable) {
+					if (newNode.t === 'Str' || newNode.t === 'Space') {
+					} else {
+						green(`pushing2: ${JSON.stringify(newNode)}`);
+						currentPandocNodeParents.push(newNode);
+					}
 
+				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
+					green(`pushing3: ${JSON.stringify(newNode)}`);
+					red('Herp derp');
+
+					currentPandocNodeParents.push(newNode)
+				} else if (parent.t === 'Para' || parent.t === 'Plain') {
+					// Wasn't doing this to Plain before, not sure why.
+					if (newNode.t === 'Str' || newNode.t === 'Space') {
+						// These are leaf nodes, and don't need to be pushed.
+						// There may be other types of leaf nodes..
+					} else {
+						console.log('HIP HIP OK ' + JSON.stringify(newNode))
+
+						green(`pushing a ${JSON.stringify(newNode)}`);
+
+						currentPandocNodeParents.push(newNode);
+					}
+				} else if (parent.t === 'Note') {
+					blue('pushing Note : D')
 					currentPandocNodeParents.push(newNode);
 				}
-			} else if (parent.t === 'Note') {
-				blue('pushing Note : D')
-				currentPandocNodeParents.push(newNode);
-			}
-		} else if (parent.t === 'Div') {
-			parent.c[1].push(newNode);
-		} else {
-			yellow('PARENT : ' + parent.t);
-			parent.c[2].push(newNode);
+				break;
+			case 'Div':
+				parent.c[1].push(newNode);
+
+			default:
+				red('Reached Defautl on ' + JSON.stringify(newNode))
+				parent.c[2].push(newNode);
+				break;
 		}
 
 	}
