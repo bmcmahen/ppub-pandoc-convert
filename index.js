@@ -18,14 +18,6 @@ function buildPandocAST(fl) {
 		throw new Error('Needs an input file');
 	}
 
-
-	function scanFragment(fragment) {
-		currentDocJSONNodeParents.push(fragment);
-		if (fragment.content) {
-			fragment.content.forEach((child, offset) => scan(child));
-		}
-	}
-
 	// Create a node
 	// If node is a root node, push it to blocks array
 	function scan(node) {
@@ -328,7 +320,7 @@ function buildPandocAST(fl) {
 				currentPandocNodeParents.pop();
 			}
 		}
-		if (node.type === "text"){ // Text creates a STR node in addition to newNode
+		if (node.type === 'text'){ // Text creates a STR node in addition to newNode
 			if (!isCode){ // Ehh.. Not 100% sure about this
 				// blue(`Popping 3 - (text/Str)`)
 				// currentPandocNodeParents.pop();
@@ -339,21 +331,29 @@ function buildPandocAST(fl) {
 			blue('Popping mark')
 			markCount--;
 			currentPandocNodeParents.pop();
-			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don"t think so
-			// ^^ Because these aren"t parent Ndoes in docJSON
+			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don't think so
+			// ^^ Because these aren't parent Ndoes in docJSON
 		}
 
-		if (node.type === "table"){
+		if (node.type === 'table'){
 			inTable = false;
 		}
 	}
 
+	function scanFragment(fragment) {
+		currentDocJSONNodeParents.push(fragment);
+		if (fragment.content) {
+			fragment.content.forEach((child, offset) => scan(child));
+		}
+	}
+
 	// Link a node to a parent node, or make it a parent
-	function addNode(newNode){
-		if (newNode.t === "DoNotAddThisNode"){
+	function addNode(newNode) {
+		var parent = currentPandocNodeParents[currentPandocNodeParents.length - 1];
+
+		if (newNode.t === 'DoNotAddThisNode') {
 			return;
 		}
-		var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
 		if (parent){
 			if (parent.t === "Table"){
