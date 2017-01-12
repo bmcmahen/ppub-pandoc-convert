@@ -353,11 +353,10 @@ function buildPandocAST(fl) {
 			return;
 		}
 
-		if (parent){
+		if (parent) {
 			if (parent.t === 'Table') {
 				console.log('Yeah parent is table')
 				console.log(`pushing to ${row}, ${col}`)
-				var numCols = parent.c[2].length; // how do you know that's columns and not rows
 				if (row < 1) {
 					// parent.c[3].push([newNode]) // c3 is for header data.
 					if (!parent.c[3][col]) {
@@ -379,26 +378,26 @@ function buildPandocAST(fl) {
 						console.log(JSON.stringify(newNode));
 					}
 
-					parent.c[4][row-1][col].push(newNode);
+					parent.c[4][row - 1][col].push(newNode);
 				}
 				green(`pushing ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode)
-			} else if (parent.t === 'Link' || parent.t === 'Code' || parent.t === 'Strikeout'){
+			} else if (parent.t === 'Link' || parent.t === 'Code' || parent.t === 'Strikeout') {
 				parent.c[1].push(newNode);
 				green(`SWEH: pushing ${JSON.stringify(newNode)}`)
-				if (newNode.t === 'Str' || newNode.t === 'Space'){
+				if (newNode.t === 'Str' || newNode.t === 'Space') {
 
 				} else {
 					currentPandocNodeParents.push(newNode); // hmm not totally sure
 				}
-			} else if (parent.t === 'BulletList'){
+			} else if (parent.t === 'BulletList') {
 				// parent.c[0] = [];
 				// parent.c[0] = [];
 				parent.c.push([newNode])
 				green(`pushing5 ${JSON.stringify(newNode)}`)
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 
-			} else if (parent.t === 'OrderedList'){
+			} else if (parent.t === 'OrderedList') {
 				parent.c[1].push([newNode]);
 				green(`pushing6 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
@@ -414,8 +413,12 @@ function buildPandocAST(fl) {
 						currentPandocNodeParents.push(newNode);
 					}
 				} else if ((parent.t === 'Plain' ) && inTable) {
-					green(`pushing2: ${JSON.stringify(newNode)}`);
-					currentPandocNodeParents.push(newNode);
+					if (newNode.t === 'Str' || newNode.t === 'Space') {
+					} else {
+						green(`pushing2: ${JSON.stringify(newNode)}`);
+						currentPandocNodeParents.push(newNode);		
+					}
+
 				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
 					green(`pushing3: ${JSON.stringify(newNode)}`);
 					red("Herp derp");
