@@ -356,8 +356,8 @@ function buildPandocAST(fl) {
 		}
 
 		if (parent){
-			if (parent.t === "Table"){
-				console.log("Yeah parent is table")
+			if (parent.t === 'Table') {
+				console.log('Yeah parent is table')
 				console.log(`pushing to ${row}, ${col}`)
 				var numCols = parent.c[2].length; // how do you know that's columns and not rows
 				if (row < 1){
@@ -375,20 +375,20 @@ function buildPandocAST(fl) {
 					if (!parent.c[4][row-1][col]){
 						parent.c[4][row-1][col] = [];
 					}
-					console.log(`inserting at c[4][${(row-1)}][${col}]`)
+					console.log(`inserting at c[4][${(row-1)}][${col}]`);
 
 					if( row == 1 && col == 0){
-						console.log(JSON.stringify(newNode))
+						console.log(JSON.stringify(newNode));
 					}
 
-					parent.c[4][row-1][col].push(newNode)
+					parent.c[4][row-1][col].push(newNode);
 				}
-				green(`pushing ${JSON.stringify(newNode)}`)
+				green(`pushing ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode)
-			} else if (parent.t === "Link" || parent.t === "Code" || parent.t === "Strikeout"){
+			} else if (parent.t === 'Link' || parent.t === 'Code' || parent.t === 'Strikeout'){
 				parent.c[1].push(newNode);
 				green(`SWEH: pushing ${JSON.stringify(newNode)}`)
-				if (newNode.t === "Str" || newNode.t === "Space"){
+				if (newNode.t === 'Str' || newNode.t === 'Space'){
 
 				} else {
 					currentPandocNodeParents.push(newNode); // hmm not totally sure
