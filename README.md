@@ -1,11 +1,9 @@
 # ProseMirror to Pandoc Converter
 
-Convert from PuPubs ProseMirror format (docJSON) to Pandocs format (JSON)
+Convert from PuPubs ProseMirror format to Pandocs JSON format 
 
 ---
 
 ### Test
 
 `npm test`
-
-
