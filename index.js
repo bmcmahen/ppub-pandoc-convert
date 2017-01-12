@@ -13,12 +13,12 @@ function buildPandocAST(fl) {
 	var inTable = false;
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
-	var docJSON = require(`./${fl}`);
+	var docJSON = require('./' + fl);
 
 	if (!fl) {
 		throw new Error('Needs an input file');
 	}
-	console.log(colors.cyan('Starting conversion\n'))
+	console.log(colors.cyan('Starting conversion\n'));
 
 	// Create a node
 	// If node is a root node, push it to blocks array
@@ -85,7 +85,7 @@ function buildPandocAST(fl) {
 				}
 
 				break;
-			// case "image":
+			// case 'image':
 			// 	newNode.t = "Image";
 			// 	newNode.c[0] = ["",[],[]];
 			// 	// if has width & height
@@ -101,7 +101,7 @@ function buildPandocAST(fl) {
 			case 'paragraph':
 				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length - 1].type === 'list_item') {
-					red('PARENT IS LIST ITEM')
+					red('PARENT IS LIST ITEM');
 					newNode.t = 'DoNotAddThisNode';
 					break;
 				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table'){
@@ -120,8 +120,7 @@ function buildPandocAST(fl) {
 				newNode.t = 'BlockQuote';
 				break;
 			case 'bullet_list':
-				newNode.t = 'BulletList'
-
+				newNode.t = 'BulletList';
 				break;
 			case 'ordered_list':
 				newNode.t = 'OrderedList';
@@ -166,7 +165,7 @@ function buildPandocAST(fl) {
 				break;
 			case 'embed':
 				newNode.t = 'Image';
-				newNode.c[0] = ['',[],[]];
+				newNode.c[0] = ['', [], []];
 				// if has width & height
 				if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
 					var widthHeightPercentage = '' + node.attrs.size;
@@ -239,11 +238,11 @@ function buildPandocAST(fl) {
 
 		// If there are any node to add before the target node, like mark nodes,
 		// add them here
-		for (var i = 0; i < newerNodes.length; i++){
+		for (var i = 0; i < newerNodes.length; i++) {
 			addNode(newerNodes[i]);
 		}
 
-		if (newNode.t === 'Strikeout' || newNode.t === 'Subscript' || newNode.t === 'Superscript'  ) {
+		if (newNode.t === 'Strikeout' || newNode.t === 'Subscript' || newNode.t === 'Superscript') {
 			// Strikeout is handled differently than other text nodes
 			newNode.c = createTextNodes(node.text);
 			addNode(newNode);
@@ -287,14 +286,8 @@ function buildPandocAST(fl) {
 		} else {
 			addNode(newNode);
 		}
-		// context is some global variable
-		// const oldContext = context.clone();
-		// if (node.type === "table_cell") {
-		// 	context.column = columns++;
-		// 	context.row = rows++;
-		// }
+
 		scanFragment(node);
-		// context = oldContext;
 
 		if (node.type === 'paragraph' || node.type === 'heading'
 		|| node.type === 'horizontal_rule' || node.type === 'blockquote'
@@ -320,19 +313,11 @@ function buildPandocAST(fl) {
 				currentPandocNodeParents.pop();
 			}
 		}
-		if (node.type === 'text') { // Text creates a STR node in addition to newNode
-			if (!isCode) { // Ehh.. Not 100% sure about this
-				// blue(`Popping 3 - (text/Str)`)
-				// currentPandocNodeParents.pop();
-			}
-		}
 
 		while (markCount > 0) {
 			blue('Popping mark');
 			markCount--;
 			currentPandocNodeParents.pop();
-			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don't think so
-			// ^^ Because these aren't parent Ndoes in docJSON
 		}
 
 		if (node.type === 'table') {
@@ -387,8 +372,8 @@ function buildPandocAST(fl) {
 				isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				break;
 			case 'BulletList':
-				parent.c.push([newNode])
-				green(`pushing5 ${JSON.stringify(newNode)}`)
+				parent.c.push([newNode]);
+				green(`pushing5 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 
 				break;
@@ -402,26 +387,18 @@ function buildPandocAST(fl) {
 			case 'Emph':
 			case 'Strong':
 			case 'Plain':
-				console.log("YEP heh " + JSON.stringify(newNode))
+				console.log('HZX: ' + JSON.stringify(newNode));
 				parent.c.push(newNode);
-				if (parent.t !== 'Para' && parent.t !== 'Plain') {
+				if ((parent.t !== 'Para' && parent.t !== 'Plain') || (parent.t === 'Plain' && inTable)) {
 					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
-				} else if (parent.t === 'Plain' && inTable) {
-					if (newNode.t === 'Str' || newNode.t === 'Space') {
-					} else {
-						green(`pushing2: ${JSON.stringify(newNode)}`);
-						currentPandocNodeParents.push(newNode);
-					}
-
 				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
 					green(`pushing3: ${JSON.stringify(newNode)}`);
-
-					currentPandocNodeParents.push(newNode)
+					currentPandocNodeParents.push(newNode);
 				} else if (parent.t === 'Para' || parent.t === 'Plain') {
 					// Wasn't doing this to Plain before, not sure why.
 					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				} else if (parent.t === 'Note') {
-					blue('pushing Note : D')
+					blue('pushing Note');
 					currentPandocNodeParents.push(newNode);
 				}
 				break;
@@ -455,7 +432,6 @@ function buildPandocAST(fl) {
 		var newFile;
 		var mdFile;
 
-		console.log('returning finish')
 		pandocJSON.blocks = blocks;
 		pandocJSON['pandoc-api-version'] = [
 			1,
@@ -494,8 +470,6 @@ function buildPandocAST(fl) {
 	return finish(fl);
 }
 
-
-
 /*** Debugging    utility functions ****************** * * * * *
 *** *******    ************************************** * * * * *
 *** *****    **************************************** * * * * *
@@ -504,42 +478,42 @@ function buildPandocAST(fl) {
 
 function green(words, heading) {
 	if (heading) {
-		console.log("\n\t\t" + words.underline.green);
+		console.log('\n\t\t' + words.underline.green);
 		return;
 	}
-	console.log(colors.green(words) +"\n");
+	console.log(colors.green(words) + '\n');
 }
 
 function yellow(words, heading) {
 	if (heading) {
-		console.log("\n\t\t" + words.underline.yellow);
+		console.log('\n\t\t' + words.underline.yellow);
 		return;
 	}
-	console.log(colors.yellow(words) +"\n");
+	console.log(colors.yellow(words) + '\n');
 }
 
 function red(words, heading) {
 	if (heading) {
-		console.log("\n\t\t" + words.underline.red);
+		console.log('\n\t\t' + words.underline.red);
 		return;
 	}
-	console.log(colors.red(words) +"\n");
+	console.log(colors.red(words) + '\n');
 }
 
 function blue(words, heading) {
 	if (heading) {
-		console.log("\n\t\t" + words.underline.blue);
+		console.log('\n\t\t' + words.underline.blue);
 		return;
 	}
-	console.log(colors.blue(words) +"\n");
+	console.log(colors.blue(words) + '\n');
 }
 
 function cyan(words, heading) {
 	if (heading) {
-		console.log("\n\t\t" + words.underline.cyan);
+		console.log('\n\t\t' + words.underline.cyan);
 		return;
 	}
-	console.log(colors.cyan(words) +"\n");
+	console.log(colors.cyan(words) + '\n');
 }
 
 if (process.argv[2]) {
