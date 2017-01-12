@@ -325,7 +325,7 @@ function buildPandocAST(fl) {
 		}
 
 		while (markCount > 0) {
-			blue('Popping mark')
+			blue('Popping mark');
 			markCount--;
 			currentPandocNodeParents.pop();
 			// currentDocJSONNodeParents.pop(); // Why do this?? Do you need to do this bc I don't think so
@@ -361,14 +361,14 @@ function buildPandocAST(fl) {
 
 		switch (parent.t) {
 			case 'Table':
-				console.log(`pushing to ${row}, ${col}`)
+				console.log(`pushing to ${row}, ${col}`);
 				if (row < 1) {
 					// parent.c[3].push([newNode]) // c3 is for header data.
 					if (!parent.c[3][col]) {
 						parent.c[3][col] = [];
 					}
 					console.log(`inserting at c[3][${col}]`);
-					parent.c[3][col].push(newNode)
+					parent.c[3][col].push(newNode);
 				} else {
 					if (!parent.c[4][row - 1]) {
 						parent.c[4][row - 1] = [];
@@ -381,18 +381,14 @@ function buildPandocAST(fl) {
 					parent.c[4][row - 1][col].push(newNode);
 				}
 				green(`pushing ${JSON.stringify(newNode)}`);
-				currentPandocNodeParents.push(newNode)
+				currentPandocNodeParents.push(newNode);
 				break;
 			case 'Link':
 			case 'Code':
 			case 'Strikeout':
 				parent.c[1].push(newNode);
 				green(`SWEH: pushing ${JSON.stringify(newNode)}`);
-				if (newNode.t === 'Str' || newNode.t === 'Space') {
-
-				} else {
-					currentPandocNodeParents.push(newNode); // hmm not totally sure
-				}
+				isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				break;
 			case 'BulletList':
 				parent.c.push([newNode])
@@ -413,13 +409,7 @@ function buildPandocAST(fl) {
 				console.log("YEP heh " + JSON.stringify(newNode))
 				parent.c.push(newNode);
 				if (parent.t !== 'Para' && parent.t !== 'Plain') {
-					if (newNode.t === 'Str' || newNode.t === 'Space') {
-						// These are leaf nodes, and don't need to be pushed.
-						// There may be other types of leaf nodes..
-					} else {
-						green(`pushing a ${JSON.stringify(newNode)}`);
-						currentPandocNodeParents.push(newNode);
-					}
+					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				} else if (parent.t === 'Plain' && inTable) {
 					if (newNode.t === 'Str' || newNode.t === 'Space') {
 					} else {
@@ -433,16 +423,7 @@ function buildPandocAST(fl) {
 					currentPandocNodeParents.push(newNode)
 				} else if (parent.t === 'Para' || parent.t === 'Plain') {
 					// Wasn't doing this to Plain before, not sure why.
-					if (newNode.t === 'Str' || newNode.t === 'Space') {
-						// These are leaf nodes, and don't need to be pushed.
-						// There may be other types of leaf nodes..
-					} else {
-						console.log('HIP HIP OK ' + JSON.stringify(newNode))
-
-						green(`pushing a ${JSON.stringify(newNode)}`);
-
-						currentPandocNodeParents.push(newNode);
-					}
+					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				} else if (parent.t === 'Note') {
 					blue('pushing Note : D')
 					currentPandocNodeParents.push(newNode);
