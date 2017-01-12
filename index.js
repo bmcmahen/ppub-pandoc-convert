@@ -157,22 +157,22 @@ function buildPandocAST(fl) {
 				newNode.c[4] = []; // Column content
 				var columns = node.attrs.columns;
 				for (let i = 0; i < columns; i++){
-					newNode.c[1].push({t: "AlignDefault"});
+					newNode.c[1].push({t: 'AlignDefault'});
 					newNode.c[2].push(0);
 				}
 
 				break;
-			case "table_row":
-				newNode.t = "DoNotAddThisNode";
+			case 'table_row':
+				newNode.t = 'DoNotAddThisNode';
 				row++;
 				col = -1;
 				break;
-			case "table_cell":
+			case 'table_cell':
 				col++;
-				newNode.t = "Plaing";
+				newNode.t = 'Plain';
 				break;
-			case "embed":
-				newNode.t = "Image";
+			case 'embed':
+				newNode.t = 'Image';
 				newNode.c[0] = ["",[],[]];
 				// if has width & height
 				if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
