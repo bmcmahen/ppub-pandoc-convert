@@ -29,7 +29,7 @@ function buildPandocAST(fl) {
 		switch (node.type) {
 			case 'block_embed': // Cases: Image in table
 				newNode.t = 'Image';
-				newNode.c[0] = ['',[],[]];
+				newNode.c[0] = ['', [], []];
 				newNode.c[1] = [];
 				newNode.c[2] = [node.attrs.data.content.url, ''];
 			break;
@@ -37,7 +37,7 @@ function buildPandocAST(fl) {
 				var level = node.attrs.level;
 				newNode.t = 'Header';
 				newNode.c[0] = level;
-				newNode.c[1] = ['',[],[]]; // Don't fully understand this lol
+				newNode.c[1] = ['', [], []];
 				newNode.c[2] = [];
 			break;
 			case 'text':
@@ -49,25 +49,25 @@ function buildPandocAST(fl) {
 							newerNode = {};
 							newerNode.t = 'Emph';
 							newerNode.c = [];
-							newerNodes.push(newerNode)
+							newerNodes.push(newerNode);
 							markCount++;
 						} else if (node.marks[i].type === 'strong') {
 							newerNode = {};
 							newerNode.t = 'Strong';
 							newerNode.c = [];
-							newerNodes.push(newerNode)
+							newerNodes.push(newerNode);
 							markCount++;
 						} else if (node.marks[i].type === 'link' ) {
 							newerNode = {};
 							newerNode.t = 'Link';
-							newerNode.c = [['',[],[ ]], [], [node.content.text, node.marks[i].attrs.title || '' ]];
-							newerNodes.push(newerNode)
+							newerNode.c = [['', [], []], [], [node.content.text, node.marks[i].attrs.title || '']];
+							newerNodes.push(newerNode);
 							markCount++;
 						} else if (node.marks[i].type === 'code') {
 							newerNode = {};
 							newerNode.t = 'Code';
-							newerNode.c = [['',[],[ ]], node.text];
-							newerNodes.push(newerNode)
+							newerNode.c = [['', [], []], node.text];
+							newerNodes.push(newerNode);
 							markCount++;
 						} else if (node.marks[i].type === 'strike') {
 							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
@@ -130,7 +130,7 @@ function buildPandocAST(fl) {
 					{
 						t: 'Period'
 					}
-				]
+				];
 				newNode.c[1] = [];
 				break;
 			case 'list_item':
@@ -152,7 +152,6 @@ function buildPandocAST(fl) {
 					newNode.c[1].push({ t: 'AlignDefault' });
 					newNode.c[2].push(0);
 				}
-
 				break;
 			case 'table_row':
 				newNode.t = 'DoNotAddThisNode';
