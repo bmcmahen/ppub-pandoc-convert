@@ -46,6 +46,16 @@ describe('Convert docJSON to PandocAST', function() {
         expect(result).to.equal(true);
       }).then(done, done);
     });
+    it('superscript', (done) => {
+      convert('test/superscript.json').then((result) => {
+        expect(result).to.equal(true);
+      }).then(done, done);
+    });
+    it('subscript', (done) => {
+      convert('test/subscript.json').then((result) => {
+        expect(result).to.equal(true);
+      }).then(done, done);
+    });
     it('quotation', (done) => {
       convert('test/quotation.json').then((result) => {
         expect(result).to.equal(true);

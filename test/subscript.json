@@ -1,0 +1,30 @@
+{
+   "type":"doc",
+   "content":[
+      {
+         "type":"paragraph",
+         "content":[
+            {
+               "type":"text",
+               "marks":[
+                  {
+                     "type":"sub"
+                  }
+               ],
+               "text":"subscript"
+            }
+         ]
+      },
+      {
+         "type":"citations",
+         "content":[
+            {
+               "type":"citation",
+               "attrs":{
+                  "title":null
+               }
+            }
+         ]
+      }
+   ]
+}

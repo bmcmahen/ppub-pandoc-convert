@@ -3,17 +3,10 @@ var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownPars
 var write = require("fs-writefile-promise")
 var colors = require("colors");
 var execPromise = require("child-process-promise").exec;
-
 var fs = require('fs');
 
-
-/*********** **** **** **** **** **** **************************
- ********** * ** * ** * ** * ** * ** * *************************
- *********** **** **** **** **** **** **************************
- *************  ***  ***  ***  ***  ****************************/
-
 function buildPandocAST(fl) {
-	cyan(`Traversing docJSON`, true);
+	cyan("Traversing docJSON", true);
 	if (!fl){
 		throw new Error("Needs an input file")
 	}
@@ -46,57 +39,63 @@ function buildPandocAST(fl) {
 		var newerNodes = []; // Used primarily for strong, emphasis, link, code text
 		var markCount = 0; // Used to count strong, emphasis, link, code text, the reason being that you can have newer nodes that aren't marks
 
-		switch(node.type){
+		switch(node.type) {
 			case "block_embed": // Cases: Image in table
-				newNode.t = "Image";
-				newNode.c[0] = ["",[],[]]; // Don"t fully understand this lol
-				newNode.c[1] = [];
-				newNode.c[2] = [node.attrs.data.content.url, ""];
-				break;
+			newNode.t = "Image";
+			newNode.c[0] = ["",[],[]]; // Don"t fully understand this lol
+			newNode.c[1] = [];
+			newNode.c[2] = [node.attrs.data.content.url, ""];
+			break;
 			case "heading":
-				var level = node.attrs.level;
-				newNode.t = "Header";
-				newNode.c[0] = level;
-				newNode.c[1] = ["",[],[]]; // Don't fully understand this lol
-				newNode.c[2] = [];
-				break;
+			var level = node.attrs.level;
+			newNode.t = "Header";
+			newNode.c[0] = level;
+			newNode.c[1] = ["",[],[]]; // Don't fully understand this lol
+			newNode.c[2] = [];
+			break;
 			case "text":
-				// Marks are handled here and the rest of it is handled later
-				if (node.marks){
-					for (var i = 0; i < node.marks.length; i++){
-						var newerNode;
-						if (node.marks[i].type === "em"){
-							newerNode = {};
-							newerNode.t = "Emph";
-							newerNode.c = [];
-							newerNodes.push(newerNode)
-							markCount++;
-						} else if (node.marks[i].type === "strong"){
-							newerNode = {};
-							newerNode.t = "Strong";
-							newerNode.c = [];
-							newerNodes.push(newerNode)
-							markCount++;
-						} else if (node.marks[i].type === "link" ){
-							newerNode = {};
-							newerNode.t = "Link";
-							newerNode.c = [["",[],[ ]], [], [node.content.text, node.marks[i].attrs.title || "" ]];
-							newerNodes.push(newerNode)
-							markCount++;
-						} else if (node.marks[i].type === "code"){
-							newerNode = {};
-							newerNode.t = "Code";
-							newerNode.c = [["",[],[ ]], node.text];
-							newerNodes.push(newerNode)
-							markCount++;
-						} else if (node.marks[i].type === "strike"){
-							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
-							newNode.t = "Strikeout";
-						}
+			// Marks are handled here and the rest of it is handled later
+			if (node.marks){
+				for (var i = 0; i < node.marks.length; i++){
+					var newerNode;
+					if (node.marks[i].type === "em"){
+						newerNode = {};
+						newerNode.t = "Emph";
+						newerNode.c = [];
+						newerNodes.push(newerNode)
+						markCount++;
+					} else if (node.marks[i].type === "strong"){
+						newerNode = {};
+						newerNode.t = "Strong";
+						newerNode.c = [];
+						newerNodes.push(newerNode)
+						markCount++;
+					} else if (node.marks[i].type === "link" ){
+						newerNode = {};
+						newerNode.t = "Link";
+						newerNode.c = [["",[],[ ]], [], [node.content.text, node.marks[i].attrs.title || "" ]];
+						newerNodes.push(newerNode)
+						markCount++;
+					} else if (node.marks[i].type === "code"){
+						newerNode = {};
+						newerNode.t = "Code";
+						newerNode.c = [["",[],[ ]], node.text];
+						newerNodes.push(newerNode)
+						markCount++;
+					} else if (node.marks[i].type === "strike"){
+						// This is an edge case and handled differently in Pandoc than link, code, strong and emph
+						newNode.t = "Strikeout";
+					} else if (node.marks[i].type === "sub"){
+						// This is an edge case and handled differently in Pandoc than link, code, strong and emph
+						newNode.t = "Subscript";
+					} else if (node.marks[i].type === "sup"){
+						// This is an edge case and handled differently in Pandoc than link, code, strong and emph
+						newNode.t = "Superscript";
 					}
 				}
+			}
 
-				break;
+			break;
 			// case "image":
 			// 	newNode.t = "Image";
 			// 	newNode.c[0] = ["",[],[]];
@@ -111,130 +110,130 @@ function buildPandocAST(fl) {
 			// 	newNode.c[2] = [node.attrs.src, ""];
 			// 	break;
 			case "paragraph":
-				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
-				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
-					red("PARENT IS LIST ITEM")
-					newNode.t = "DoNotAddThisNode";
-					break;
-				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === "Plain" && currentPandocNodeParents[currentPandocNodeParents.length-2].t === "Table"){
-					newNode.t = "DoNotAddThisNode";
-				} else {
-					// This is the proper way to handle Para -- one to one with docJSOn paragraph
-					// Because otherwise have issues with Para : [text, text]
-					newNode.t = "Para";
-				}
-
+			// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
+			if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === "list_item"){
+				red("PARENT IS LIST ITEM")
+				newNode.t = "DoNotAddThisNode";
 				break;
+			} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === "Plain" && currentPandocNodeParents[currentPandocNodeParents.length-2].t === "Table"){
+				newNode.t = "DoNotAddThisNode";
+			} else {
+				// This is the proper way to handle Para -- one to one with docJSOn paragraph
+				// Because otherwise have issues with Para : [text, text]
+				newNode.t = "Para";
+			}
+
+			break;
 			case "horizontal_rule":
-				newNode.t = "HorizontalRule";
-				break;
+			newNode.t = "HorizontalRule";
+			break;
 			case "blockquote":
-				newNode.t = "BlockQuote";
-				break;
+			newNode.t = "BlockQuote";
+			break;
 			case "bullet_list":
-				newNode.t = "BulletList"
+			newNode.t = "BulletList"
 
-				break;
+			break;
 			case "ordered_list":
-				newNode.t = "OrderedList";
-				newNode.c[0] = [ // Not super sure this conversion is right
-					1, {
-						"t": "DefaultStyle"
-					},
-					{
-						"t": "Period"
-					}
-				]
-				newNode.c[1] = [];
-				break;
-			case "list_item":
-				newNode.t = "Plain";
-				break;
-			case "table":
-				inTable = true;
-				// This doesn't work for nested tables.
-				col = -1;
-				row = -1;
-				newNode.t = "Table";
-				newNode.c[0] = [];
-				newNode.c[1] = []; // Should have {t: "AlignDefault"} for every column
-				newNode.c[2] = []; // Should have a 0 for every column
-				newNode.c[3] = []; // Column Titles
-				newNode.c[4] = []; // Column content
-				var columns = node.attrs.columns;
-				for (let i = 0; i < columns; i++){
-					newNode.c[1].push({t: "AlignDefault"});
-					newNode.c[2].push(0);
+			newNode.t = "OrderedList";
+			newNode.c[0] = [ // Not super sure this conversion is right
+				1, {
+					"t": "DefaultStyle"
+				},
+				{
+					"t": "Period"
 				}
+			]
+			newNode.c[1] = [];
+			break;
+			case "list_item":
+			newNode.t = "Plain";
+			break;
+			case "table":
+			inTable = true;
+			// This doesn't work for nested tables.
+			col = -1;
+			row = -1;
+			newNode.t = "Table";
+			newNode.c[0] = [];
+			newNode.c[1] = []; // Should have {t: "AlignDefault"} for every column
+			newNode.c[2] = []; // Should have a 0 for every column
+			newNode.c[3] = []; // Column Titles
+			newNode.c[4] = []; // Column content
+			var columns = node.attrs.columns;
+			for (let i = 0; i < columns; i++){
+				newNode.c[1].push({t: "AlignDefault"});
+				newNode.c[2].push(0);
+			}
 
-				break;
+			break;
 			case "table_row":
-				newNode.t = "DoNotAddThisNode";
-				row++;
-				col = -1;
-				break;
+			newNode.t = "DoNotAddThisNode";
+			row++;
+			col = -1;
+			break;
 			case "table_cell":
-				col++;
-				newNode.t = "Plain";
-				break;
+			col++;
+			newNode.t = "Plain";
+			break;
 			case "embed":
-					newNode.t = "Image";
-					newNode.c[0] = ["",[],[]];
-					// if has width & height
-					if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
-						var widthHeightPercentage = "" + node.attrs.size;
-						newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
-					}
-					newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];
-					newNode.c[2] = [node.attrs.url, node.attrs.figureName || ""];
+			newNode.t = "Image";
+			newNode.c[0] = ["",[],[]];
+			// if has width & height
+			if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
+				var widthHeightPercentage = "" + node.attrs.size;
+				newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
+			}
+			newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];
+			newNode.c[2] = [node.attrs.url, node.attrs.figureName || ""];
 
-				break;
+			break;
 			case "citations":
-				newNode.t = "DoNotAddThisNode";
+			newNode.t = "DoNotAddThisNode";
 
-				//Crete a Para parent
-				// newNode.t = "Para";
-				// var childNode = {};
-				// newNode.c[0] = childNode;
-				// childNode.t = "Cite";
-				// childNode.c =[{
-				// 	{
-				// 		 citationSuffix:[
-				//
-				// 		 ],
-				// 		 citationNoteNum:0,
-				// 		 citationMode:{
-				// 				t:"AuthorInText"
-				// 		 },
-				// 		 citationPrefix:[
-				//
-				// 		 ],
-				// 		 citationId:"Book",
-				// 		 citationHash:0
-				// 	}
-				// }, [
-				// 	{
-				// 		t: "Str",
-				// 		c: "@Book" //May not necessarily be book
-				// 	}
-				// ]]
+			//Crete a Para parent
+			// newNode.t = "Para";
+			// var childNode = {};
+			// newNode.c[0] = childNode;
+			// childNode.t = "Cite";
+			// childNode.c =[{
+			// 	{
+			// 		 citationSuffix:[
+			//
+			// 		 ],
+			// 		 citationNoteNum:0,
+			// 		 citationMode:{
+			// 				t:"AuthorInText"
+			// 		 },
+			// 		 citationPrefix:[
+			//
+			// 		 ],
+			// 		 citationId:"Book",
+			// 		 citationHash:0
+			// 	}
+			// }, [
+			// 	{
+			// 		t: "Str",
+			// 		c: "@Book" //May not necessarily be book
+			// 	}
+			// ]]
 
 
-				// Footers stuf fis copy pasted below. This is untested and copy pasted.
-				// red("Hit a citation. Unimplemented..", true)
-				// newNode.t = "Note";
-				// var content;
-				// console.log(JSON.stringify(node))
-				// //
-				// // if (node.content[0].attrs.caption)
-				// // 	content = createTextNodes(node.attrs.caption);
-				// // }
-				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
-				break;
+			// Footers stuf fis copy pasted below. This is untested and copy pasted.
+			// red("Hit a citation. Unimplemented..", true)
+			// newNode.t = "Note";
+			// var content;
+			// console.log(JSON.stringify(node))
+			// //
+			// // if (node.content[0].attrs.caption)
+			// // 	content = createTextNodes(node.attrs.caption);
+			// // }
+			// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
+			break;
 			default:
-				red(`Uh oh...Unprocessed node of type ${node.type}`);
-				newNode.t = "DoNotAddThisNode";
-				break;
+			red(`Uh oh...Unprocessed node of type ${node.type}`);
+			newNode.t = "DoNotAddThisNode";
+			break;
 		}
 
 		// Wrap all images in a para block, because Pandoc seems to do this,
@@ -256,7 +255,7 @@ function buildPandocAST(fl) {
 			addNode(newerNodes[i]);
 		}
 
-		if (newNode.t === "Strikeout") {
+		if (newNode.t === "Strikeout" || newNode.t === "Subscript" || newNode.t === "Superscript"  ) {
 			// Strikeout is handled differently than other text nodes
 			newNode.c = createTextNodes(node.text);
 			addNode(newNode);
@@ -311,23 +310,23 @@ function buildPandocAST(fl) {
 		red("HEH YEP")
 
 		if (node.type === "paragraph" || node.type === "heading"
-		 || node.type === "horizontal_rule" || node.type === "blockquote"
-		 || node.type === "bullet_list" || node.type === "ordered_list"
-	 	 || node.type === "list_item" || node.type === "table"
-	 	 || node.type === "table_row" || node.type === "table_cell"
-	 	 || node.type === "block_embed" || node.type === "text"
-	 	 || node.type ==="embed"){
+		|| node.type === "horizontal_rule" || node.type === "blockquote"
+		|| node.type === "bullet_list" || node.type === "ordered_list"
+		|| node.type === "list_item" || node.type === "table"
+		|| node.type === "table_row" || node.type === "table_cell"
+		|| node.type === "block_embed" || node.type === "text"
+		|| node.type ==="embed"){
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === "Para" || newNode.t === "Plain"
-		  || newNode.t === "Header" || newNode.t === "Code"
-			|| newNode.t === "HorizontalRule" || newNode.t === "Blockquote"
-			|| newNode.t === "BulletList" || newNode.t === "OrderedList"
-			|| newNode.t === "Table" || newNode.t === "Image"
-			|| newNode.t === "Note" || newNode.t === "Link"){
-				// Link is for the case UL->[Link, Str]
-				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
-				currentPandocNodeParents.pop();
+		|| newNode.t === "Header" || newNode.t === "Code"
+		|| newNode.t === "HorizontalRule" || newNode.t === "Blockquote"
+		|| newNode.t === "BulletList" || newNode.t === "OrderedList"
+		|| newNode.t === "Table" || newNode.t === "Image"
+		|| newNode.t === "Note" || newNode.t === "Link"){
+			// Link is for the case UL->[Link, Str]
+			blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
+			currentPandocNodeParents.pop();
 		} else if (inTable) {
 			if (newNode.t === "Plain"){
 				blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
@@ -460,8 +459,8 @@ function buildPandocAST(fl) {
 	}
 
 	/* Write the file, and convert it back to make sure it was successful :D
-	 *********************************************************************
-	 *********************************************************************/
+	*********************************************************************
+	*********************************************************************/
 
 	function finish(fl) {
 		console.log("returning finish")
@@ -506,8 +505,8 @@ function buildPandocAST(fl) {
 }
 
 /* Pandoc has a Str node for each word and space, this function converts
- * strings to Pandocs format
- */
+* strings to Pandocs format
+*/
 function createTextNodes(str){
 
 	var newNodes = [];
@@ -528,10 +527,10 @@ function createTextNodes(str){
 
 
 /*** Debugging    utility functions ****************** * * * * *
- *** *******    ************************************** * * * * *
- *** *****    **************************************** * * * * *
- *** ***    ****************************************** * * * * *
- *** *    ******************************************** * * * * */
+*** *******    ************************************** * * * * *
+*** *****    **************************************** * * * * *
+*** ***    ****************************************** * * * * *
+*** *    ******************************************** * * * * */
 
 function green(words, heading){
 	if (heading){
