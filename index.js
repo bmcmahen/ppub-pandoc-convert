@@ -22,11 +22,11 @@ function buildPandocAST(fl) {
 	// If node is a root node, push it to blocks array
 	function scan(node) {
 		// green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentDocJSONNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
-		var newNode = {t: undefined, c: []};
+		var newNode = { t: undefined, c: [] };
 		var newerNodes = []; // Used primarily for strong, emphasis, link, code text
 		var markCount = 0; // Used to count strong, emphasis, link, code text, the reason being that you can have newer nodes that aren't marks
 
-		switch(node.type) {
+		switch (node.type) {
 			case 'block_embed': // Cases: Image in table
 				newNode.t = 'Image';
 				newNode.c[0] = ['',[],[]];
@@ -42,42 +42,42 @@ function buildPandocAST(fl) {
 			break;
 			case 'text':
 				// Marks are handled here and the rest of it is handled later
-				if (node.marks){
+				if (node.marks) {
 					for (var i = 0; i < node.marks.length; i++){
 						var newerNode;
-						if (node.marks[i].type === 'em'){
+						if (node.marks[i].type === 'em') {
 							newerNode = {};
 							newerNode.t = 'Emph';
 							newerNode.c = [];
 							newerNodes.push(newerNode)
 							markCount++;
-						} else if (node.marks[i].type === 'strong'){
+						} else if (node.marks[i].type === 'strong') {
 							newerNode = {};
 							newerNode.t = 'Strong';
 							newerNode.c = [];
 							newerNodes.push(newerNode)
 							markCount++;
-						} else if (node.marks[i].type === 'link' ){
+						} else if (node.marks[i].type === 'link' ) {
 							newerNode = {};
 							newerNode.t = 'Link';
 							newerNode.c = [['',[],[ ]], [], [node.content.text, node.marks[i].attrs.title || '' ]];
 							newerNodes.push(newerNode)
 							markCount++;
-						} else if (node.marks[i].type === "code"){
+						} else if (node.marks[i].type === 'code') {
 							newerNode = {};
-							newerNode.t = "Code";
-							newerNode.c = [["",[],[ ]], node.text];
+							newerNode.t = 'Code';
+							newerNode.c = [['',[],[ ]], node.text];
 							newerNodes.push(newerNode)
 							markCount++;
-						} else if (node.marks[i].type === "strike"){
+						} else if (node.marks[i].type === 'strike') {
 							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
-							newNode.t = "Strikeout";
-						} else if (node.marks[i].type === "sub"){
+							newNode.t = 'Strikeout';
+						} else if (node.marks[i].type === 'sub') {
 							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
-							newNode.t = "Subscript";
-						} else if (node.marks[i].type === "sup"){
+							newNode.t = 'Subscript';
+						} else if (node.marks[i].type === 'sup') {
 							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
-							newNode.t = "Superscript";
+							newNode.t = 'Superscript';
 						}
 					}
 				}
