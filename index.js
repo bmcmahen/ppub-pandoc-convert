@@ -11,12 +11,11 @@ function buildPandocAST(fl) {
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
 	var docJSON = require(`./${fl}`);
-	cyan('Traversing docJSON', true);
-	cyan(JSON.stringify(docJSON));
 
 	if (!fl) {
 		throw new Error('Needs an input file');
 	}
+	console.log(colors.cyan('Starting conversion\n'))
 
 	// Create a node
 	// If node is a root node, push it to blocks array
@@ -57,7 +56,7 @@ function buildPandocAST(fl) {
 							newerNode.c = [];
 							newerNodes.push(newerNode);
 							markCount++;
-						} else if (node.marks[i].type === 'link' ) {
+						} else if (node.marks[i].type === 'link') {
 							newerNode = {};
 							newerNode.t = 'Link';
 							newerNode.c = [['', [], []], [], [node.content.text, node.marks[i].attrs.title || '']];
@@ -98,7 +97,7 @@ function buildPandocAST(fl) {
 			// 	break;
 			case 'paragraph':
 				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
-				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length-1].type === 'list_item'){
+				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length - 1].type === 'list_item') {
 					red('PARENT IS LIST ITEM')
 					newNode.t = 'DoNotAddThisNode';
 					break;
@@ -123,7 +122,7 @@ function buildPandocAST(fl) {
 				break;
 			case 'ordered_list':
 				newNode.t = 'OrderedList';
-				newNode.c[0] = [ // Not super sure this conversion is right
+				newNode.c[0] = [
 					1, {
 						t: 'DefaultStyle'
 					},
@@ -353,104 +352,102 @@ function buildPandocAST(fl) {
 			return;
 		}
 
-		if (parent) {
-			if (parent.t === 'Table') {
-				console.log('Yeah parent is table')
-				console.log(`pushing to ${row}, ${col}`)
-				if (row < 1) {
-					// parent.c[3].push([newNode]) // c3 is for header data.
-					if (!parent.c[3][col]) {
-						parent.c[3][col] = [];
-					}
-					console.log(`inserting at c[3][${col}]`)
-
-					parent.c[3][col].push(newNode)
-				} else {
-					if (!parent.c[4][row - 1]) {
-						parent.c[4][row - 1] = [];
-					}
-					if (!parent.c[4][row - 1][col]) {
-						parent.c[4][row - 1][col] = [];
-					}
-					console.log(`inserting at c[4][${(row-1)}][${col}]`);
-
-					if (row === 1 && col === 0) {
-						console.log(JSON.stringify(newNode));
-					}
-
-					parent.c[4][row - 1][col].push(newNode);
-				}
-				green(`pushing ${JSON.stringify(newNode)}`);
-				currentPandocNodeParents.push(newNode)
-			} else if (parent.t === 'Link' || parent.t === 'Code' || parent.t === 'Strikeout') {
-				parent.c[1].push(newNode);
-				green(`SWEH: pushing ${JSON.stringify(newNode)}`)
-				if (newNode.t === 'Str' || newNode.t === 'Space') {
-
-				} else {
-					currentPandocNodeParents.push(newNode); // hmm not totally sure
-				}
-			} else if (parent.t === 'BulletList') {
-				// parent.c[0] = [];
-				// parent.c[0] = [];
-				parent.c.push([newNode])
-				green(`pushing5 ${JSON.stringify(newNode)}`)
-				currentPandocNodeParents.push(newNode); // Ahh may be buggy
-
-			} else if (parent.t === 'OrderedList') {
-				parent.c[1].push([newNode]);
-				green(`pushing6 ${JSON.stringify(newNode)}`);
-				currentPandocNodeParents.push(newNode); // Ahh may be buggy
-			} else if (parent.t === 'BlockQuote' || parent.t === 'Para' || parent.t === 'Emph' || parent.t === 'Strong' || parent.t === 'Plain') {
-
-				parent.c.push(newNode);
-				if (parent.t !== 'Para' && parent.t !== 'Plain') {
-					if (newNode.t === 'Str' || newNode.t === 'Space') {
-						// These are leaf nodes, and don't need to be pushed.
-						// There may be other types of leaf nodes..
-					} else {
-						green(`pushing a ${JSON.stringify(newNode)}`);
-						currentPandocNodeParents.push(newNode);
-					}
-				} else if ((parent.t === 'Plain' ) && inTable) {
-					if (newNode.t === 'Str' || newNode.t === 'Space') {
-					} else {
-						green(`pushing2: ${JSON.stringify(newNode)}`);
-						currentPandocNodeParents.push(newNode);		
-					}
-
-				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
-					green(`pushing3: ${JSON.stringify(newNode)}`);
-					red("Herp derp");
-
-					currentPandocNodeParents.push(newNode)
-				} else if (parent.t === 'Para' || parent.t === 'Plain') {
-					// Wasn't doing this to Plain before, not sure why.
-					if (newNode.t === 'Str' || newNode.t === 'Space') {
-						// These are leaf nodes, and don't need to be pushed.
-						// There may be other types of leaf nodes..
-					} else {
-						console.log("HIP HIP OK " + JSON.stringify(newNode))
-
-						green(`pushing a ${JSON.stringify(newNode)}`);
-
-						currentPandocNodeParents.push(newNode);
-					}
-				} else if (parent.t === 'Note'){
-					blue('pushing Note : D')
-					currentPandocNodeParents.push(newNode);
-				}
-			} else if (parent.t === 'Div') {
-				parent.c[1].push(newNode);
-			} else {
-				yellow('PARENT : ' + parent.t);
-				parent.c[2].push(newNode);
-			}
-		} else {
-			green(`pushing10 ${JSON.stringify(newNode)}`);
+		if (!parent) {
+			green(`Pushing to root ${JSON.stringify(newNode)}`);
 			currentPandocNodeParents.push(newNode);
 			blocks.push(newNode);
+			return;
 		}
+
+
+		if (parent.t === 'Table') {
+			console.log(`pushing to ${row}, ${col}`)
+			if (row < 1) {
+				// parent.c[3].push([newNode]) // c3 is for header data.
+				if (!parent.c[3][col]) {
+					parent.c[3][col] = [];
+				}
+				console.log(`inserting at c[3][${col}]`)
+
+				parent.c[3][col].push(newNode)
+			} else {
+				if (!parent.c[4][row - 1]) {
+					parent.c[4][row - 1] = [];
+				}
+				if (!parent.c[4][row - 1][col]) {
+					parent.c[4][row - 1][col] = [];
+				}
+				console.log(`inserting at c[4][${(row-1)}][${col}]`);
+
+				parent.c[4][row - 1][col].push(newNode);
+			}
+			green(`pushing ${JSON.stringify(newNode)}`);
+			currentPandocNodeParents.push(newNode)
+		} else if (parent.t === 'Link' || parent.t === 'Code' || parent.t === 'Strikeout') {
+			parent.c[1].push(newNode);
+			green(`SWEH: pushing ${JSON.stringify(newNode)}`)
+			if (newNode.t === 'Str' || newNode.t === 'Space') {
+
+			} else {
+				currentPandocNodeParents.push(newNode); // hmm not totally sure
+			}
+		} else if (parent.t === 'BulletList') {
+			// parent.c[0] = [];
+			// parent.c[0] = [];
+			parent.c.push([newNode])
+			green(`pushing5 ${JSON.stringify(newNode)}`)
+			currentPandocNodeParents.push(newNode); // Ahh may be buggy
+
+		} else if (parent.t === 'OrderedList') {
+			parent.c[1].push([newNode]);
+			green(`pushing6 ${JSON.stringify(newNode)}`);
+			currentPandocNodeParents.push(newNode); // Ahh may be buggy
+		} else if (parent.t === 'BlockQuote' || parent.t === 'Para' || parent.t === 'Emph' || parent.t === 'Strong' || parent.t === 'Plain') {
+			console.log("YEP heh " + JSON.stringify(newNode))
+			parent.c.push(newNode);
+			if (parent.t !== 'Para' && parent.t !== 'Plain') {
+				if (newNode.t === 'Str' || newNode.t === 'Space') {
+					// These are leaf nodes, and don't need to be pushed.
+					// There may be other types of leaf nodes..
+				} else {
+					green(`pushing a ${JSON.stringify(newNode)}`);
+					currentPandocNodeParents.push(newNode);
+				}
+			} else if (parent.t === 'Plain' && inTable) {
+				if (newNode.t === 'Str' || newNode.t === 'Space') {
+				} else {
+					green(`pushing2: ${JSON.stringify(newNode)}`);
+					currentPandocNodeParents.push(newNode);
+				}
+
+			} else if (parent.t === 'Emph' || parent.t === 'Strong') {
+				green(`pushing3: ${JSON.stringify(newNode)}`);
+				red('Herp derp');
+
+				currentPandocNodeParents.push(newNode)
+			} else if (parent.t === 'Para' || parent.t === 'Plain') {
+				// Wasn't doing this to Plain before, not sure why.
+				if (newNode.t === 'Str' || newNode.t === 'Space') {
+					// These are leaf nodes, and don't need to be pushed.
+					// There may be other types of leaf nodes..
+				} else {
+					console.log('HIP HIP OK ' + JSON.stringify(newNode))
+
+					green(`pushing a ${JSON.stringify(newNode)}`);
+
+					currentPandocNodeParents.push(newNode);
+				}
+			} else if (parent.t === 'Note') {
+				blue('pushing Note : D')
+				currentPandocNodeParents.push(newNode);
+			}
+		} else if (parent.t === 'Div') {
+			parent.c[1].push(newNode);
+		} else {
+			yellow('PARENT : ' + parent.t);
+			parent.c[2].push(newNode);
+		}
+
 	}
 
 	/* Write the file, and convert it back to make sure it was successful :D
@@ -458,6 +455,9 @@ function buildPandocAST(fl) {
 	*********************************************************************/
 
 	function finish(fl) {
+		var newFile;
+		var mdFile;
+
 		console.log('returning finish')
 		pandocJSON.blocks = blocks;
 		pandocJSON['pandoc-api-version'] = [
@@ -467,8 +467,6 @@ function buildPandocAST(fl) {
 			4
 		];
 		pandocJSON.meta = {};
-		var newFile;
-		var mdFile;
 
 		if (fl.search('test/') !== -1) {
 			newFile = fl.split('.')[0].replace('test/', 'test/pandoc/') + '.json';
@@ -484,7 +482,7 @@ function buildPandocAST(fl) {
 			return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${mdFile}`);
 		})
 		.then(function(idk) {
-			console.log(`done converting`);
+			console.log('done converting');
 			return true;
 		})
 		.catch((error)=>{
