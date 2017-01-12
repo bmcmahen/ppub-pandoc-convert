@@ -1,28 +1,23 @@
-var Promise = require("bluebird");
-var defaultMarkdownParser =  require("prosemirror-markdown").defaultMarkdownParser;
-var write = require("fs-writefile-promise")
-var colors = require("colors");
-var execPromise = require("child-process-promise").exec;
-var fs = require('fs');
+var write = require('fs-writefile-promise');
+var colors = require('colors');
+var execPromise = require('child-process-promise').exec;
 
 function buildPandocAST(fl) {
-	cyan("Traversing docJSON", true);
-	if (!fl){
-		throw new Error("Needs an input file")
-	}
 	var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 	var currentPandocNodeParents = []; // stack for keeping track of the last output node
 	var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 	var pandocJSON = {};
-
 	var inTable = false;
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
-
-
 	var docJSON = require(`./${fl}`);
-
+	cyan('Traversing docJSON', true);
 	cyan(JSON.stringify(docJSON));
+
+	if (!fl) {
+		throw new Error('Needs an input file');
+	}
+
 
 	function scanFragment(fragment) {
 		currentDocJSONNodeParents.push(fragment);
