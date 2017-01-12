@@ -314,19 +314,19 @@ function buildPandocAST(fl) {
 			blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
 			currentPandocNodeParents.pop();
 		} else if (inTable) {
-			if (newNode.t === "Plain"){
+			if (newNode.t === 'Plain') {
 				blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
 				currentPandocNodeParents.pop();
 			}
 		}
-		if (node.type === 'text'){ // Text creates a STR node in addition to newNode
-			if (!isCode){ // Ehh.. Not 100% sure about this
+		if (node.type === 'text') { // Text creates a STR node in addition to newNode
+			if (!isCode) { // Ehh.. Not 100% sure about this
 				// blue(`Popping 3 - (text/Str)`)
 				// currentPandocNodeParents.pop();
 			}
 		}
 
-		while (markCount > 0){
+		while (markCount > 0) {
 			blue('Popping mark')
 			markCount--;
 			currentPandocNodeParents.pop();
@@ -334,7 +334,7 @@ function buildPandocAST(fl) {
 			// ^^ Because these aren't parent Ndoes in docJSON
 		}
 
-		if (node.type === 'table'){
+		if (node.type === 'table') {
 			inTable = false;
 		}
 	}
@@ -359,24 +359,24 @@ function buildPandocAST(fl) {
 				console.log('Yeah parent is table')
 				console.log(`pushing to ${row}, ${col}`)
 				var numCols = parent.c[2].length; // how do you know that's columns and not rows
-				if (row < 1){
+				if (row < 1) {
 					// parent.c[3].push([newNode]) // c3 is for header data.
-					if (!parent.c[3][col]){
+					if (!parent.c[3][col]) {
 						parent.c[3][col] = [];
 					}
 					console.log(`inserting at c[3][${col}]`)
 
 					parent.c[3][col].push(newNode)
 				} else {
-					if (!parent.c[4][row-1]){
-						parent.c[4][row-1] = [];
+					if (!parent.c[4][row - 1]) {
+						parent.c[4][row - 1] = [];
 					}
-					if (!parent.c[4][row-1][col]){
-						parent.c[4][row-1][col] = [];
+					if (!parent.c[4][row - 1][col]) {
+						parent.c[4][row - 1][col] = [];
 					}
 					console.log(`inserting at c[4][${(row-1)}][${col}]`);
 
-					if( row == 1 && col == 0){
+					if (row === 1 && col === 0) {
 						console.log(JSON.stringify(newNode));
 					}
 
@@ -392,7 +392,7 @@ function buildPandocAST(fl) {
 				} else {
 					currentPandocNodeParents.push(newNode); // hmm not totally sure
 				}
-			} else if (parent.t === "BulletList"){
+			} else if (parent.t === 'BulletList'){
 				// parent.c[0] = [];
 				// parent.c[0] = [];
 				parent.c.push([newNode])
