@@ -34,14 +34,14 @@ function buildPandocAST(fl) {
 				newNode.c[0] = ['', [], []];
 				newNode.c[1] = [];
 				newNode.c[2] = [node.attrs.data.content.url, ''];
-			break;
+				break;
 			case 'heading':
 				var level = node.attrs.level;
 				newNode.t = 'Header';
 				newNode.c[0] = level;
 				newNode.c[1] = ['', [], []];
 				newNode.c[2] = [];
-			break;
+				break;
 			case 'text':
 				// Marks are handled here and the rest of it is handled later
 				if (node.marks) {
@@ -261,7 +261,7 @@ function buildPandocAST(fl) {
 				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
 				yellow(`PARENT: ${JSON.stringify(parent)}`)
-				if (parent && parent.c[0] && parent.t === "Para"){
+				if (parent && parent.c[0] && parent.t === 'Para'){
 					// Close the parent Paragraph node and open a new one.
 					// Because this will create a newline, and is how Pandoc does it
 					// Not doing it for plain, because of an edge case when its in OL->[Link, Str]
