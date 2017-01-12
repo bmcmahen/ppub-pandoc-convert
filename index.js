@@ -469,30 +469,30 @@ function buildPandocAST(fl) {
 		var mdFile;
 
 		if (fl.search('test/') !== -1) {
-			newFile = fl.split('.')[0].replace('test/','test/pandoc/') + '.json';
+			newFile = fl.split('.')[0].replace('test/', 'test/pandoc/') + '.json';
 			mdFile = fl.split('.')[0].replace('test/', 'test/md/') + '.md';
 		} else {
 			newFile = fl.split('.')[0] + '-pandoc.json';
 			mdFile = fl.split('.')[0] + '-converted.md';
 		}
 
-		return write(newFile, JSON.stringify(pandocJSON, null, "\t"))
-		.then(function(fn){
-			console.log("written to " + fn)
+		return write(newFile, JSON.stringify(pandocJSON, null, '\t'))
+		.then(function(fn) {
+			console.log('written to ' + fn);
 			return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${mdFile}`);
 		})
-		.then(function(idk){
-			console.log(`done converting`)
+		.then(function(idk) {
+			console.log(`done converting`);
 			return true;
 		})
 		.catch((error)=>{
 			// MAYBE this should throw an error instead of returning
 			console.log(`${error}`);
 			return false;
-		})
+		});
 	}
 
-	scanFragment(docJSON, 0)
+	scanFragment(docJSON, 0);
 
 	return finish(fl);
 }
@@ -500,23 +500,22 @@ function buildPandocAST(fl) {
 /* Pandoc has a Str node for each word and space, this function converts
 * strings to Pandocs format
 */
-function createTextNodes(str){
+function createTextNodes(str) {
 
 	var newNodes = [];
 	// str = str.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
-	str = str.split(" ")
-	console.log(str)
-	for (let i = 0; i < str.length; i++){
+	str = str.split(' ');
+	console.log(str);
+	for (var i = 0; i < str.length; i++) {
 		// if (str[i] == "") continue;
 
-		newNodes.push({t: "Str", c: str[i]})
-		if (i < str.length - 1){
-			newNodes.push({t: "Space"})
+		newNodes.push({ t: 'Str', c: str[i] });
+		if (i < str.length - 1) {
+			newNodes.push({ t: 'Space' });
 		}
 	}
 	return newNodes;
 }
-
 
 
 /*** Debugging    utility functions ****************** * * * * *
