@@ -43,7 +43,7 @@ function buildPandocAST(fl) {
 			case 'text':
 				// Marks are handled here and the rest of it is handled later
 				if (node.marks) {
-					for (var i = 0; i < node.marks.length; i++){
+					for (var i = 0; i < node.marks.length; i++) {
 						var newerNode;
 						if (node.marks[i].type === 'em') {
 							newerNode = {};
@@ -527,55 +527,55 @@ function createTextNodes(str){
 *** ***    ****************************************** * * * * *
 *** *    ******************************************** * * * * */
 
-function green(words, heading){
-	if (heading){
+function green(words, heading) {
+	if (heading) {
 		console.log("\n\t\t" + words.underline.green);
 		return;
 	}
 	console.log(colors.green(words) +"\n");
 }
 
-function yellow(words, heading){
-	if (heading){
+function yellow(words, heading) {
+	if (heading) {
 		console.log("\n\t\t" + words.underline.yellow);
 		return;
 	}
 	console.log(colors.yellow(words) +"\n");
 }
 
-function red(words, heading){
-	if (heading){
+function red(words, heading) {
+	if (heading) {
 		console.log("\n\t\t" + words.underline.red);
 		return;
 	}
 	console.log(colors.red(words) +"\n");
 }
 
-function blue(words, heading){
-	if (heading){
+function blue(words, heading) {
+	if (heading) {
 		console.log("\n\t\t" + words.underline.blue);
 		return;
 	}
 	console.log(colors.blue(words) +"\n");
 }
 
-function cyan(words, heading){
-	if (heading){
+function cyan(words, heading) {
+	if (heading) {
 		console.log("\n\t\t" + words.underline.cyan);
 		return;
 	}
 	console.log(colors.cyan(words) +"\n");
 }
 
-function white(words, heading){
-	if (heading){
+function white(words, heading) {
+	if (heading) {
 		console.log("\n\t\t" + words.underline.white);
 		return;
 	}
 	console.log(colors.white(words) +"\n");
 }
 
-if (process.argv[2]){
+if (process.argv[2]) {
 	buildPandocAST(process.argv[2]);
 } else {
 	module.exports = buildPandocAST;
