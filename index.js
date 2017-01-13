@@ -235,6 +235,11 @@ function buildPandocAST(fl) {
 				// // }
 				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 				break;
+			case 'latex':
+
+				newNode.t = 'Span';
+				newNode.c[0] = ['', ['math'], []];
+				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
 				newNode.t = 'DoNotAddThisNode';
@@ -311,7 +316,7 @@ function buildPandocAST(fl) {
 		|| node.type === 'list_item' || node.type === 'table'
 		|| node.type === 'table_row' || node.type === 'table_cell'
 		|| node.type === 'block_embed' || node.type === 'text'
-		|| node.type === 'embed') {
+		|| node.type === 'embed' || node.type === 'latex') {
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === 'Para' || newNode.t === 'Plain'
@@ -416,6 +421,13 @@ function buildPandocAST(fl) {
 
 				green(`pushing6 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
+				break;
+			case 'Span':
+				if (!parent.c[1]){
+					parent.c[1] = [];
+
+				}
+				parent.c[1].push(newNode);
 				break;
 			case 'BlockQuote':
 			case 'Para':
