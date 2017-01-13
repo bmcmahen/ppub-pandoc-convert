@@ -238,11 +238,12 @@ function buildPandocAST(fl) {
 			case 'latex':
 				console.log(node)
 				newNode.t = 'Math';
-				newNode.c = [{
-					t:"InlineMath"
-				},
-				node.content[0].text
-				]
+				newNode.c = [
+					{
+					t: 'InlineMath'
+					},
+					node.content[0].text
+				];
 
 				break;
 			default:

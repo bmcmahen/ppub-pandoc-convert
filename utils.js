@@ -15,7 +15,7 @@ exports.createTextNodes = function createTextNodes(str) {
 	str = str.split(' ');
 	console.log(str);
 	for (var i = 0; i < str.length; i++) {
-		// if (str[i] == "") continue;
+		if (str[i] === "") continue;
 
 		newNodes.push({ t: 'Str', c: str[i] });
 		if (i < str.length - 1) {
