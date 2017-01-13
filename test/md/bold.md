@@ -1,1 +1,1 @@
- **Simple bold example**
+**Simple bold example**

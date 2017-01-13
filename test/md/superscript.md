@@ -1,1 +1,1 @@
- ^superscript^
+^superscript^

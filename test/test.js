@@ -90,6 +90,16 @@ describe('Convert docJSON to PandocAST', function() {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
+		it('bibliography', (done) => {
+			convert('test/bibliography.json').then((result) => {
+				expect(result).to.equal(true);
+			}).then(done, done);
+		});
+		it('code block', (done) => {
+			convert('test/codeblock.json').then((result) => {
+				expect(result).to.equal(true);
+			}).then(done, done);
+		});
 	});
 	// describe(', failure to: ', function() {
 	//   it('simple bold', (done) => {

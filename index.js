@@ -246,6 +246,11 @@ function buildPandocAST(fl) {
 				];
 
 				break;
+			case 'code_block':
+				newNode.t = 'CodeBlock';
+				newNode.c[0] = ['',[],[]];
+				newNode.c[1] = node.content[0].text;
+				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
 				newNode.t = 'DoNotAddThisNode';
@@ -428,6 +433,7 @@ function buildPandocAST(fl) {
 				green(`pushing6 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 				break;
+			case 'CodeBlock':
 			case 'Math':
 				// Don't do anything
 				break;

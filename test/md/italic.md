@@ -1,1 +1,1 @@
-* Simple italic example*
+*Simple italic example*
