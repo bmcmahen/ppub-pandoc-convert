@@ -1,0 +1,178 @@
+{
+	"blocks": [
+		{
+			"t": "OrderedList",
+			"c": [
+				[
+					1,
+					{
+						"t": "DefaultStyle"
+					},
+					{
+						"t": "Period"
+					}
+				],
+				[
+					[
+						{
+							"t": "Plain",
+							"c": [
+								{
+									"t": "Str",
+									"c": "first"
+								}
+							]
+						},
+						{
+							"t": "OrderedList",
+							"c": [
+								[
+									1,
+									{
+										"t": "DefaultStyle"
+									},
+									{
+										"t": "Period"
+									}
+								],
+								[
+									[
+										{
+											"t": "Plain",
+											"c": [
+												{
+													"t": "Str",
+													"c": "first"
+												},
+												{
+													"t": "Space"
+												},
+												{
+													"t": "Str",
+													"c": "nest"
+												}
+											]
+										},
+										{
+											"t": "OrderedList",
+											"c": [
+												[
+													1,
+													{
+														"t": "DefaultStyle"
+													},
+													{
+														"t": "Period"
+													}
+												],
+												[
+													[
+														{
+															"t": "Plain",
+															"c": [
+																{
+																	"t": "Str",
+																	"c": "second"
+																},
+																{
+																	"t": "Space"
+																},
+																{
+																	"t": "Str",
+																	"c": "nest"
+																}
+															]
+														}
+													],
+													[
+														{
+															"t": "Plain",
+															"c": [
+																{
+																	"t": "Str",
+																	"c": "another"
+																},
+																{
+																	"t": "Space"
+																},
+																{
+																	"t": "Str",
+																	"c": "item"
+																}
+															]
+														}
+													]
+												]
+											]
+										}
+									],
+									[
+										{
+											"t": "Plain",
+											"c": [
+												{
+													"t": "Str",
+													"c": "idk"
+												},
+												{
+													"t": "Space"
+												},
+												{
+													"t": "Str",
+													"c": "bro"
+												}
+											]
+										}
+									]
+								]
+							]
+						}
+					],
+					[
+						{
+							"t": "Plain",
+							"c": [
+								{
+									"t": "Str",
+									"c": "first"
+								},
+								{
+									"t": "Space"
+								},
+								{
+									"t": "Str",
+									"c": "level"
+								}
+							]
+						}
+					],
+					[
+						{
+							"t": "Plain",
+							"c": [
+								{
+									"t": "Str",
+									"c": "first"
+								},
+								{
+									"t": "Space"
+								},
+								{
+									"t": "Str",
+									"c": "level"
+								}
+							]
+						}
+					]
+				]
+			]
+		}
+	],
+	"pandoc-api-version": [
+		1,
+		17,
+		0,
+		4
+	],
+	"meta": {}
+}

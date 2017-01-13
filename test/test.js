@@ -85,6 +85,11 @@ describe('Convert docJSON to PandocAST', function() {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
+		it('nested ordered lists', (done) => {
+			convert('test/nested-ol.json').then((result) => {
+				expect(result).to.equal(true);
+			}).then(done, done);
+		});
 	});
 	// describe(', failure to: ', function() {
 	//   it('simple bold', (done) => {

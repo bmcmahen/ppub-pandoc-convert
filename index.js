@@ -14,6 +14,7 @@ function buildPandocAST(fl) {
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
 	var docJSON = require('./' + fl);
+	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
 
 	if (!fl) {
 		throw new Error('Needs an input file');
@@ -102,7 +103,7 @@ function buildPandocAST(fl) {
 				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
 				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length - 1].type === 'list_item') {
 					red('PARENT IS LIST ITEM');
-					newNode.t = 'DoNotAddThisNode';
+					newNode.t = 'Plain';
 					break;
 				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table'){
 					newNode.t = 'DoNotAddThisNode';
@@ -121,6 +122,11 @@ function buildPandocAST(fl) {
 				break;
 			case 'bullet_list':
 				newNode.t = 'BulletList';
+				// newNode.c[0] = [];
+				console.log("Pushing to list depth stack")
+				red("PUSING -1")
+
+				listDepthStack.push(-1);
 				break;
 			case 'ordered_list':
 				newNode.t = 'OrderedList';
@@ -133,9 +139,22 @@ function buildPandocAST(fl) {
 					}
 				];
 				newNode.c[1] = [];
+				red("PUSING -1")
+				listDepthStack.push(-1);
 				break;
 			case 'list_item':
-				newNode.t = 'Plain';
+				newNode.t = 'DoNotAddThisNode';
+
+				console.log("Reached a list item. " + listDepthStack)
+				var depth = listDepthStack[listDepthStack.length - 1] + 1;
+				listDepthStack[listDepthStack.length - 1] = depth;
+				var parent = currentPandocNodeParents[currentPandocNodeParents.length - 1];
+				if (parent.t === 'OrderedList'){
+					parent.c[1][depth] = [];
+				} else {
+					parent.c[depth] = [];
+				}
+				console.log("new list depth stack " + listDepthStack)
 				break;
 			case 'table':
 				inTable = true;
@@ -149,7 +168,7 @@ function buildPandocAST(fl) {
 				newNode.c[3] = []; // Column Titles
 				newNode.c[4] = []; // Column content
 				var columns = node.attrs.columns;
-				for (let i = 0; i < columns; i++) {
+				for (var i = 0; i < columns; i++) {
 					newNode.c[1].push({ t: 'AlignDefault' });
 					newNode.c[2].push(0);
 				}
@@ -169,11 +188,10 @@ function buildPandocAST(fl) {
 				// if has width & height
 				if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
 					var widthHeightPercentage = '' + node.attrs.size;
-					newNode.c[0][2]=[['width', widthHeightPercentage], ['height', widthHeightPercentage]]
+					newNode.c[0][2] = [['width', widthHeightPercentage], ['height', widthHeightPercentage]]
 				}
 				newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];
 				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
-
 				break;
 			case 'citations':
 				newNode.t = 'DoNotAddThisNode';
@@ -255,9 +273,7 @@ function buildPandocAST(fl) {
 					}
 				}
 			}
-			if (isCode) {
-
-			} else {
+			if (!isCode) {
 				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 
 				yellow(`PARENT: ${JSON.stringify(parent)}`)
@@ -323,6 +339,10 @@ function buildPandocAST(fl) {
 		if (node.type === 'table') {
 			inTable = false;
 		}
+
+		if (node.type === 'bullet_list' || node.type === 'ordered_list') {
+			listDepthStack.pop();
+		}
 	}
 
 	// Link a node to a parent node, or make it a parent
@@ -372,13 +392,25 @@ function buildPandocAST(fl) {
 				isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				break;
 			case 'BulletList':
-				parent.c.push([newNode]);
+				var depth = listDepthStack[listDepthStack.length - 1];
+				parent.c[depth].push(newNode);
+
 				green(`pushing5 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 
 				break;
 			case 'OrderedList':
-				parent.c[1].push([newNode]);
+				var depth = listDepthStack[listDepthStack.length - 1];
+				if (depth === -1){
+					depth = listDepthStack[listDepthStack.length - 2];
+
+				}
+				console.log(listDepthStack)
+				console.log(`pushing a ${newNode.t} at c[1][${depth}]`)
+				console.log(JSON.stringify(parent))
+
+				parent.c[1][depth].push(newNode);
+
 				green(`pushing6 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 				break;
