@@ -236,9 +236,14 @@ function buildPandocAST(fl) {
 				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 				break;
 			case 'latex':
+				console.log(node)
+				newNode.t = 'Math';
+				newNode.c = [{
+					t:"InlineMath"
+				},
+				node.content[0].text
+				]
 
-				newNode.t = 'Span';
-				newNode.c[0] = ['', ['math'], []];
 				break;
 			default:
 				red(`Uh oh...Unprocessed node of type ${node.type}`);
@@ -422,12 +427,8 @@ function buildPandocAST(fl) {
 				green(`pushing6 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 				break;
-			case 'Span':
-				if (!parent.c[1]){
-					parent.c[1] = [];
-
-				}
-				parent.c[1].push(newNode);
+			case 'Math':
+				// Don't do anything
 				break;
 			case 'BlockQuote':
 			case 'Para':
