@@ -393,6 +393,9 @@ function buildPandocAST(fl) {
 				break;
 			case 'BulletList':
 				var depth = listDepthStack[listDepthStack.length - 1];
+				if (depth === -1) {
+					depth = listDepthStack[listDepthStack.length - 2];
+				}
 				parent.c[depth].push(newNode);
 
 				green(`pushing5 ${JSON.stringify(newNode)}`);
@@ -401,7 +404,7 @@ function buildPandocAST(fl) {
 				break;
 			case 'OrderedList':
 				var depth = listDepthStack[listDepthStack.length - 1];
-				if (depth === -1){
+				if (depth === -1) {
 					depth = listDepthStack[listDepthStack.length - 2];
 
 				}
