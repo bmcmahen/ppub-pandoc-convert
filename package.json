@@ -1,7 +1,7 @@
 {
   "name": "ProseMirror-to-Pandoc",
-  "version": "0.2.0",
-  "description": "Convert docJSON (ProseMirror) to Pandoc JSON AST",
+  "version": "0.3.0",
+  "description": "Convert PubPubs docJSON (ProseMirror) to Pandoc JSON AST",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha"
