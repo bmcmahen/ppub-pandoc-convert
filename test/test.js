@@ -100,6 +100,11 @@ describe('Convert docJSON to PandocAST', function() {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
+		it('table 4 empty cells', (done) => {
+			convert('test/table-4-empty-cells.json').then((result) => {
+				expect(result).to.equal(true);
+			}).then(done, done);
+		});
 	});
 	// describe(', failure to: ', function() {
 	//   it('simple bold', (done) => {
