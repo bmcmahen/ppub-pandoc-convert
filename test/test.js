@@ -5,110 +5,110 @@ var expect = chai.expect;
 describe('Convert docJSON to PandocAST', function() {
 	describe(', successful to: ', function() {
 		it('simple bold', (done) => {
-			convert('test/bold.json').then((result) => {
+			convert({ fl: 'test/bold.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('simple italic', (done) => {
-			convert('test/italic.json').then((result) => {
+			convert({ fl: 'test/italic.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('simple bold and italic', (done) => {
-			convert('test/bold-and-italic.json').then((result) => {
+			convert({ fl: 'test/bold-and-italic.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('simple heading one', (done) => {
-			convert('test/heading-one.json').then((result) => {
+			convert({ fl: 'test/heading-one.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('simple strikethrough', (done) => {
-			convert('test/strikethrough.json').then((result) => {
+			convert({ fl: 'test/strikethrough.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('simple image', (done) => {
-			convert('test/image.json').then((result) => {
+			convert({ fl: 'test/image.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 
 		it('simple code', (done) => {
-			convert('test/code.json').then((result) => {
+			convert({ fl: 'test/code.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('new lines', (done) => {
-			convert('test/newlines.json').then((result) => {
+			convert({ fl: 'test/newlines.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('ordered list', (done) => {
-			convert('test/ordered-list.json').then((result) => {
+			convert({ fl: 'test/ordered-list.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('ordered list 2', (done) => {
-			convert('test/ordered-list-2.json').then((result) => {
+			convert({ fl: 'test/ordered-list-2.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('text before first word', (done) => {
-			convert('test/text-before-paragraph.json').then((result) => {
+			convert({ fl: 'test/text-before-paragraph.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('superscript', (done) => {
-			convert('test/superscript.json').then((result) => {
+			convert({ fl: 'test/superscript.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('subscript', (done) => {
-			convert('test/subscript.json').then((result) => {
+			convert({ fl: 'test/subscript.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
-		it('quotation', (done) => {
-			convert('test/quotation.json').then((result) => {
+		it('quotation' , (done) => {
+			convert({ fl: 'test/quotation.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('simple table', (done) => {
-			convert('test/table.json').then((result) => {
+			convert({ fl: 'test/table.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('more complex pub', (done) => {
-			convert('test/more-complex-pub.json').then((result) => {
+			convert({ fl: 'test/more-complex-pub.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('nested ordered lists', (done) => {
-			convert('test/nested-ol.json').then((result) => {
+			convert({ fl: 'test/nested-ol.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('bibliography', (done) => {
-			convert('test/bibliography.json').then((result) => {
+			convert({ fl: 'test/bibliography.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('code block', (done) => {
-			convert('test/codeblock.json').then((result) => {
+			convert({ fl: 'test/codeblock.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 		it('table 4 empty cells', (done) => {
-			convert('test/table-4-empty-cells.json').then((result) => {
+			convert({ fl: 'test/table-4-empty-cells.json' }).then((result) => {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
 	});
 	// describe(', failure to: ', function() {
 	//   it('simple bold', (done) => {
-	//     convert('test/bold.json').then((result) => {
+	//     convert({ fl: 'test/bold.json' }).then((result) => {
 	//       console.log("DONE : D " + result)
 	//       expect(result).to.equal(1);
 	//       done();

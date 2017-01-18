@@ -5,7 +5,7 @@ var execPromise = require('child-process-promise').exec;
 var isLeafNode = require('./utils').isLeafNode;
 var createTextNodes = require('./utils').createTextNodes;
 
-function buildPandocAST(fl) {
+function buildPandocAST(obj) {
 	var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 	var currentPandocNodeParents = []; // stack for keeping track of the last output node
 	var blocks = []; // blocks (pandoc AST) is eventually set to this array.
@@ -13,11 +13,17 @@ function buildPandocAST(fl) {
 	var inTable = false;
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
-	var docJSON = require('./' + fl);
+	var docJSON;
+	if (obj.docJSON) {
+		docJSON = obj.docJSON;
+	} else if (obj.fl) {
+		docJSON = require('./' + obj.fl);
+	}
+
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
 
-	if (!fl) {
-		throw new Error('Needs an input file');
+	if (!obj.fl && !obj.docJSON) {
+		throw new Error('Input misisng');
 	}
 	console.log(colors.cyan('Starting conversion\n'));
 
@@ -485,7 +491,7 @@ function buildPandocAST(fl) {
 
 	function finish(fl) {
 		var newFile;
-		var mdFile;
+		var late;
 
 		pandocJSON.blocks = blocks;
 		pandocJSON['pandoc-api-version'] = [
@@ -496,33 +502,37 @@ function buildPandocAST(fl) {
 		];
 		pandocJSON.meta = {};
 
-		if (fl.search('test/') !== -1) {
-			newFile = fl.split('.')[0].replace('test/', 'test/pandoc/') + '.json';
-			mdFile = fl.split('.')[0].replace('test/', 'test/md/') + '.md';
-		} else {
-			newFile = fl.split('.')[0] + '-pandoc.json';
-			mdFile = fl.split('.')[0] + '-converted.md';
-		}
 
-		return write(newFile, JSON.stringify(pandocJSON, null, '\t'))
-		.then(function(fn) {
-			console.log('written to ' + fn);
-			return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${mdFile}`);
-		})
-		.then(function(idk) {
-			console.log('done converting');
-			return true;
-		})
-		.catch((error)=>{
-			// MAYBE this should throw an error instead of returning
-			console.log(`${error}`);
-			return false;
-		});
+		if (fl) {
+			if (fl.search('test/') !== -1) {
+				newFile = fl.split('.')[0].replace('test/', 'test/pandoc/') + '.json';
+				late = fl.split('.')[0].replace('test/', 'test/md/') + '.md';
+			} else {
+				newFile = fl.split('.')[0] + '-pandoc.json';
+				late = fl.split('.')[0] + '-converted.md';
+			}
+			return write(newFile, JSON.stringify(pandocJSON, null, '\t'))
+			.then(function(fn) {
+				console.log('written to ' + fn);
+				return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${late}`);
+			})
+			.then(function(idk) {
+				console.log('done converting');
+				return true;
+			})
+			.catch((error)=>{
+				// MAYBE this should throw an error instead of returning
+				console.log(`${error}`);
+				return false;
+			});
+		}
+		return pandocJSON;
+
 	}
 
 	scanFragment(docJSON, 0);
 
-	return finish(fl);
+	return finish(obj.fl);
 }
 
 /*** Debugging    utility functions ****************** * * * * *
