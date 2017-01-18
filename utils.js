@@ -1,5 +1,5 @@
 exports.isLeafNode = function isLeafNode(node) {
-	if (node.t === 'Str' || node.t === 'Space') {
+	if (node.t === 'Str' || node.t === 'Space' || node.t === 'Cite') {
 		return true;
 	}
 	return false;

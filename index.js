@@ -112,7 +112,7 @@ function buildPandocAST(obj) {
 					red('PARENT IS LIST ITEM');
 					newNode.t = 'Plain';
 					break;
-				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table'){
+				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table') {
 					newNode.t = 'DoNotAddThisNode';
 				} else {
 					// This is the proper way to handle Para -- one to one with docJSOn paragraph
@@ -201,18 +201,53 @@ function buildPandocAST(obj) {
 				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
 				break;
 			case 'citations':
-				if (node.content){
+				if (node.content) {
 					newNode.t = 'Div';
 					newNode.c = [
-						["refs", ["references"], []],
+						['refs', ['references'], []],
 						[]
 					];
 				} else {
-					newNode.t = "DoNotAddThisNode";
+					newNode.t = 'DoNotAddThisNode';
 				}
 
 				break;
+			case 'reference':
+				// Footnote
+				var citationId = node.attrs.citationID;
 
+				newNode.t = 'Cite';
+				newNode.c = [
+					[
+						{
+							citationSuffix: [
+
+							],
+							citationNoteNum: 0,
+							citationMode: {
+								t: 'NormalCitation'
+							},
+							citationPrefix: [
+
+							],
+							citationId: 'item' + citationId,
+							citationHash: 1 // Idk what this is
+						}
+					],
+					[]
+				]
+
+			// red("Hit a citation. Unimplemented..", true)
+			// newNode.t = "Note";
+			// var content;
+			// console.log(JSON.stringify(node))
+			//
+			// if (node.content[0].attrs.caption)
+			// 	content = createTextNodes(node.attrs.caption);
+			// }
+			// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
+
+				break;
 
 				// Crete a Para parent
 				// newNode.t = "Para";
@@ -359,7 +394,9 @@ function buildPandocAST(obj) {
 		|| node.type === 'list_item' || node.type === 'table'
 		|| node.type === 'table_row' || node.type === 'table_cell'
 		|| node.type === 'block_embed' || node.type === 'text'
-		|| node.type === 'embed' || node.type === 'latex') {
+		|| node.type === 'embed' || node.type === 'latex'
+		|| node.type === 'reference' || node.type === 'citation'
+		|| node.type === 'citations') {
 			currentDocJSONNodeParents.pop();
 		}
 		if (newNode.t === 'Para' || newNode.t === 'Plain'
@@ -468,6 +505,10 @@ function buildPandocAST(obj) {
 			case 'CodeBlock':
 			case 'Math':
 				// Don't do anything
+				break;
+			case 'Cite':
+				red("PARENT IS CITE SHOULD NEVER HAPPEN LOL")
+				parent.c.push(newNode);
 				break;
 			case 'BlockQuote':
 			case 'Para':
