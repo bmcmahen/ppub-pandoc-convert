@@ -14,8 +14,9 @@ function buildPandocAST(obj) {
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
 	var docJSON;
+	var refItemNumber = 1;
 	if (obj.docJSON) {
-		docJSON = obj.docJSON;
+		docJSON = JSON.parse(obj.docJSON);
 	} else if (obj.fl) {
 		docJSON = require('./' + obj.fl);
 	}
@@ -200,9 +201,20 @@ function buildPandocAST(obj) {
 				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
 				break;
 			case 'citations':
-				newNode.t = 'DoNotAddThisNode';
+				if (node.content){
+					newNode.t = 'Div';
+					newNode.c = [
+						["refs", ["references"], []],
+						[]
+					];
+				} else {
+					newNode.t = "DoNotAddThisNode";
+				}
 
-				//Crete a Para parent
+				break;
+
+
+				// Crete a Para parent
 				// newNode.t = "Para";
 				// var childNode = {};
 				// newNode.c[0] = childNode;
@@ -228,6 +240,7 @@ function buildPandocAST(obj) {
 				// 		c: "@Book" //May not necessarily be book
 				// 	}
 				// ]]
+				// childNode.c[2] =
 
 
 				// Footers stuf fis copy pasted below. This is untested and copy pasted.
@@ -235,11 +248,24 @@ function buildPandocAST(obj) {
 				// newNode.t = "Note";
 				// var content;
 				// console.log(JSON.stringify(node))
-				// //
-				// // if (node.content[0].attrs.caption)
-				// // 	content = createTextNodes(node.attrs.caption);
-				// // }
+				//
+				// if (node.content[0].attrs.caption)
+				// 	content = createTextNodes(node.attrs.caption);
+				// }
 				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
+			case 'citation':
+				newNode.t = 'Div';
+
+				var authorName = node.attrs.data.author;
+				var title = node.attrs.data.title;
+				var journal = node.attrs.data.journal;
+				var year = node.attrs.data.year;
+				var citationString = `${authorName}. ${year}. ${title}. ${journal}`
+
+				newNode.c = [
+					['ref-item' + refItemNumber++, [], []],
+					[{ t: 'Para', c: createTextNodes(citationString) }]
+				];
 				break;
 			case 'latex':
 				console.log(node)
@@ -582,7 +608,7 @@ function cyan(words, heading) {
 }
 
 if (process.argv[2]) {
-	buildPandocAST(process.argv[2]);
+	buildPandocAST({ fl: process.argv[2]});
 } else {
 	module.exports = buildPandocAST;
 }

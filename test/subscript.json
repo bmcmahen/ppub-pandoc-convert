@@ -16,15 +16,7 @@
          ]
       },
       {
-         "type":"citations",
-         "content":[
-            {
-               "type":"citation",
-               "attrs":{
-                  "title":null
-               }
-            }
-         ]
+         "type":"citations"
       }
    ]
 }

@@ -1,0 +1,32 @@
+{
+   "type":"doc",
+   "content":[
+      {
+         "type":"citations",
+         "content":[
+            {
+               "type":"citation",
+               "attrs":{
+                  "data":{
+                     "title":"birds are good",
+                     "author":"jeffry dahmer",
+                     "journal":"journal or berd",
+                     "year":"2013"
+                  }
+               }
+            },
+            {
+               "type":"citation",
+               "attrs":{
+                  "data":{
+                     "title":"special carsgud",
+                     "author":"hassan sherbly",
+                     "journal":"jods",
+                     "year":"1991"
+                  }
+               }
+            }
+         ]
+      }
+   ]
+}

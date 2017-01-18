@@ -1,0 +1,158 @@
+{
+	"blocks": [
+		{
+			"t": "Div",
+			"c": [
+				[
+					"refs",
+					[
+						"references"
+					],
+					[]
+				],
+				[
+					{
+						"t": "Div",
+						"c": [
+							[
+								"ref-item1",
+								[],
+								[]
+							],
+							[
+								{
+									"t": "Para",
+									"c": [
+										{
+											"t": "Str",
+											"c": "jeffry"
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "dahmer."
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "2013."
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "birds"
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "are"
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "good."
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "journal"
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "or"
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "berd"
+										}
+									]
+								}
+							]
+						]
+					},
+					{
+						"t": "Div",
+						"c": [
+							[
+								"ref-item2",
+								[],
+								[]
+							],
+							[
+								{
+									"t": "Para",
+									"c": [
+										{
+											"t": "Str",
+											"c": "hassan"
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "sherbly."
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "1991."
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "special"
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "carsgud."
+										},
+										{
+											"t": "Space"
+										},
+										{
+											"t": "Str",
+											"c": "jods"
+										}
+									]
+								}
+							]
+						]
+					}
+				]
+			]
+		}
+	],
+	"pandoc-api-version": [
+		1,
+		17,
+		0,
+		4
+	],
+	"meta": {}
+}

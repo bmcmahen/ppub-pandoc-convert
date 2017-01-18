@@ -105,6 +105,11 @@ describe('Convert docJSON to PandocAST', function() {
 				expect(result).to.equal(true);
 			}).then(done, done);
 		});
+		it('citations', (done) => {
+			convert({ fl: 'test/citations.json' }).then((result) => {
+				expect(result).to.equal(true);
+			}).then(done, done);
+		});
 	});
 	// describe(', failure to: ', function() {
 	//   it('simple bold', (done) => {
