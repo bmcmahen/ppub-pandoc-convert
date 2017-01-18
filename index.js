@@ -225,12 +225,12 @@ function buildPandocAST(obj) {
 							],
 							citationNoteNum: 0,
 							citationMode: {
-								t: 'NormalCitation'
+								t: 'AuthorInText'
 							},
 							citationPrefix: [
 
 							],
-							citationId: 'item' + citationId,
+							citationId: 'item1',
 							citationHash: 1 // Idk what this is
 						}
 					],
@@ -581,7 +581,7 @@ function buildPandocAST(obj) {
 			return write(newFile, JSON.stringify(pandocJSON, null, '\t'))
 			.then(function(fn) {
 				console.log('written to ' + fn);
-				return execPromise(`pandoc -f JSON ${newFile} -t markdown-simple_tables+pipe_tables --atx-headers -o ${late}`);
+				return execPromise(`pandoc -f JSON ${newFile} --filter=pandoc-citeproc -t markdown-simple_tables+pipe_tables --atx-headers -o ${late}`);
 			})
 			.then(function(idk) {
 				console.log('done converting');
