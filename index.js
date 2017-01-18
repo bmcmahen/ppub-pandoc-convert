@@ -14,6 +14,10 @@ function buildPandocAST(obj) {
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
 	var docJSON;
+	var itemCountBib = 1;
+
+	var bibFile = Math.random().toString(36).substring(7) + '.bib';
+
 	var refItemNumber = 1;
 	if (obj.docJSON) {
 		docJSON = JSON.parse(obj.docJSON);
@@ -201,15 +205,17 @@ function buildPandocAST(obj) {
 				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
 				break;
 			case 'citations':
-				if (node.content) {
-					newNode.t = 'Div';
-					newNode.c = [
-						['refs', ['references'], []],
-						[]
-					];
-				} else {
-					newNode.t = 'DoNotAddThisNode';
-				}
+				// if (node.content) {
+				// 	newNode.t = 'Div';
+				// 	newNode.c = [
+				// 		['refs', ['references'], []],
+				// 		[]
+				// 	];
+				// } else {
+				// 	newNode.t = 'DoNotAddThisNode';
+				// }
+
+				newNode.t = "DoNotAddThisNode";
 
 				break;
 			case 'reference':
@@ -289,18 +295,33 @@ function buildPandocAST(obj) {
 				// }
 				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 			case 'citation':
-				newNode.t = 'Div';
-
-				var authorName = node.attrs.data.author;
+				var author = node.attrs.data.author;
 				var title = node.attrs.data.title;
 				var journal = node.attrs.data.journal;
 				var year = node.attrs.data.year;
-				var citationString = `${authorName}. ${year}. ${title}. ${journal}`
+				var citationString = `${author}. ${year}. ${title}. ${journal}`
 
-				newNode.c = [
-					['ref-item' + refItemNumber++, [], []],
-					[{ t: 'Para', c: createTextNodes(citationString) }]
-				];
+				// Going to try to insert this into the .bib file
+				// newNode.t = 'Div';
+				//
+		//
+				// newNode.c = [
+				// 	['ref-item' + refItemNumber++, [], []],
+				// 	[{ t: 'Para', c: createTextNodes(citationString) }]
+				// ];
+				newNode.t = "DoNotAddThisNode";
+
+				var str = `
+					@article{item${itemCountBib++},
+						author = {"${author}"},
+						journal = {"${journal}"},
+						year = {"${year}"},
+						title = {"${title}"}
+					}
+					`;
+					execPromise(`echo "${str}" >> ${bibFile}`);
+
+					//
 				break;
 			case 'latex':
 				console.log(node)
