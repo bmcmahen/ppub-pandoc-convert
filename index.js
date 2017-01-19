@@ -430,16 +430,17 @@ function convertToPandoc(obj) {
 			}
 			if (newNode.t === 'Para' || newNode.t === 'Plain'
 			|| newNode.t === 'Header' || newNode.t === 'Code'
-			|| newNode.t === 'HorizontalRule' || newNode.t === 'Blockquote'
+			|| newNode.t === 'HorizontalRule' || newNode.t === 'BlockQuote'
 			|| newNode.t === 'BulletList' || newNode.t === 'OrderedList'
 			|| newNode.t === 'Table' || newNode.t === 'Image'
-			|| newNode.t === 'Note' || newNode.t === 'Link') {
+			|| newNode.t === 'Note' || newNode.t === 'Link'
+			|| newNode.t === 'Superscript') {
 				// Link is for the case UL->[Link, Str]
-				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`)
+				blue(`Popping 1 - ${JSON.stringify(newNode.t)}`);
 				currentPandocNodeParents.pop();
 			} else if (inTable) {
 				if (newNode.t === 'Plain') {
-					blue(`Popping 2 - ${JSON.stringify(newNode.t)}`)
+					blue(`Popping 2 - ${JSON.stringify(newNode.t)}`);
 					currentPandocNodeParents.pop();
 				}
 			}
