@@ -243,7 +243,7 @@ function convertToPandoc(obj) {
 								citationPrefix: [
 
 								],
-								citationId: 'item1',
+								citationId: 'item' + citationId,
 								citationHash: 1 // Idk what this is
 							}
 						],
@@ -677,8 +677,9 @@ function cyan(words, heading) {
 	console.log(colors.cyan(words) + '\n');
 }
 
+// Allow command line args `node index fileToConvert.json`
 if (process.argv[2]) {
-	convertToPandoc({ fl: process.argv[2]});
+	convertToPandoc({ fl: process.argv[2] });
 } else {
 	module.exports = convertToPandoc;
 }
