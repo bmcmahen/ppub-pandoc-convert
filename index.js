@@ -5,7 +5,7 @@ var execPromise = require('child-process-promise').exec;
 var isLeafNode = require('./utils').isLeafNode;
 var createTextNodes = require('./utils').createTextNodes;
 
-function buildPandocAST(obj) {
+function convertToPandoc(obj) {
 	var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 	var currentPandocNodeParents = []; // stack for keeping track of the last output node
 	var blocks = []; // blocks (pandoc AST) is eventually set to this array.
@@ -15,6 +15,7 @@ function buildPandocAST(obj) {
 	var row; // used when within a table, to keep track of current pandoc row
 	var docJSON;
 	var itemCountBib = 1;
+	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
 
 	var bibFile = Math.random().toString(36).substring(7) + '.bib';
 
@@ -25,7 +26,6 @@ function buildPandocAST(obj) {
 		docJSON = require('./' + obj.fl);
 	}
 
-	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
 
 	if (!obj.fl && !obj.docJSON) {
 		throw new Error('Input misisng');
@@ -676,7 +676,7 @@ function cyan(words, heading) {
 }
 
 if (process.argv[2]) {
-	buildPandocAST({ fl: process.argv[2]});
+	convertToPandoc({ fl: process.argv[2]});
 } else {
-	module.exports = buildPandocAST;
+	module.exports = convertToPandoc;
 }
