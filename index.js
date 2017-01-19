@@ -6,7 +6,6 @@ var isLeafNode = require('./utils').isLeafNode;
 var createTextNodes = require('./utils').createTextNodes;
 
 function convertToPandoc(obj) {
-	return new Promise(function(resolve, reject) {
 
 		var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 		var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -615,13 +614,11 @@ function convertToPandoc(obj) {
 				})
 				.then(function(idk) {
 					console.log('done converting');
-					resolve();
 					return true;
 				})
 				.catch((error)=>{
 					// MAYBE this should throw an error instead of returning
 					console.log(`${error}`);
-					reject();
 					return false;
 				});
 			}
@@ -632,7 +629,6 @@ function convertToPandoc(obj) {
 		scanFragment(docJSON, 0);
 
 		return finish(obj.fl);
-	});
 }
 
 /*** Debugging    utility functions ****************** * * * * *

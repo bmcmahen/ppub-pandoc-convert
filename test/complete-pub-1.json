@@ -1,0 +1,179 @@
+{
+   "type":"doc",
+   "content":[
+      {
+         "type":"heading",
+         "attrs":{
+            "level":1
+         },
+         "content":[
+            {
+               "type":"text",
+               "text":"A Test Pub"
+            }
+         ]
+      },
+      {
+         "type":"paragraph",
+         "content":[
+            {
+               "type":"text",
+               "text":"Abstract: Here we have created a test pub to show how Pubs look when output to LaTeX."
+            }
+         ]
+      },
+      {
+         "type":"paragraph"
+      },
+      {
+         "type":"heading",
+         "attrs":{
+            "level":2
+         },
+         "content":[
+            {
+               "type":"text",
+               "text":"Introduction"
+            }
+         ]
+      },
+      {
+         "type":"paragraph",
+         "content":[
+            {
+               "type":"text",
+               "text":"Here we introduce the subject matter and talk more about things like how screwed we are for instance. How bad things are in this world except for the internet. The internet is pretty cool. "
+            },
+            {
+               "type":"reference",
+               "attrs":{
+                  "citationID":"1"
+               }
+            }
+         ]
+      },
+      {
+         "type":"paragraph"
+      },
+      {
+         "type":"heading",
+         "attrs":{
+            "level":4
+         },
+         "content":[
+            {
+               "type":"text",
+               "text":"Why is the internet cool?"
+            }
+         ]
+      },
+      {
+         "type":"paragraph",
+         "content":[
+            {
+               "type":"text",
+               "text":"Because I said so. "
+            },
+            {
+               "type":"reference",
+               "attrs":{
+                  "citationID":"1"
+               }
+            },
+            {
+               "type":"text",
+               "text":" Does that make sense? Or does it not make sense."
+            },
+            {
+               "type":"text",
+               "marks":[
+                  {
+                     "type":"sup"
+                  }
+               ],
+               "text":" it better god damn make sense."
+            }
+         ]
+      },
+      {
+         "type":"heading",
+         "attrs":{
+            "level":2
+         },
+         "content":[
+            {
+               "type":"text",
+               "text":"Body"
+            }
+         ]
+      },
+      {
+         "type":"paragraph",
+         "content":[
+            {
+               "type":"text",
+               "text":"A wise man once said "
+            }
+         ]
+      },
+      {
+         "type":"blockquote",
+         "content":[
+            {
+               "type":"paragraph",
+               "content":[
+                  {
+                     "type":"text",
+                     "text":"I don’t want to live on this planet anymore."
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "type":"paragraph",
+         "content":[
+            {
+               "type":"text",
+               "text":"Every day I wonder how to "
+            }
+         ]
+      },
+      {
+         "type":"code_block",
+         "content":[
+            {
+               "type":"text",
+               "text":"var p = hassan.getLife()\np.relaxCircumstance();\n"
+            }
+         ]
+      },
+      {
+         "type":"citations",
+         "content":[
+            {
+               "type":"citation",
+               "attrs":{
+                  "data":{
+                     "title":"Absolute Truths",
+                     "author":"Hassan Shaikley",
+                     "journal":"Journal of Bigly",
+                     "year":"2017"
+                  }
+               }
+            },
+            {
+               "type":"citation",
+               "attrs":{
+                  "data":{
+                     "title":"The Internet is So Cool",
+                     "author":"Jeffery Dahmer",
+                     "journal":"Associated Press",
+                     "year":"1994"
+                  }
+               }
+            }
+         ]
+      }
+   ]
+}

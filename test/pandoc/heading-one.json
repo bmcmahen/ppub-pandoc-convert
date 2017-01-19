@@ -23,6 +23,25 @@
 					}
 				]
 			]
+		},
+		{
+			"t": "Header",
+			"c": [
+				1,
+				[
+					"references",
+					[
+						"unnumbered"
+					],
+					[]
+				],
+				[
+					{
+						"t": "Str",
+						"c": "References"
+					}
+				]
+			]
 		}
 	],
 	"pandoc-api-version": [

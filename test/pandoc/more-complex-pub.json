@@ -186,11 +186,30 @@
 							]
 						}
 					]
-				},
-				{
-					"t": "Para",
-					"c": []
 				}
+			]
+		},
+		{
+			"t": "Para",
+			"c": []
+		},
+		{
+			"t": "Header",
+			"c": [
+				1,
+				[
+					"references",
+					[
+						"unnumbered"
+					],
+					[]
+				],
+				[
+					{
+						"t": "Str",
+						"c": "References"
+					}
+				]
 			]
 		}
 	],
