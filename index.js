@@ -248,7 +248,7 @@ function convertToPandoc(obj) {
 							}
 						],
 						[]
-					]
+					];
 
 				// red("Hit a citation. Unimplemented..", true)
 				// newNode.t = "Note";

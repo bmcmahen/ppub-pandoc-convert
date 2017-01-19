@@ -14,6 +14,8 @@ exports.createTextNodes = function createTextNodes(str) {
 	// str = str.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
 	str = str.split(' ');
 	console.log(str);
+	// if first node is a space
+	if (str[0] === '') newNodes.push({ t: 'Space' });
 	for (var i = 0; i < str.length; i++) {
 		if (str[i] === '') continue;
 
