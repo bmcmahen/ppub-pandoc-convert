@@ -215,6 +215,12 @@ function buildPandocAST(obj) {
 				// 	newNode.t = 'DoNotAddThisNode';
 				// }
 
+				// Create a header node that goes above that says 'References'
+
+				var aboveNode = { t: 'Header', c: [1, ['references', ['unnumbered'], []], [{ 't':'Str', 'c':'References' }]]};
+				// insert this node at the root
+				blocks.push(aboveNode)
+
 				newNode.t = "DoNotAddThisNode";
 
 				break;
