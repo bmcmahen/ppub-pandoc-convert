@@ -586,21 +586,19 @@ function pubToPandoc(docJSON) {
 	*********************************************************************/
 
 	function finish(fl) {
-		return new Promise(function (resolve, reject) {
-			if (blocks.length === 0) {
-				reject('Conversion failed');
-			}
-			pandocJSON.blocks = blocks;
-			pandocJSON['pandoc-api-version'] = [
-				1,
-				17,
-				0,
-				4
-			];
-			pandocJSON.meta = {};
+		if (blocks.length === 0) {
+			throw new Error('Conversion failed');
+		}
+		pandocJSON.blocks = blocks;
+		pandocJSON['pandoc-api-version'] = [
+			1,
+			17,
+			0,
+			4
+		];
+		pandocJSON.meta = {};
 
-			resolve(pandocJSON);
-		});
+		return pandocJSON;
 	}
 
 	scanFragment(docJSON, 0);
@@ -658,5 +656,5 @@ function cyan(words, heading) {
 if (process.argv[2]) {
 	pubToPandoc(require(`./${process.argv[2]}`));
 } else {
-	module.exports = pubToPandoc;
+	exports.pubToPandoc = pubToPandoc;
 }
