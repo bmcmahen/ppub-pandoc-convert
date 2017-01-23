@@ -11,8 +11,8 @@ the internet. The internet is pretty cool. @item1
 
 #### Why is the internet cool?
 
-Because I said so. @item1Does that make sense? Or does it not make
-sense.^it\ better\ god\ damn\ make\ sense.^
+Because I said so. @item1 Does that make sense? Or does it not make
+sense.^\ it\ better\ god\ damn\ make\ sense.^
 
 ## Body
 

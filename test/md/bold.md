@@ -1,3 +1,3 @@
-**Simple bold example**
+ **Simple bold example**
 
 # References {#references .unnumbered}
