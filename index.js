@@ -2,7 +2,11 @@ var write = require('fs-writefile-promise');
 var colors = require('colors');
 var execPromise = require('child-process-promise').exec;
 
-function pubToPandoc(docJSON) {
+/*
+ * @options { bibFile }
+ *
+ */
+function pubToPandoc(docJSON, options) {
 
 	var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
 	var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -13,7 +17,7 @@ function pubToPandoc(docJSON) {
 	var row; // used when within a table, to keep track of current pandoc row
 	// var docJSON = obj;
 	var itemCountBib = 1;
-	var bibFile = Math.random().toString(36).substring(7) + '.bib'; // Temp file
+	var bibFile = options.bibFile ?  options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
 
@@ -341,9 +345,9 @@ function pubToPandoc(docJSON) {
 						title = {"${title}"}
 					}
 					`;
+					// Append this reference to the .bib file
 					execPromise(`echo "${str}" >> ${bibFile}`);
 
-					//
 				break;
 			case 'latex':
 				console.log(node)
