@@ -1,5 +1,6 @@
 var write = require('fs-writefile-promise');
 var colors = require('colors');
+var fs = require('fs');
 var execPromise = require('child-process-promise').exec;
 
 /*
@@ -20,6 +21,7 @@ function pubToPandoc(docJSON, options) {
 	var bibFile = options.bibFile ?  options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
+	var bibContents;
 
 	console.log(colors.cyan('Starting conversion\n'));
 
@@ -346,7 +348,9 @@ function pubToPandoc(docJSON, options) {
 					}
 					`;
 					// Append this reference to the .bib file
-					execPromise(`echo "${str}" >> ${bibFile}`);
+
+				bibContents += str;
+					// execPromise(`echo "${str}" >> ${bibFile}`);
 
 				break;
 			case 'latex':
@@ -593,6 +597,10 @@ function pubToPandoc(docJSON, options) {
 		if (blocks.length === 0) {
 			throw new Error('Conversion failed');
 		}
+
+		// write file syncronously
+		fs.writeFileSync(bibFile, bibContents);
+
 		pandocJSON.blocks = blocks;
 		pandocJSON['pandoc-api-version'] = [
 			1,
