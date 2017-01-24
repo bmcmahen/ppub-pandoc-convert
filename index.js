@@ -18,10 +18,10 @@ function pubToPandoc(docJSON, options) {
 	var row; // used when within a table, to keep track of current pandoc row
 	// var docJSON = obj;
 	var itemCountBib = 1;
-	var bibFile = options.bibFile ?  options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
+	var bibFile = (options && options.bibFile) ?  options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
-	var bibContents;
+	var bibContents = '';
 
 	console.log(colors.cyan('Starting conversion\n'));
 
@@ -599,18 +599,20 @@ function pubToPandoc(docJSON, options) {
 		}
 
 		// write file syncronously
-		fs.writeFileSync(bibFile, bibContents);
+		// fs.writeFileSync(bibFile, bibContents);
+		return write(bibFile, bibContents)
+		.then(function() {
+			pandocJSON.blocks = blocks;
+			pandocJSON['pandoc-api-version'] = [
+				1,
+				17,
+				0,
+				4
+			];
+			pandocJSON.meta = {};
 
-		pandocJSON.blocks = blocks;
-		pandocJSON['pandoc-api-version'] = [
-			1,
-			17,
-			0,
-			4
-		];
-		pandocJSON.meta = {};
-
-		return pandocJSON;
+			return pandocJSON;
+		});
 	}
 
 	scanFragment(docJSON, 0);
