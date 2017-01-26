@@ -12,7 +12,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'bold';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -29,7 +29,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'italic';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -45,7 +45,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'bold-and-italic';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -61,7 +61,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'heading-one';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -77,7 +77,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'strikethrough';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -93,7 +93,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'image';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -109,7 +109,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'code';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -125,7 +125,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'newlines';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -141,7 +141,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'ordered-list';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -157,7 +157,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'ordered-list-2';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -173,7 +173,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'text-before-paragraph';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -189,7 +189,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'superscript';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -205,7 +205,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'subscript';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -221,7 +221,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'quotation';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -237,7 +237,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'table';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -253,7 +253,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'more-complex-pub';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -269,7 +269,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'nested-ol';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -285,7 +285,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'bibliography';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -301,7 +301,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'codeblock';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -317,7 +317,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'table-4-empty-cells';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -333,7 +333,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'citations';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -349,7 +349,7 @@ describe('Convert docJSON to PandocAST', function() {
 			const testName = 'complete-pub-1';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}` })
+			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
