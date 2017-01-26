@@ -1,7 +1,8 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\documentclass[12pt,twoside]{MITemplate/mitthesis}
+
+% \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
 \usepackage{MITemplate/lgrind}
 \pagestyle{plain}
-\newcounter{savepage}
 
 $if(beamerarticle)$
 \usepackage{beamerarticle} % needs to be loaded first
