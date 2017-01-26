@@ -1,4 +1,8 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\usepackage{MITemplate/lgrind}
+\pagestyle{plain}
+\newcounter{savepage}
+
 $if(beamerarticle)$
 \usepackage{beamerarticle} % needs to be loaded first
 $endif$
@@ -221,7 +225,11 @@ $if(institute)$
 $endif$
 \date{$date$}
 
+
 \begin{document}
+
+%% Start cover page %%
+
 $if(title)$
 \maketitle
 $endif$
@@ -230,6 +238,21 @@ $if(abstract)$
 $abstract$
 \end{abstract}
 $endif$
+
+\cleardoublepage
+\setcounter{savepage}{\thepage}
+\begin{abstract}
+\input{MITemplate/abstract}
+\end{abstract}
+
+\cleardoublepage
+
+\section*{Acknowledgments}
+
+This is the acknowledgements section.  You should replace this with your
+own acknowledgements.
+
+%% End cover page %%
 
 $for(include-before)$
 $include-before$
