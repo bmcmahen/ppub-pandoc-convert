@@ -239,7 +239,7 @@ function pubToPandoc(docJSON, options) {
 
 				// Create a header node that goes above that says 'References'
 
-				var aboveNode = { t: 'Header', c: [1, ['references', ['unnumbered'], []], [{ 't':'Str', 'c':'References' }]]};
+				var aboveNode = { t: 'Header', c: [1, ['references', ['unnumbered'], []], [{ t:'Str', 'c':'References' }]]};
 				// insert this node at the root
 				blocks.push(aboveNode)
 
@@ -609,7 +609,45 @@ function pubToPandoc(docJSON, options) {
 				0,
 				4
 			];
-			pandocJSON.meta = {};
+			pandocJSON.meta = {
+				author: {
+					t: 'MetaList',
+					c: [
+						{
+							t: 'MetaInlines',
+							c: [
+								{
+									t: 'Str',
+									c: 'Lucien'
+								},
+								{
+									t: 'Space'
+								},
+								{
+									t: 'Str',
+									c: 'William'
+								}
+							]
+						}
+					]
+				},
+				title: {
+					t: 'MetaInlines',
+					c: [
+						{
+							t: 'Str',
+							c: 'An'
+						},
+						{
+							t: 'Space'
+						},
+						{
+							t: 'Str',
+							c: 'Optimizing'
+						}
+					]
+				}
+			};
 
 			return pandocJSON;
 		});
