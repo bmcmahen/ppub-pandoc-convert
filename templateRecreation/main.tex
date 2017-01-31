@@ -14,13 +14,8 @@ $endif$
 \usepackage{fixltx2e} % provides \textsubscript
 
 
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
-  \usepackage[utf8]{inputenc}
-$if(euro)$
-  \usepackage{eurosym}
-$endif$
-\else % if luatex or xelatex
+
+
   \ifxetex
     \usepackage{mathspec}
   \else
@@ -49,7 +44,7 @@ $if(CJKmainfont)$
     \usepackage{xeCJK}
     \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
 $endif$
-\fi
+
 
 
 \PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
