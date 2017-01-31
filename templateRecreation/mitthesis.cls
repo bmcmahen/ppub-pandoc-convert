@@ -422,6 +422,12 @@ reserved.\par\permission}}
 
 \def\thesisdate#1{\gdef\@thesisdate{#1}}
 
+
+\newcommand{\herpaderp}[1]{
+  \centerline{\Huge{#1 this is a test parameter! :D}}
+}
+
+
 % typically just a month and year
 \def\degreemonth#1{\gdef\@degreemonth{#1}}
 \def\degreeyear#1{\gdef\@degreeyear{#1}}
