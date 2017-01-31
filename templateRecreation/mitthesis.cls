@@ -368,8 +368,7 @@
 \def\prevdegrees#1{\gdef\@prevdegrees{#1}}
 \def\@prevdegrees{}
 
-%% COMMENTING OUT
-% \def\department#1{\gdef\@department{#1}}
+\def\department#1{\gdef\@department{#1}}
 
 % If you are getting two degrees, use \and between the names.
 

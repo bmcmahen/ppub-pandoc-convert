@@ -216,6 +216,7 @@ $endfor$
 $if(title)$
 \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
+
 $if(subtitle)$
 \providecommand{\subtitle}[1]{}
 \subtitle{$subtitle$}
@@ -233,14 +234,15 @@ $endif$
 
 \include{cover}
 
-$if(title)$
-\maketitle
-$endif$
-$if(abstract)$
-\begin{abstract}
-$abstract$
-\end{abstract}
-$endif$
+% $if(title)$
+% \maketitle
+% $endif$
+
+% $if(abstract)$
+% \begin{abstract}
+% $abstract$
+% \end{abstract}
+% $endif$
 
 $for(include-before)$
 $include-before$
