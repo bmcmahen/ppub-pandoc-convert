@@ -365,22 +365,20 @@
 
 % \title and \author already exist
 
-%% COMMENTING BOTH OUT
-% \def\prevdegrees#1{\gdef\@prevdegrees{#1}}
-% \def\@prevdegrees{}
+\def\prevdegrees#1{\gdef\@prevdegrees{#1}}
+\def\@prevdegrees{}
 
 %% COMMENTING OUT
 % \def\department#1{\gdef\@department{#1}}
 
 % If you are getting two degrees, use \and between the names.
-%% COMMENTING OUT
-% \def\degree#1{\setbox0\hbox{#1}	 %for side effect of setting \@degreeword
-%  \gdef\@degree{#1}}
+
+\def\degree#1{\setbox0\hbox{#1}	 %for side effect of setting \@degreeword
+  \gdef\@degree{#1}}
 
 % \and is used inside the \degree argument to separate two degrees
-%% COMMENTING OUT
-% \def\and{\gdef\@degreeword{degrees} \par and \par}
-% \def\@degreeword{degree}
+\def\and{\gdef\@degreeword{degrees} \par and \par}
+\def\@degreeword{degree}
 
 % The copyright notice stuff is a tremendous mess.
 %
@@ -426,9 +424,8 @@ reserved.\par\permission}}
 \def\thesisdate#1{\gdef\@thesisdate{#1}}
 
 % typically just a month and year
-%% COMMENTING BOTH OUT
-% \def\degreemonth#1{\gdef\@degreemonth{#1}}
-% \def\degreeyear#1{\gdef\@degreeyear{#1}}
+\def\degreemonth#1{\gdef\@degreemonth{#1}}
+\def\degreeyear#1{\gdef\@degreeyear{#1}}
 
 % Usage: \supervisor{name}{title}
 %        \chairman{name}{title}
@@ -448,8 +445,7 @@ reserved.\par\permission}}
   \par\noindent Thesis Supervisor: #1 \\ Title: #2}}
 
 % department chairman, not thesis committee chairman
-%% COMMENTING OUT
-% \def\chairman#1#2{\gdef\@chairmanname{#1}\gdef\@chairmantitle{#2}}
+\def\chairman#1#2{\gdef\@chairmanname{#1}\gdef\@chairmantitle{#2}}
 
 %% `upcase' documentclass option: \choosecase is defined either as a dummy or
 %% a macro to change the (expanded) argument to uppercase.
