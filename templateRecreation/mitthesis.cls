@@ -403,7 +403,7 @@ reserved.\par\permission}}
 % Occacionally you will need to exactly specify the text of the
 % copyright notice.  The \copyrightnoticetext command is then useful.
 \long\def\copyrightnoticetext#1{\gdef\@copyrightnotice{#1}}
-% \def\@copyrightnotice{\copyright\ \Mit\ \@degreeyear.  All rights reserved.}
+\def\@copyrightnotice{\copyright\ \Mit\ \@degreeyear.  All rights reserved.}
 
 %% `vi' documentclass option: Specifying this option automatically
 %% copyrights the thesis to the author and gives MIT permission to copy and
@@ -454,32 +454,31 @@ reserved.\par\permission}}
 by\par
 {\Large  \choosecase{\@author}}
 \par
-%% COMMENTING OUT
-% \@prevdegrees
+\@prevdegrees
 \par
-%% COMMENTING OUT
-% \choosecase{Submitted to the} \choosecase{\@department} \\
-% \choosecase{in partial fulfillment of the requirements for the}
-% \choosecase{\@degreeword}
-% \choosecase{of}
-% \par
-% \choosecase{\@degree}
-% \par
-% at the
-% \par\MIT\par
-% \@degreemonth\ \@degreeyear
-% \par
-% \@copyrightnotice
-% \par
-% \vskip 3\baselineskip
-% \signature{Author}{\@department \\ \@thesisdate}
-% \par
-% \vfill
-% \unvbox\@titlesupervisor
-% \par
-% \vfill
-% \signature{Accepted by}{\@chairmanname \\ \@chairmantitle}
-% \vfill
+
+\choosecase{Submitted to the} \choosecase{\@department} \\
+\choosecase{in partial fulfillment of the requirements for the}
+\choosecase{\@degreeword}
+\choosecase{of}
+\par
+\choosecase{\@degree}
+\par
+at the
+\par\MIT\par
+\@degreemonth\ \@degreeyear
+\par
+\@copyrightnotice
+\par
+\vskip 3\baselineskip
+\signature{Author}{\@department \\ \@thesisdate}
+\par
+\vfill
+\unvbox\@titlesupervisor
+\par
+\vfill
+\signature{Accepted by}{\@chairmanname \\ \@chairmantitle}
+\vfill
 \end{titlepage}}
 
 % this environment should probably be called abstract,
