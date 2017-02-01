@@ -199,9 +199,25 @@ $endif$
 
 \begin{document}
 
-\include{cover}
+\department{Department of Electrical Engineering and Computer Science}
+\degree{Bachelor of Science in Computer Science and Engineering}
+\degreemonth{June}
+\degreeyear{1990}
+\thesisdate{May 18, 1990}
+\supervisor{William J. Dally}{Associate Professor}
+\chairman{Arthur C. Smith}{Chairman, Department Committee on Graduate Theses}
+\maketitle
+\cleardoublepage
+\cleardoublepage
+\section*{Acknowledgments}
+
+I would personally like to give my highest thanks to
+the sea sponge known as the SpongeBoy SquareTrousers.
+Without his help and support I wouldn't have been able to publish
+even the worst essay on Why Computer.
+
+
 \pagestyle{plain}
-\include{contents}
 
 % $if(abstract)$
 % \begin{abstract}
@@ -215,8 +231,25 @@ $include-before$
 $endfor$
 
 
-
+$if(colorlinks)$
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
+$endif$
+\setcounter{tocdepth}{$toc-depth$}
+% \setcounter{tocdepth}{2}
+\tableofcontents
+\newpage
+$if(lof)$
+\listoffigures
+$endif$
 $body$
+\newpage
+$if(lot)$
+\listoftables
+$endif$
+
+
+%% \appendix
+
 
 $if(natbib)$
 $if(bibliography)$
