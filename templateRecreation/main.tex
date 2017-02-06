@@ -242,14 +242,22 @@ $endif$
 % \setcounter{tocdepth}{2}
 \tableofcontents
 \newpage
-$if(lof)$
 \listoffigures
-$endif$
-$body$
 \newpage
-$if(lot)$
 \listoftables
-$endif$
+\newpage
+
+
+% \tableofcontents
+% \newpage
+% $if(lof)$
+% \listoffigures
+% $endif$
+% $body$
+% \newpage
+% $if(lot)$
+% \listoftables
+% $endif$
 
 
 \appendix
