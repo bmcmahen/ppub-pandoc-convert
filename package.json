@@ -15,7 +15,9 @@
     "colors": "^1.1.2",
     "fs-writefile-promise": "^2.0.0",
     "mocha": "^3.2.0",
-    "prosemirror-markdown": "^0.14.0"
+    "prosemirror-markdown": "^0.14.0",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",

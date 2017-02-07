@@ -2,6 +2,7 @@ var write = require('fs-writefile-promise');
 var colors = require('colors');
 var fs = require('fs');
 var execPromise = require('child-process-promise').exec;
+var requestPromise = require('request-promise');
 
 /*
  * @options { bibFile }
@@ -649,8 +650,30 @@ function pubToPandoc(docJSON, options) {
 				}
 			};
 
+			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/2d35c2fc2770782fca792cc4ef9809a732046c71/metadata.json');
+		})
+		.then(function(htmlContent) {
+			var metadata = JSON.parse(htmlContent);
+			pandocJSON.degree = {
+				t: 'MetaInlines',
+				c: createTextNodes(metadata.body['degree'])
+			}
+
+
+			// metadata.body['university'];
+			// metadata.body['supervisor-name'];
+			// metadata.body['supervisor-title'];
+			// metadata.body['chairman-name'];
+			// metadata.body['chairman-title'];
+			// metadata.body['abstract'];
+			// metadata.body['acknowledgements'];
+			// pandocJSON.meta.
+			console.log(JSON.stringify(pandocJSON))
 			return pandocJSON;
-		});
+		})
+		.catch(function(error) {
+			console.log(error)
+		})
 	}
 
 	scanFragment(docJSON, 0);
