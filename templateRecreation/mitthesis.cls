@@ -378,6 +378,7 @@
 \def\pubuniversity#1{\gdef\@pubuniversity{#1}}
 
 
+
 % If you are getting two degrees, use \and between the names.
 
 
@@ -510,7 +511,7 @@ by \\
 \def\baselinestretch{1}\@normalsize
 Submitted to the Department of \@pubdepartment \\
 on \@thesisdate, in partial fulfillment of the \\
-requirements for the \@degreeword\ of \\
+requirements for the \@degree\ \\
 %% COMMENTING OUT
 % \@degree
 \end{center}
