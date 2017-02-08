@@ -368,7 +368,10 @@
 \def\prevdegrees#1{\gdef\@prevdegrees{#1}}
 \def\@prevdegrees{}
 
-\def\department#1{\gdef\@department{#1}}
+\def\department#1{\gdef\@pubdepartment{#1}}
+
+\def\pubuniversity#1{\gdef\@pubuniversity{#1}}
+
 
 % If you are getting two degrees, use \and between the names.
 
@@ -465,7 +468,7 @@ by\par
 \@prevdegrees
 \par
 
-\choosecase{Submitted to the} \choosecase{\@department} \\
+\choosecase{Submitted to the Department of } \choosecase{\@pubdepartment} \\
 \choosecase{in partial fulfillment of the requirements for the}
 \choosecase{\@degreeword}
 \choosecase{of}
@@ -473,13 +476,13 @@ by\par
 \choosecase{\@degree}
 \par
 at the
-\par\MIT\par
+\par\mit\par
 \@degreemonth\ \@degreeyear
 \par
 \@copyrightnotice
 \par
 \vskip 3\baselineskip
-\signature{Author}{\@department \\ \@thesisdate}
+\signature{Author}{\@pubdepartment \\ \@thesisdate}
 \par
 \vfill
 \unvbox\@titlesupervisor
@@ -500,7 +503,7 @@ by \\
 \@author \\[\baselineskip]}
 \par
 \def\baselinestretch{1}\@normalsize
-Submitted to the \@department \\
+Submitted to the Department of \@pubdepartment \\
 on \@thesisdate, in partial fulfillment of the \\
 requirements for the \@degreeword\ of \\
 %% COMMENTING OUT
@@ -531,8 +534,9 @@ requirements for the \@degreeword\ of \\
 % The \kern0pt pushes any depth into the height.  Thanks to Richard Stone.
 \def\endtitlepage{\par\kern 0pt\egroup\vss\egroup\newpage}
 
-\def\MIT{MASSACHUSETTS INSTITUTE OF TECHNOLOGY}
-\def\Mit{Massachusetts Institute of Technology}
+\def\Mit{@pubuniversity}
+
+
 
 \def\permission{\par\noindent{\centering
    The author hereby grants to MIT permission to reproduce and to

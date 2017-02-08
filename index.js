@@ -650,7 +650,7 @@ function pubToPandoc(docJSON, options) {
 				}
 			};
 
-			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/012387bcca3f8f341115e7516c3b4cb11f1cf786/metadata.json');
+			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/cf79b037ed397a5e688fc19b3c90c9a9505df4fb/metadata.json');
 		})
 		.then(function(htmlContent) {
 			var metadata = JSON.parse(htmlContent);
@@ -724,6 +724,12 @@ function pubToPandoc(docJSON, options) {
 				pandocJSON.meta.pubthesisdate = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata.body['thesis-date'])
+				};
+			}
+			if(metadata.body['department']) {
+				pandocJSON.meta.pubdepartment = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['department'])
 				};
 			}
 			// metadata.body['university'];

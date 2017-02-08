@@ -199,7 +199,13 @@ $endif$
 
 \begin{document}
 
-\department{Department of Electrical Engineering and Computer Science}
+$if(pubdepartment)$
+\department{$pubdepartment$}
+$endif$
+
+$if(pubuniversity)$
+\pubuniversity{$pubuniversity$}
+$endif$
 
 $if(pubdegree)$
 \degree{$pubdegree$}
