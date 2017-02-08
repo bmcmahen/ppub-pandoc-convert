@@ -203,6 +203,8 @@
 % If the user wants single spacing, set baselinestretch=1.
 
 \usepackage{setspace}
+\usepackage[utf8]{inputenc}
+
 
 % Note - doublespace.sty has some float-related troubles in
 % combination with graphics or color, and is not officially compliant
@@ -363,6 +365,9 @@
 
 %% Define all the pieces that go on the title page and the abstract.
 
+
+
+
 % \title and \author already exist
 
 \def\prevdegrees#1{\gdef\@prevdegrees{#1}}
@@ -408,7 +413,7 @@ reserved.\par\permission}}
 % Occacionally you will need to exactly specify the text of the
 % copyright notice.  The \copyrightnoticetext command is then useful.
 \long\def\copyrightnoticetext#1{\gdef\@copyrightnotice{#1}}
-\def\@copyrightnotice{\copyright\ \Mit\ \@degreeyear.  All rights reserved.}
+\def\@copyrightnotice{\copyright\ \@pubuniversity\ \@degreeyear.  All rights reserved.}
 
 %% `vi' documentclass option: Specifying this option automatically
 %% copyrights the thesis to the author and gives MIT permission to copy and
@@ -476,7 +481,7 @@ by\par
 \choosecase{\@degree}
 \par
 at the
-\par\mit\par
+\par\MakeUppercase{\@pubuniversity}\par
 \@degreemonth\ \@degreeyear
 \par
 \@copyrightnotice
@@ -533,9 +538,6 @@ requirements for the \@degreeword\ of \\
   \def\baselinestretch{1}\@normalsize\vbox to \vsize\bgroup\vbox to 9in\bgroup}
 % The \kern0pt pushes any depth into the height.  Thanks to Richard Stone.
 \def\endtitlepage{\par\kern 0pt\egroup\vss\egroup\newpage}
-
-\def\Mit{@pubuniversity}
-
 
 
 \def\permission{\par\noindent{\centering
