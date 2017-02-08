@@ -214,29 +214,29 @@ $else$
 $endif$
 
 $if(pubdegreemonth)$
-\degreeyear{pubdegreeyear}
+\degreeyear{$pubdegreeyear$}
 $else$
 \degreeyear{}
 $endif$
 
 $if(pubthesisdate)$
-\thesisdate{pubthesisdate}
+\thesisdate{$pubthesisdate$}
 $else$
 \thesisdate{}
 $endif$
 
 $if(pubsupervisorname)$
 $if(pubsupervisortitle)$
-\supervisor{pubsupervisorname}{pubsupervisortitle}
+\supervisor{$pubsupervisorname$}{$pubsupervisortitle$}
 $endif$
 $endif$
 
 
 $if(pubchairmanname)$
 $if(pubchairmantitle)$
-\chairman{pubchairmanname}{pubchairmantitle}
+\chairman{$pubchairmanname$}{$pubchairmantitle$}
 $else$
-\chairman{pubchairmanname}{Idk}
+\chairman{pubchairmanname}{ }
 $endif$
 $else$
 $endif$

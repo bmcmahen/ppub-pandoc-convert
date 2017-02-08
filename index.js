@@ -650,61 +650,82 @@ function pubToPandoc(docJSON, options) {
 				}
 			};
 
-			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/b8e4322581f28157f021e8e11a6528c3134dc537/metadata.json');
+			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/012387bcca3f8f341115e7516c3b4cb11f1cf786/metadata.json');
 		})
 		.then(function(htmlContent) {
 			var metadata = JSON.parse(htmlContent);
-			pandocJSON.meta.pubdegree = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['degree'])
-			};
-			pandocJSON.meta.pubuniversity = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['university'])
-			};
-			pandocJSON.meta.pubdate = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['date'])
-			};
-			pandocJSON.meta.pubsupervisorname = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['supervisor-name'])
-			};
-			pandocJSON.meta.pubsupervisortitle = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['supervisor-title'])
-			};
-			pandocJSON.meta.pubchairmanname = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['chairman-name'])
-			};
-			pandocJSON.meta.pubchairmantitle = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['chairmain-title'])
-			};
-			pandocJSON.meta.pubacknowledgements = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['acknowledgements'])
-			};
-			pandocJSON.meta.pubabstract = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['abstract'])
-			};
-
-			pandocJSON.meta.pubdegreemonth = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['degree-month'])
-			};
-
-			pandocJSON.meta.pubdegreeyear = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['degree-year'])
-			};
-
-			pandocJSON.meta.pubthesisdate = {
-				t: 'MetaInlines',
-				c: createTextNodes(metadata.body['thesis-date'])
-			};
+			if(metadata.body['degree']) {
+				pandocJSON.meta.pubdegree = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['degree'])
+				};
+			}
+			if(metadata.body['university']) {
+				pandocJSON.meta.pubuniversity = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['university'])
+				};
+			}
+			if(metadata.body['date']) {
+				pandocJSON.meta.pubdate = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['date'])
+				};
+			}
+			if(metadata.body['supervisor-name']) {
+				pandocJSON.meta.pubsupervisorname = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['supervisor-name'])
+				};
+			}
+			if(metadata.body['supervisor-title']) {
+				pandocJSON.meta.pubsupervisortitle = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['supervisor-title'])
+				};
+			}
+			if(metadata.body['chairman-name']) {
+				pandocJSON.meta.pubchairmanname = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['chairman-name'])
+				};
+			}
+			if(metadata.body['chairmain-title']) {
+				pandocJSON.meta.pubchairmantitle = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['chairmain-title'])
+				};
+			}
+			if(metadata.body['acknowledgements']) {
+				pandocJSON.meta.pubacknowledgements = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['acknowledgements'])
+				};
+			}
+			if(metadata.body['abstract']) {
+				pandocJSON.meta.pubabstract = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['abstract'])
+				};
+			}
+			if(metadata.body['degree-month']) {
+				pandocJSON.meta.pubdegreemonth = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['degree-month'])
+				};
+			}
+			if(metadata.body['degree-year']) {
+				pandocJSON.meta.pubdegreeyear = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['degree-year'])
+				};
+			}
+			if(metadata.body['thesis-date']) {
+				pandocJSON.meta.pubthesisdate = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.body['thesis-date'])
+				};
+			}
 			// metadata.body['university'];
 			// metadata.body['supervisor-name'];
 			// metadata.body['supervisor-title'];
@@ -712,7 +733,6 @@ function pubToPandoc(docJSON, options) {
 			// metadata.body['chairman-title'];
 			// metadata.body['abstract'];
 			// metadata.body['acknowledgements'];
-			// pandocJSON.meta.
 			console.log(JSON.stringify(pandocJSON))
 			return pandocJSON;
 		})
