@@ -650,7 +650,7 @@ function pubToPandoc(docJSON, options) {
 				}
 			};
 
-			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/cf79b037ed397a5e688fc19b3c90c9a9505df4fb/metadata.json');
+			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/3a5a022109ca356c82d1f918dead73fc811c5cdd/metadata.json');
 		})
 		.then(function(htmlContent) {
 			var metadata = JSON.parse(htmlContent);

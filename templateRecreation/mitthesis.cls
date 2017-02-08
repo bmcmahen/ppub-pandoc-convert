@@ -450,10 +450,10 @@ reserved.\par\permission}}
 % we build the appropriate boxes for the titlepage and
 % the abstractpage as the user makes multiple calls
 % to \supervisor
-\newbox\@titlesupervisor 	\newbox\@abstractsupervisor
+\newbox\@pubsupervisortitle 	\newbox\@abstractsupervisor
 
-\def\supervisor#1#2{\setbox\@titlesupervisor\vbox
-  {\unvbox\@titlesupervisor \vskip 10pt% plus 1fil minus 1fil
+\def\supervisor#1#2{\setbox\@pubsupervisortitle\vbox
+  {\unvbox\@pubsupervisortitle \vskip 10pt% plus 1fil minus 1fil
   \def\baselinestretch{1}\large
   \signature{Certified by}{#1 \\ #2 \\ Thesis Supervisor}}
   \setbox\@abstractsupervisor\vbox{\unvbox\@abstractsupervisor
@@ -491,7 +491,7 @@ at the
 \signature{Author}{\@pubdepartment \\ \@thesisdate}
 \par
 \vfill
-\unvbox\@titlesupervisor
+\unvbox\@pubsupervisortitle
 \par
 \vfill
 \if@leftblank
