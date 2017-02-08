@@ -200,12 +200,48 @@ $endif$
 \begin{document}
 
 \department{Department of Electrical Engineering and Computer Science}
-\degree{Bachelor of Science in Computer Science and Engineering}
-\degreemonth{June}
-\degreeyear{1990}
-\thesisdate{May 18, 1990}
-\supervisor{William J. Dally}{Associate Professor}
-\chairman{Arthur C. Smith}{Chairman, Department Committee on Graduate Theses}
+
+$if(pubdegree)$
+\degree{$pubdegree$}
+$else$
+\degree{Unspecified}
+$endif$
+
+$if(pubdegreemonth)$
+\degreemonth{$pubdegreemonth$}
+$else$
+\degreemonth{}
+$endif$
+
+$if(pubdegreemonth)$
+\degreeyear{pubdegreeyear}
+$else$
+\degreeyear{}
+$endif$
+
+$if(pubthesisdate)$
+\thesisdate{pubthesisdate}
+$else$
+\thesisdate{}
+$endif$
+
+$if(pubsupervisorname)$
+$if(pubsupervisortitle)$
+\supervisor{pubsupervisorname}{pubsupervisortitle}
+$endif$
+$endif$
+
+
+$if(pubchairmanname)$
+$if(pubchairmantitle)$
+\chairman{pubchairmanname}{pubchairmantitle}
+$else$
+\chairman{pubchairmanname}{Idk}
+$endif$
+$else$
+$endif$
+
+
 \maketitle
 \cleardoublepage
 

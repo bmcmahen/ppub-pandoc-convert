@@ -372,6 +372,8 @@
 
 % If you are getting two degrees, use \and between the names.
 
+
+
 \def\degree#1{\setbox0\hbox{#1}	 %for side effect of setting \@degreeword
   \gdef\@degree{#1}}
 
@@ -483,7 +485,9 @@ at the
 \unvbox\@titlesupervisor
 \par
 \vfill
+\if@leftblank
 \signature{Accepted by}{\@chairmanname \\ \@chairmantitle}
+\fi
 \vfill
 \end{titlepage}}
 
