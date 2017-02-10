@@ -64,6 +64,9 @@ function pubToPandoc(docJSON, options) {
 		var markCount = 0; // Used to count strong, emphasis, link, code text, the reason being that you can have newer nodes that aren't marks
 
 		switch (node.type) {
+			case 'article':
+				newNode.t = 'DoNotAddThisNode';
+				break;
 			case 'block_embed': // Cases: Image in table
 				newNode.t = 'Image';
 				newNode.c[0] = ['', [], []];
