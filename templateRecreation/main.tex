@@ -296,56 +296,10 @@ $endif$
 \tableofcontents
 
 \newpage
-$if(lof)$
-\listoffigures
-$endif$
 $body$
 \newpage
-$if(lot)$
-\listoftables
-$endif$
 
-
-\appendix
-% Appendix A
-\chapter{Tables}
-
-\begin{table}
-\caption{Armadillos}
-\label{arm:table}
-\begin{center}
-\begin{tabular}{||l|l||}\hline
-Armadillos & are \\\hline
-our	   & friends \\\hline
-\end{tabular}
-\end{center}
-\end{table}
-
-\clearpage
-\newpage
-
-% Appendix B
-\chapter{Figures}
-
-\vspace*{-3in}
-
-\begin{figure}
-\vspace{2.4in}
-\caption{Armadillo slaying lawyer.}
-\label{arm:fig1}
-\end{figure}
-\clearpage
-\newpage
-
-\begin{figure}
-\vspace{2.4in}
-\caption{Armadillo eradicating national debt.}
-\label{arm:fig2}
-\end{figure}
-\clearpage
-\newpage
-
-
+% \clearpage
 
 $if(natbib)$
 $if(bibliography)$
