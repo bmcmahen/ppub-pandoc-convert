@@ -511,7 +511,8 @@ by \\
 \def\baselinestretch{1}\@normalsize
 Submitted to the Department of \@pubdepartment \\
 on \@thesisdate, in partial fulfillment of the \\
-requirements for the \@degree\ \\
+requirements for the degree of \\
+\@degree\
 %% COMMENTING OUT
 % \@degree
 \end{center}
