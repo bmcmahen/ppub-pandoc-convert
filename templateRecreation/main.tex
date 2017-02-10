@@ -278,29 +278,32 @@ $include-before$
 $endfor$
 
 
+
+%
+%
+% \newpage
+% \listoffigures
+% \newpage
+% \listoftables
+% \newpage
+
+
+
 $if(colorlinks)$
 \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
 $endif$
-\setcounter{tocdepth}{$toc-depth$}
-% \setcounter{tocdepth}{2}
+\setcounter{tocdepth}{2} % was $toc-depth$
 \tableofcontents
+
 \newpage
+$if(lof)$
 \listoffigures
+$endif$
+$body$
 \newpage
+$if(lot)$
 \listoftables
-\newpage
-
-
-% \tableofcontents
-% \newpage
-% $if(lof)$
-% \listoffigures
-% $endif$
-% $body$
-% \newpage
-% $if(lot)$
-% \listoftables
-% $endif$
+$endif$
 
 
 \appendix
