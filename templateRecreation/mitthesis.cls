@@ -494,9 +494,9 @@ at the
 \unvbox\@pubsupervisortitle
 \par
 \vfill
-\if@leftblank
+% \if@leftblank
 \signature{Accepted by}{\@chairmanname \\ \@chairmantitle}
-\fi
+% \fi
 \vfill
 \end{titlepage}}
 

@@ -16,6 +16,7 @@
     "fs-writefile-promise": "^2.0.0",
     "mocha": "^3.2.0",
     "prosemirror-markdown": "^0.14.0",
+    "pubpub-prose": "github:pubpub/pubpub-prose",
     "request": "^2.79.0",
     "request-promise": "^4.1.1"
   },

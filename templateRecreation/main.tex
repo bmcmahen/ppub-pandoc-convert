@@ -242,10 +242,12 @@ $if(pubchairmanname)$
 $if(pubchairmantitle)$
 \chairman{$pubchairmanname$}{$pubchairmantitle$}
 $else$
-\chairman{pubchairmanname}{ }
+\chairman{$pubchairmanname$}{ }
 $endif$
 $else$
+% \chairman{Loser}{Shoes Chairman}
 $endif$
+
 
 
 \maketitle

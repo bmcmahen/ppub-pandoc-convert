@@ -690,10 +690,10 @@ function pubToPandoc(docJSON, options) {
 					c: createTextNodes(metadata['department-chairman-name'])
 				};
 			}
-			if(metadata['department-chairmain-title']) {
+			if(metadata['department-chairman-title']) {
 				pandocJSON.meta.pubchairmantitle = {
 					t: 'MetaInlines',
-					c: createTextNodes(metadata['department-chairmain-title'])
+					c: createTextNodes(metadata['department-chairman-title'])
 				};
 			}
 			if(metadata['acknowledgements']) {
