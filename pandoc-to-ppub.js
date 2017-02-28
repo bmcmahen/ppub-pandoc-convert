@@ -17,6 +17,19 @@ var requestPromise = require('request-promise');
 
 var csltoBibtex = require('@pubpub/prose/dist/references/csltoBibtex').csltoBibtex;
 
+
+function isInline(nodeType) {
+	return (['Str', 'Emph', 'Strong', 'Strikeout',
+		'Superscript', 'Subscript', 'Quoted', 'Cite',
+		'Code', 'Space', 'SoftBreak', 'LineBreak',
+		'Math', 'Link', 'Image', 'Note'].indexOf(nodeType) !== -1);
+}
+function isBlock(nodeType) {
+	return (['Plain', 'Para', 'CodeBlock', 'BlockQuote',
+		'OrderedList', 'BulletList', 'Header', 'HorizontalRule',
+		'Table'].indexOf(nodeType) !== -1);
+}
+
 /*
 * @options { bibFile }
 */
@@ -305,7 +318,7 @@ function pandocToPpub(pandoc, options) {
 				newNode.c[1] = node.content[0].text;
 				break;
 			default:
-				red(`Uh oh...Unprocessed node of type ${node.type}`);
+				red(`Uh oh...Unprocessed node of type ${node.t}`);
 				newNode.t = 'DoNotAddThisNode';
 				break;
 		}
@@ -399,6 +412,7 @@ function pandocToPpub(pandoc, options) {
 	function addNode(newNode) {
 		var parent = currentPpubNodeParents[currentPpubNodeParents.length - 1];
 
+		blue(newNode.type)
     switch (newNode.type) {
       case 'embed':
       case 'paragraph':
@@ -411,10 +425,12 @@ function pandocToPpub(pandoc, options) {
 	}
 
 	function scanFragment(fragment) {
-    yellow(JSON.stringify(fragment))
+    yellow('pushing fragment:\n'+JSON.stringify(fragment))
 		pushPandocParent(fragment);
 		if (fragment.c) {
-			fragment.c.forEach((child, offset) => scan(child));
+			fragment.c.forEach((child, offset) => {
+				scan(child);
+			});
 		}
 	}
 
