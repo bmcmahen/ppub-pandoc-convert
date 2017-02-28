@@ -24,7 +24,6 @@ function pubToPandoc(ppub, options) {
 	var bibFile = (options && options.bibFile) ? options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
-	// var bibContents = '';
 
 	console.log(colors.cyan('Starting conversion\n'));
 
@@ -249,7 +248,7 @@ function pubToPandoc(ppub, options) {
 				// insert this node at the root
 				blocks.push(aboveNode)
 
-				newNode.t = "DoNotAddThisNode";
+				newNode.t = 'DoNotAddThisNode';
 
 				break;
 			case 'reference':
@@ -329,37 +328,9 @@ function pubToPandoc(ppub, options) {
 				// }
 				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 			case 'citation':
-				// var author = node.attrs.data.author;
-				// var title = node.attrs.data.title;
-				// var journal = node.attrs.data.journal;
-				// var year = node.attrs.data.year;
-				// var citationString = `${author}. ${year}. ${title}. ${journal}`
-
-				// Going to try to insert this into the .bib file
-				// newNode.t = 'Div';
-				//
-		//
-				// newNode.c = [
-				// 	['ref-item' + refItemNumber++, [], []],
-				// 	[{ t: 'Para', c: createTextNodes(citationString) }]
-				// ];
-				newNode.t = "DoNotAddThisNode";
-
+				newNode.t = 'DoNotAddThisNode';
 				var data = node.attrs.data;
-				bibData.push(data)
-				// var str = `
-				// 	@article{item${itemCountBib++},
-				// 		author = {"${author}"},
-				// 		journal = {"${journal}"},
-				// 		year = {"${year}"},
-				// 		title = {"${title}"}
-				// 	}
-				// 	`;
-					// Append this reference to the .bib file
-
-				// bibContents += str;
-					// execPromise(`echo "${str}" >> ${bibFile}`);
-
+				bibData.push(data);
 				break;
 			case 'latex':
 				console.log(node)
