@@ -4,6 +4,8 @@ var fs = require('fs');
 var execPromise = require('child-process-promise').exec;
 var requestPromise = require('request-promise');
 
+var csltoBibtex = require('@pubpub/prose/dist/references/csltoBibtex').csltoBibtex;
+
 /*
  * @options { bibFile }
  *
@@ -15,6 +17,7 @@ function pubToPandoc(docJSON, options) {
 	var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 	var pandocJSON = {};
 	var inTable = false;
+	var bibData = [];
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
 	// var docJSON = obj;
@@ -22,7 +25,7 @@ function pubToPandoc(docJSON, options) {
 	var bibFile = (options && options.bibFile) ?  options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
-	var bibContents = '';
+	// var bibContents = '';
 
 	console.log(colors.cyan('Starting conversion\n'));
 
@@ -327,11 +330,11 @@ function pubToPandoc(docJSON, options) {
 				// }
 				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 			case 'citation':
-				var author = node.attrs.data.author;
-				var title = node.attrs.data.title;
-				var journal = node.attrs.data.journal;
-				var year = node.attrs.data.year;
-				var citationString = `${author}. ${year}. ${title}. ${journal}`
+				// var author = node.attrs.data.author;
+				// var title = node.attrs.data.title;
+				// var journal = node.attrs.data.journal;
+				// var year = node.attrs.data.year;
+				// var citationString = `${author}. ${year}. ${title}. ${journal}`
 
 				// Going to try to insert this into the .bib file
 				// newNode.t = 'Div';
@@ -343,17 +346,19 @@ function pubToPandoc(docJSON, options) {
 				// ];
 				newNode.t = "DoNotAddThisNode";
 
-				var str = `
-					@article{item${itemCountBib++},
-						author = {"${author}"},
-						journal = {"${journal}"},
-						year = {"${year}"},
-						title = {"${title}"}
-					}
-					`;
+				var data = node.attrs.data;
+				bibData.push(data)
+				// var str = `
+				// 	@article{item${itemCountBib++},
+				// 		author = {"${author}"},
+				// 		journal = {"${journal}"},
+				// 		year = {"${year}"},
+				// 		title = {"${title}"}
+				// 	}
+				// 	`;
 					// Append this reference to the .bib file
 
-				bibContents += str;
+				// bibContents += str;
 					// execPromise(`echo "${str}" >> ${bibFile}`);
 
 				break;
@@ -604,6 +609,9 @@ function pubToPandoc(docJSON, options) {
 
 		// write file syncronously
 		// fs.writeFileSync(bibFile, bibContents);
+
+		var bibContents = csltoBibtex(bibData);
+
 		return write(bibFile, bibContents)
 		.then(function() {
 			pandocJSON.blocks = blocks;
