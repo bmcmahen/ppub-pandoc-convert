@@ -9,6 +9,7 @@
   "author": "Hassan Shaikley <hassan.shaikley@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@pubpub/prose": "^1.0.5",
     "@pubpub/render-files": "^1.0.2",
     "bluebird": "^3.4.6",
     "chai": "^3.5.0",

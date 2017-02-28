@@ -10,9 +10,9 @@ var csltoBibtex = require('@pubpub/prose/dist/references/csltoBibtex').csltoBibt
  * @options { bibFile }
  *
  */
-function pubToPandoc(docJSON, options) {
+function pubToPandoc(ppub, options) {
 
-	var currentDocJSONNodeParents = []; // stack for keeping track of the last node : )
+	var currentPpubNodeParents = []; // stack for keeping track of the last node : )
 	var currentPandocNodeParents = []; // stack for keeping track of the last output node
 	var blocks = []; // blocks (pandoc AST) is eventually set to this array.
 	var pandocJSON = {};
@@ -20,9 +20,8 @@ function pubToPandoc(docJSON, options) {
 	var bibData = [];
 	var col; // used when within a table, to keep track of current pandoc col
 	var row; // used when within a table, to keep track of current pandoc row
-	// var docJSON = obj;
 	var itemCountBib = 1;
-	var bibFile = (options && options.bibFile) ?  options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
+	var bibFile = (options && options.bibFile) ? options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
 	// var bibContents = '';
@@ -61,7 +60,7 @@ function pubToPandoc(docJSON, options) {
 	// Create a node
 	// If node is a root node, push it to blocks array
 	function scan(node) {
-		// green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentDocJSONNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
+		// green(`\nBlocks:\t${JSON.stringify(blocks)}\nParentNodes:\t${JSON.stringify(currentPpubNodeParents)}\nOutputParentNodes:\t${JSON.stringify(currentPandocNodeParents)}\n`)
 		var newNode = { t: undefined, c: [] };
 		var newerNodes = []; // Used primarily for strong, emphasis, link, code text
 		var markCount = 0; // Used to count strong, emphasis, link, code text, the reason being that you can have newer nodes that aren't marks
@@ -141,14 +140,14 @@ function pubToPandoc(docJSON, options) {
 			// 	break;
 			case 'paragraph':
 				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
-				if (currentDocJSONNodeParents[currentDocJSONNodeParents.length - 1].type === 'list_item') {
+				if (currentPpubNodeParents[currentPpubNodeParents.length - 1].type === 'list_item') {
 					red('PARENT IS LIST ITEM');
 					newNode.t = 'Plain';
 					break;
 				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table') {
 					newNode.t = 'DoNotAddThisNode';
 				} else {
-					// This is the proper way to handle Para -- one to one with docJSOn paragraph
+					// This is the proper way to handle Para -- one to one with ppub paragraph
 					// Because otherwise have issues with Para : [text, text]
 					newNode.t = 'Para';
 				}
@@ -442,7 +441,7 @@ function pubToPandoc(docJSON, options) {
 		|| node.type === 'embed' || node.type === 'latex'
 		|| node.type === 'reference' || node.type === 'citation'
 		|| node.type === 'citations') {
-			currentDocJSONNodeParents.pop();
+			currentPpubNodeParents.pop();
 		}
 		if (newNode.t === 'Para' || newNode.t === 'Plain'
 		|| newNode.t === 'Header' || newNode.t === 'Code'
@@ -592,7 +591,7 @@ function pubToPandoc(docJSON, options) {
 	}
 
 	function scanFragment(fragment) {
-		currentDocJSONNodeParents.push(fragment);
+		currentPpubNodeParents.push(fragment);
 		if (fragment.content) {
 			fragment.content.forEach((child, offset) => scan(child));
 		}
@@ -758,7 +757,7 @@ function pubToPandoc(docJSON, options) {
 		})
 	}
 
-	scanFragment(docJSON, 0);
+	scanFragment(ppub, 0);
 
 	return finish();
 }
