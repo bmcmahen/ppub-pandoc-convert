@@ -10,7 +10,7 @@ var csltoBibtex = require('@pubpub/prose/dist/references/csltoBibtex').csltoBibt
  * @options { bibFile }
  *
  */
-function pubToPandoc(ppub, options) {
+function ppubToPandoc(ppub, options) {
 
 	var currentPpubNodeParents = []; // stack for keeping track of the last node : )
 	var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -25,8 +25,6 @@ function pubToPandoc(ppub, options) {
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
 
-	console.log(colors.cyan('Starting conversion\n'));
-
 	function isLeafNode(node) {
 		if (node.t === 'Str' || node.t === 'Space' || node.t === 'Cite') {
 			return true;
@@ -40,13 +38,9 @@ function pubToPandoc(ppub, options) {
 	function createTextNodes(str) {
 
 		var newNodes = [];
-		// str = str.trim(); // No longer trim, but might be necessary to protect from bugs, the reason I don't is when there is a Link or another thing, followed by text it'll get rid of the leading space
 		str = str.split(' ');
 
-		// if (str[0] === '') newNodes.push({ t: 'Space' }); // if first node is a space
 		for (var i = 0; i < str.length; i++) {
-			// if (str[i] === '') continue;
-
 			newNodes.push({ t: 'Str', c: str[i] });
 			if (i < str.length - 1) {
 				newNodes.push({ t: 'Space' });
@@ -124,23 +118,9 @@ function pubToPandoc(ppub, options) {
 				}
 
 				break;
-			// case 'image':
-			// 	newNode.t = "Image";
-			// 	newNode.c[0] = ["",[],[]];
-			// 	// if has width & height
-			// 	if (newNode.attrs.size) { // Images in the newer editor use embe not image
-			// 		var widthHeightPercentage = "" + newNode.attrs.size;
-			// 		newNode.c[0][2]=[["width", widthHeightPercentage], ["height", widthHeightPercentage]]
-			//
-			// 	}
-			//
-			// 	newNode.c[1] = node.attrs.alt ? createTextNodes(node.attrs.alt) : [];
-			// 	newNode.c[2] = [node.attrs.src, ""];
-			// 	break;
 			case 'paragraph':
 				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
 				if (currentPpubNodeParents[currentPpubNodeParents.length - 1].type === 'list_item') {
-					red('PARENT IS LIST ITEM');
 					newNode.t = 'Plain';
 					break;
 				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table') {
@@ -160,9 +140,6 @@ function pubToPandoc(ppub, options) {
 				break;
 			case 'bullet_list':
 				newNode.t = 'BulletList';
-				// newNode.c[0] = [];
-				console.log("Pushing to list depth stack")
-				red("PUSING -1")
 
 				listDepthStack.push(-1);
 				break;
@@ -177,13 +154,11 @@ function pubToPandoc(ppub, options) {
 					}
 				];
 				newNode.c[1] = [];
-				red("PUSING -1")
 				listDepthStack.push(-1);
 				break;
 			case 'list_item':
 				newNode.t = 'DoNotAddThisNode';
 
-				console.log("Reached a list item. " + listDepthStack)
 				var depth = listDepthStack[listDepthStack.length - 1] + 1;
 				listDepthStack[listDepthStack.length - 1] = depth;
 				var parent = currentPandocNodeParents[currentPandocNodeParents.length - 1];
@@ -192,7 +167,6 @@ function pubToPandoc(ppub, options) {
 				} else {
 					parent.c[depth] = [];
 				}
-				console.log("new list depth stack " + listDepthStack)
 				break;
 			case 'table':
 				inTable = true;
@@ -232,22 +206,11 @@ function pubToPandoc(ppub, options) {
 				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
 				break;
 			case 'citations':
-				// if (node.content) {
-				// 	newNode.t = 'Div';
-				// 	newNode.c = [
-				// 		['refs', ['references'], []],
-				// 		[]
-				// 	];
-				// } else {
-				// 	newNode.t = 'DoNotAddThisNode';
-				// }
-
 				// Create a header node that goes above that says 'References'
 
 				var aboveNode = { t: 'Header', c: [1, ['references', ['unnumbered'], []], [{ t:'Str', 'c':'References' }]]};
 				// insert this node at the root
 				blocks.push(aboveNode)
-
 				newNode.t = 'DoNotAddThisNode';
 
 				break;
@@ -276,64 +239,13 @@ function pubToPandoc(ppub, options) {
 					[]
 				];
 
-			// red("Hit a citation. Unimplemented..", true)
-			// newNode.t = "Note";
-			// var content;
-			// console.log(JSON.stringify(node))
-			//
-			// if (node.content[0].attrs.caption)
-			// 	content = createTextNodes(node.attrs.caption);
-			// }
-			// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
-
 				break;
-
-				// Crete a Para parent
-				// newNode.t = "Para";
-				// var childNode = {};
-				// newNode.c[0] = childNode;
-				// childNode.t = "Cite";
-				// childNode.c =[{
-				// 	{
-				// 		 citationSuffix:[
-				//
-				// 		 ],
-				// 		 citationNoteNum:0,
-				// 		 citationMode:{
-				// 				t:"AuthorInText"
-				// 		 },
-				// 		 citationPrefix:[
-				//
-				// 		 ],
-				// 		 citationId:"Book",
-				// 		 citationHash:0
-				// 	}
-				// }, [
-				// 	{
-				// 		t: "Str",
-				// 		c: "@Book" //May not necessarily be book
-				// 	}
-				// ]]
-				// childNode.c[2] =
-
-
-				// Footers stuf fis copy pasted below. This is untested and copy pasted.
-				// red("Hit a citation. Unimplemented..", true)
-				// newNode.t = "Note";
-				// var content;
-				// console.log(JSON.stringify(node))
-				//
-				// if (node.content[0].attrs.caption)
-				// 	content = createTextNodes(node.attrs.caption);
-				// }
-				// newNode.c[0] = { t: "Para", c: false ? createTextNodes() : []}
 			case 'citation':
 				newNode.t = 'DoNotAddThisNode';
 				var data = node.attrs.data;
 				bibData.push(data);
 				break;
 			case 'latex':
-				console.log(node)
 				newNode.t = 'Math';
 				newNode.c = [
 					{
@@ -357,12 +269,9 @@ function pubToPandoc(ppub, options) {
 		// Wrap all images in a para block, because Pandoc seems to do this,
 		// at least in does it in files where there is just an image. It'll break if you don't
 		if (newNode.t === 'Image') {
-			// red('divdiv')
 			var para = {};
 			para.t = 'Para';
 			para.c = [];
-			// para.c[0] = ['', [], []]; // Attributes
-			// para.c[1] = []; // Contents
 			newerNodes.push(para);
 			markCount++;
 		}
@@ -422,17 +331,14 @@ function pubToPandoc(ppub, options) {
 		|| newNode.t === 'Note' || newNode.t === 'Link'
 		|| newNode.t === 'Superscript') {
 			// Link is for the case UL->[Link, Str]
-			blue(`Popping 1 - ${JSON.stringify(newNode.t)}`);
 			currentPandocNodeParents.pop();
 		} else if (inTable) {
 			if (newNode.t === 'Plain') {
-				blue(`Popping 2 - ${JSON.stringify(newNode.t)}`);
 				currentPandocNodeParents.pop();
 			}
 		}
 
 		while (markCount > 0) {
-			blue('Popping mark');
 			markCount--;
 			currentPandocNodeParents.pop();
 		}
@@ -455,7 +361,6 @@ function pubToPandoc(ppub, options) {
 		}
 
 		if (!parent) {
-			green(`Pushing to root ${JSON.stringify(newNode)}`);
 			currentPandocNodeParents.push(newNode);
 			blocks.push(newNode);
 			return;
@@ -463,13 +368,10 @@ function pubToPandoc(ppub, options) {
 
 		switch (parent.t) {
 			case 'Table':
-				console.log(`pushing to ${row}, ${col}`);
 				if (row < 1) {
-					// parent.c[3].push([newNode]) // c3 is for header data.
 					if (!parent.c[3][col]) {
 						parent.c[3][col] = [];
 					}
-					console.log(`inserting at c[3][${col}]`);
 					parent.c[3][col].push(newNode);
 				} else {
 					if (!parent.c[4][row - 1]) {
@@ -478,7 +380,6 @@ function pubToPandoc(ppub, options) {
 					if (!parent.c[4][row - 1][col]) {
 						parent.c[4][row - 1][col] = [];
 					}
-					console.log(`inserting at c[4][${(row - 1)}][${col}]`);
 
 					parent.c[4][row - 1][col].push(newNode);
 				}
@@ -489,7 +390,6 @@ function pubToPandoc(ppub, options) {
 			case 'Code':
 			case 'Strikeout':
 				parent.c[1].push(newNode);
-				green(`SWEH: pushing ${JSON.stringify(newNode)}`);
 				isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				break;
 			case 'BulletList':
@@ -498,8 +398,6 @@ function pubToPandoc(ppub, options) {
 					depth = listDepthStack[listDepthStack.length - 2];
 				}
 				parent.c[depth].push(newNode);
-
-				green(`pushing5 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 
 				break;
@@ -509,13 +407,8 @@ function pubToPandoc(ppub, options) {
 					depth = listDepthStack[listDepthStack.length - 2];
 
 				}
-				console.log(listDepthStack)
-				console.log(`pushing a ${newNode.t} at c[1][${depth}]`)
-				console.log(JSON.stringify(parent))
-
 				parent.c[1][depth].push(newNode);
 
-				green(`pushing6 ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode); // Ahh may be buggy
 				break;
 			case 'CodeBlock':
@@ -523,7 +416,6 @@ function pubToPandoc(ppub, options) {
 				// Don't do anything
 				break;
 			case 'Cite':
-				red("PARENT IS CITE SHOULD NEVER HAPPEN LOL")
 				parent.c.push(newNode);
 				break;
 			case 'BlockQuote':
@@ -531,7 +423,6 @@ function pubToPandoc(ppub, options) {
 			case 'Emph':
 			case 'Strong':
 			case 'Plain':
-				console.log('HZX: ' + JSON.stringify(newNode));
 				parent.c.push(newNode);
 				if ((parent.t !== 'Para' && parent.t !== 'Plain') || (parent.t === 'Plain' && inTable)) {
 					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
@@ -542,7 +433,6 @@ function pubToPandoc(ppub, options) {
 					// Wasn't doing this to Plain before, not sure why.
 					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				} else if (parent.t === 'Note') {
-					blue('pushing Note');
 					currentPandocNodeParents.push(newNode);
 				}
 				break;
@@ -554,7 +444,6 @@ function pubToPandoc(ppub, options) {
 				parent.c[1].push(newNode);
 				break;
 			default:
-				red('Reached Default on: ' + JSON.stringify(newNode))
 				parent.c[2].push(newNode);
 				break;
 		}
@@ -576,9 +465,6 @@ function pubToPandoc(ppub, options) {
 		if (blocks.length === 0) {
 			throw new Error('Conversion failed');
 		}
-
-		// write file syncronously
-		// fs.writeFileSync(bibFile, bibContents);
 
 		var bibContents = csltoBibtex(bibData);
 
@@ -713,14 +599,6 @@ function pubToPandoc(ppub, options) {
 					c: createTextNodes(metadata['department'])
 				};
 			}
-			// metadata['university'];
-			// metadata['supervisor-name'];
-			// metadata['supervisor-title'];
-			// metadata['chairman-name'];
-			// metadata['chairman-title'];
-			// metadata['abstract'];
-			// metadata['acknowledgements'];
-			console.log(JSON.stringify(pandocJSON))
 			return pandocJSON;
 		})
 		.catch(function(error) {
@@ -733,55 +611,9 @@ function pubToPandoc(ppub, options) {
 	return finish();
 }
 
-/*** Debugging    utility functions ****************** * * * * *
-*** *******    ************************************** * * * * *
-*** *****    **************************************** * * * * *
-*** ***    ****************************************** * * * * *
-*** *    ******************************************** * * * * */
-
-function green(words, heading) {
-	if (heading) {
-		console.log('\n\t\t' + words.underline.green);
-		return;
-	}
-	console.log(colors.green(words) + '\n');
-}
-
-function yellow(words, heading) {
-	if (heading) {
-		console.log('\n\t\t' + words.underline.yellow);
-		return;
-	}
-	console.log(colors.yellow(words) + '\n');
-}
-
-function red(words, heading) {
-	if (heading) {
-		console.log('\n\t\t' + words.underline.red);
-		return;
-	}
-	console.log(colors.red(words) + '\n');
-}
-
-function blue(words, heading) {
-	if (heading) {
-		console.log('\n\t\t' + words.underline.blue);
-		return;
-	}
-	console.log(colors.blue(words) + '\n');
-}
-
-function cyan(words, heading) {
-	if (heading) {
-		console.log('\n\t\t' + words.underline.cyan);
-		return;
-	}
-	console.log(colors.cyan(words) + '\n');
-}
-
 // Allow command line args `node index fileToConvert.json`
 if (process.argv[2]) {
-	pubToPandoc(require(`./${process.argv[2]}`));
+	ppubToPandoc(require(`./${process.argv[2]}`));
 } else {
-	exports.pubToPandoc = pubToPandoc;
+	exports.ppubToPandoc = ppubToPandoc;
 }
