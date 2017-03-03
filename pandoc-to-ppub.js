@@ -41,10 +41,11 @@ function startTraversePandoc(pandoc) {
 					case 'Plain':
 					case 'Para':
 						//Create a Para Node
-						var newNode = {type: 'paragraph', content: [] };
+						var newNode = { type: 'paragraph', content: [] };
 						ppubNodeParents.push(newNode)
 						currentPpubParent.content.push(newNode);
 						handleInline(elements[i].c);
+						ppubNodeParents.pop();
 						// traversePandoc(elements[i].c[0])
 						break;
 					case 'LineBlock':
@@ -60,6 +61,7 @@ function startTraversePandoc(pandoc) {
 						traversePandoc(elements[i].c[1][0])
 						break;
 					case 'Header':
+						var newNode = { type: 'heading', content: [] };
 						handleInline(elements[i].c[2]);
 						break;
 					case 'HorizontalRule':
@@ -96,6 +98,7 @@ function startTraversePandoc(pandoc) {
 		console.log(`current ppub parent: ${JSON.stringify(currentPpubParent)}`)
 		var lastContentItem = currentPpubParent.content[currentPpubParent.content.length - 1];
 		console.log(`last content item: ${JSON.stringify(lastContentItem)}`)
+		console.log(`element is ${JSON.stringify(element)}`)
 		if (!lastContentItem) {
 			newNode = { type: 'text', text: '' };
 			addNode(newNode);
