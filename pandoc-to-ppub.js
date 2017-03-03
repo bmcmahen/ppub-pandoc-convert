@@ -23,22 +23,27 @@ function startTraversePandoc(pandoc) {
 		]
 	};
 
-	var currentPpubNodeParents = [{
-		type: 'Article',
+	// This variable is used to keep track of parent nodes
+	// Usually for inserting new nodes
+	var ppubNodeParents = [{
+		type: 'article',
 		content: []
 	}];
 
 	function traversePandoc(elements) {
 		console.log('Traversing Array: ' + JSON.stringify(elements))
 		for (let i = 0; i < elements.length; i++) {
-			var currentPpubParent = currentPpubNodeParents[currentPpubNodeParents.length -1];
+			var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
+			console.log('currentppub parent is ' + JSON.stringify(currentPpubParent));
 			if (isBlock(elements[i].t)) {
 				console.log('hit elements type ' + elements[i].t)
 				switch (elements[i].t) {
 					case 'Plain':
 					case 'Para':
 						//Create a Para Node
-						currentPpubParent.push({t: 'paragraph', c: [] });
+						var newNode = {type: 'paragraph', content: [] };
+						ppubNodeParents.push(newNode)
+						currentPpubParent.content.push(newNode);
 						handleInline(elements[i].c);
 						// traversePandoc(elements[i].c[0])
 						break;
@@ -77,17 +82,20 @@ function startTraversePandoc(pandoc) {
 				console.log(colors.red('Unknown ' + JSON.stringify(elements[i])))
 			}
 		}
+		console.log(colors.yellow(JSON.stringify(ppubNodeParents)))
 	}
 
 	function addNode(newNode) {
 		// Not convinced this is optimal
-		var currentPpubParent = currentPpubNodeParents[currentPpubNodeParents.length - 1];
+		var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
 
 	}
 
 	function handleString(element) {
-		var currentPpubParent = currentPpubNodeParents[currentPpubNodeParents.length - 1];
+		var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
+		console.log(`current ppub parent: ${JSON.stringify(currentPpubParent)}`)
 		var lastContentItem = currentPpubParent.content[currentPpubParent.content.length - 1];
+		console.log(`last content item: ${JSON.stringify(lastContentItem)}`)
 		if (!lastContentItem) {
 			newNode = { type: 'text', text: '' };
 			addNode(newNode);
@@ -128,7 +136,7 @@ function startTraversePandoc(pandoc) {
 	}
 
 
-	traversePandoc(pandoc.blocks)
+	traversePandoc(pandoc.blocks);
 }
 
 if (process.argv[2]) {
