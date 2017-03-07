@@ -610,7 +610,7 @@ function ppubToPandoc(ppub, options, metadata) {
 					c: createTextNodes(metadata['department'])
 				};
 			}
-			console.log(JSON.stringify(pandocJSON))
+			// console.log(JSON.stringify(pandocJSON))
 			return pandocJSON;
 		})
 		.catch(function(error) {
