@@ -6,6 +6,7 @@ $if(fontfamily)$
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
 $else$
 \usepackage{lmodern}
+
 $endif$
 $if(linestretch)$
 \usepackage{setspace}
@@ -218,7 +219,7 @@ $header-includes$
 $endfor$
 
 $if(title)$
-\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+\title{{\bfseries\sffamily $title$$if(thanks)$\thanks{$thanks$}$endif$}}
 $endif$
 $if(subtitle)$
 \providecommand{\subtitle}[1]{}
@@ -232,6 +233,14 @@ $if(institute)$
 \institute{$for(institute)$$institute$$sep$ \and $endfor$}
 $endif$
 \date{$date$}
+
+\usepackage{merriweather}
+\linespread{1.5}
+
+\usepackage{sectsty}
+\allsectionsfont{\bfseries\sffamily}
+
+
 
 \begin{document}
 $if(title)$
