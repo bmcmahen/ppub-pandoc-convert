@@ -234,7 +234,7 @@ function ppubToPandoc(ppub, options) {
 							citationPrefix: [
 
 							],
-							citationId: 'item' + citationId,
+							citationId: citationId,
 							citationHash: 1 // Idk what this is
 						}
 					],
