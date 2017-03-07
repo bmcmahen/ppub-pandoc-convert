@@ -190,17 +190,6 @@ function ppubToPandoc(ppub, options) {
 				newNode.t = 'Plain';
 				break;
 			case 'block_embed': // Cases: Image in table
-				newNode.t = 'Image';
-				newNode.c[0] = ['', [], []];
-				var caption = attrs.caption;
-				if (!caption) {
-					caption = node.content && node.content[0] && node.content[0].content[0] ? node.content[0].content[0].text : '';
-				}
-
-				newNode.c[1] = caption ? createTextNodes(caption) : [];
-
-				newNode.c[2] = [node.attrs.data.content.url, ''];
-				break;
 			case 'embed':
 				newNode.t = 'Image';
 				newNode.c[0] = ['', [], []];
@@ -211,9 +200,12 @@ function ppubToPandoc(ppub, options) {
 				}
 				var alignment = node.attrs.align; // is either left, right or full
 				// alignment is not fully supported in pandoc quite yet
-
-				newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];
-				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
+				var caption = node.attrs.caption;
+				if (!caption) {
+					caption = node.content && node.content[0] && node.content[0].content[0] ? node.content[0].content[0].text : '';
+				}
+				newNode.c[1] = caption ? createTextNodes(caption) : [];
+				newNode.c[2] = [node.attrs.url || node.attrs.data.content.url, node.attrs.figureName || ''];
 				break;
 			case 'citations':
 				// Create a header node that goes above that says 'References'
