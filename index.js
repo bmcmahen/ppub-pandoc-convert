@@ -209,6 +209,9 @@ function ppubToPandoc(ppub, options) {
 					var widthHeightPercentage = '' + node.attrs.size;
 					newNode.c[0][2] = [['width', widthHeightPercentage], ['height', widthHeightPercentage]]
 				}
+				var alignment = node.attrs.align; // is either left, right or full
+				// alignment is not fully supported in pandoc quite yet
+
 				newNode.c[1] = node.attrs.caption ? createTextNodes(node.attrs.caption) : [];
 				newNode.c[2] = [node.attrs.url, node.attrs.figureName || ''];
 				break;
