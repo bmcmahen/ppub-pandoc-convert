@@ -7,10 +7,10 @@ var requestPromise = require('request-promise');
 var csltoBibtex = require('@pubpub/prose/dist/references/csltobibtex').csltoBibtex;
 
 /*
- * @options { bibFile }
- *
- */
-function ppubToPandoc(ppub, options) {
+* @options { bibFile }
+*
+*/
+function ppubToPandoc(ppub, options, metadata) {
 
 	var currentPpubNodeParents = []; // stack for keeping track of the last node : )
 	var currentPandocNodeParents = []; // stack for keeping track of the last output node
@@ -24,6 +24,7 @@ function ppubToPandoc(ppub, options) {
 	var bibFile = (options && options.bibFile) ? options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
+	metadata = metadata || {};
 
 	function isLeafNode(node) {
 		if (node.t === 'Str' || node.t === 'Space' || node.t === 'Cite') {
@@ -60,211 +61,211 @@ function ppubToPandoc(ppub, options) {
 
 		switch (node.type) {
 			case 'article':
-				newNode.t = 'DoNotAddThisNode';
-				break;
+			newNode.t = 'DoNotAddThisNode';
+			break;
 
 			case 'heading':
-				var level = node.attrs.level;
-				newNode.t = 'Header';
-				newNode.c[0] = level;
-				newNode.c[1] = ['', [], []];
-				newNode.c[2] = [];
-				break;
+			var level = node.attrs.level;
+			newNode.t = 'Header';
+			newNode.c[0] = level;
+			newNode.c[1] = ['', [], []];
+			newNode.c[2] = [];
+			break;
 			case 'text':
-				// Marks are handled here and the rest of it is handled later
-				if (node.marks) {
-					for (var i = 0; i < node.marks.length; i++) {
-						var newerNode;
-						if (node.marks[i].type === 'em') {
-							newerNode = {};
-							newerNode.t = 'Emph';
-							newerNode.c = [];
-							newerNodes.push(newerNode);
-							markCount++;
-						} else if (node.marks[i].type === 'strong') {
-							newerNode = {};
-							newerNode.t = 'Strong';
-							newerNode.c = [];
-							newerNodes.push(newerNode);
-							markCount++;
-						} else if (node.marks[i].type === 'link') {
-							newerNode = {};
-							newerNode.t = 'Link';
-							newerNode.c = [['', [], []], [], [node.content.text, node.marks[i].attrs.title || '']];
-							newerNodes.push(newerNode);
-							markCount++;
-						} else if (node.marks[i].type === 'code') {
-							newerNode = {};
-							newerNode.t = 'Code';
-							newerNode.c = [['', [], []], node.text];
-							newerNodes.push(newerNode);
-							markCount++;
-						} else if (node.marks[i].type === 'strike') {
-							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
-							newNode.t = 'Strikeout';
-						} else if (node.marks[i].type === 'sub') {
-							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
-							newNode.t = 'Subscript';
-						} else if (node.marks[i].type === 'sup') {
-							// This is an edge case and handled differently in Pandoc than link, code, strong and emph
-							newNode.t = 'Superscript';
-						}
+			// Marks are handled here and the rest of it is handled later
+			if (node.marks) {
+				for (var i = 0; i < node.marks.length; i++) {
+					var newerNode;
+					if (node.marks[i].type === 'em') {
+						newerNode = {};
+						newerNode.t = 'Emph';
+						newerNode.c = [];
+						newerNodes.push(newerNode);
+						markCount++;
+					} else if (node.marks[i].type === 'strong') {
+						newerNode = {};
+						newerNode.t = 'Strong';
+						newerNode.c = [];
+						newerNodes.push(newerNode);
+						markCount++;
+					} else if (node.marks[i].type === 'link') {
+						newerNode = {};
+						newerNode.t = 'Link';
+						newerNode.c = [['', [], []], [], [node.content.text, node.marks[i].attrs.title || '']];
+						newerNodes.push(newerNode);
+						markCount++;
+					} else if (node.marks[i].type === 'code') {
+						newerNode = {};
+						newerNode.t = 'Code';
+						newerNode.c = [['', [], []], node.text];
+						newerNodes.push(newerNode);
+						markCount++;
+					} else if (node.marks[i].type === 'strike') {
+						// This is an edge case and handled differently in Pandoc than link, code, strong and emph
+						newNode.t = 'Strikeout';
+					} else if (node.marks[i].type === 'sub') {
+						// This is an edge case and handled differently in Pandoc than link, code, strong and emph
+						newNode.t = 'Subscript';
+					} else if (node.marks[i].type === 'sup') {
+						// This is an edge case and handled differently in Pandoc than link, code, strong and emph
+						newNode.t = 'Superscript';
 					}
 				}
+			}
 
-				break;
+			break;
 			case 'paragraph':
-				// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
-				if (currentPpubNodeParents[currentPpubNodeParents.length - 1].type === 'list_item') {
-					newNode.t = 'Plain';
-					break;
-				} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table') {
-					newNode.t = 'DoNotAddThisNode';
-				} else {
-					// This is the proper way to handle Para -- one to one with ppub paragraph
-					// Because otherwise have issues with Para : [text, text]
-					newNode.t = 'Para';
-				}
-
-				break;
-			case 'horizontal_rule':
-				newNode.t = 'HorizontalRule';
-				break;
-			case 'blockquote':
-				newNode.t = 'BlockQuote';
-				break;
-			case 'bullet_list':
-				newNode.t = 'BulletList';
-
-				listDepthStack.push(-1);
-				break;
-			case 'ordered_list':
-				newNode.t = 'OrderedList';
-				newNode.c[0] = [
-					1, {
-						t: 'DefaultStyle'
-					},
-					{
-						t: 'Period'
-					}
-				];
-				newNode.c[1] = [];
-				listDepthStack.push(-1);
-				break;
-			case 'list_item':
-				newNode.t = 'DoNotAddThisNode';
-
-				var depth = listDepthStack[listDepthStack.length - 1] + 1;
-				listDepthStack[listDepthStack.length - 1] = depth;
-				var parent = currentPandocNodeParents[currentPandocNodeParents.length - 1];
-				if (parent.t === 'OrderedList'){
-					parent.c[1][depth] = [];
-				} else {
-					parent.c[depth] = [];
-				}
-				break;
-			case 'table':
-				inTable = true;
-				// This doesn't work for nested tables.
-				col = -1;
-				row = -1;
-				newNode.t = 'Table';
-				newNode.c[0] = [];
-				newNode.c[1] = []; // Should have {t: "AlignDefault"} for every column
-				newNode.c[2] = []; // Should have a 0 for every column
-				newNode.c[3] = []; // Column Titles
-				newNode.c[4] = []; // Column content
-				var columns = node.attrs.columns;
-				for (var i = 0; i < columns; i++) {
-					newNode.c[1].push({ t: 'AlignDefault' });
-					newNode.c[2].push(0);
-				}
-				break;
-			case 'table_row':
-				newNode.t = 'DoNotAddThisNode';
-				row++;
-				col = -1;
-				break;
-			case 'table_cell':
-				col++;
+			// Let's actually create Paragraph nodes when text nodes are seen, as opposed to when paragraph nodes are seen
+			if (currentPpubNodeParents[currentPpubNodeParents.length - 1].type === 'list_item') {
 				newNode.t = 'Plain';
 				break;
+			} else if (inTable && currentPandocNodeParents[currentPandocNodeParents.length-1].t === 'Plain' && currentPandocNodeParents[currentPandocNodeParents.length-2].t === 'Table') {
+				newNode.t = 'DoNotAddThisNode';
+			} else {
+				// This is the proper way to handle Para -- one to one with ppub paragraph
+				// Because otherwise have issues with Para : [text, text]
+				newNode.t = 'Para';
+			}
+
+			break;
+			case 'horizontal_rule':
+			newNode.t = 'HorizontalRule';
+			break;
+			case 'blockquote':
+			newNode.t = 'BlockQuote';
+			break;
+			case 'bullet_list':
+			newNode.t = 'BulletList';
+
+			listDepthStack.push(-1);
+			break;
+			case 'ordered_list':
+			newNode.t = 'OrderedList';
+			newNode.c[0] = [
+				1, {
+					t: 'DefaultStyle'
+				},
+				{
+					t: 'Period'
+				}
+			];
+			newNode.c[1] = [];
+			listDepthStack.push(-1);
+			break;
+			case 'list_item':
+			newNode.t = 'DoNotAddThisNode';
+
+			var depth = listDepthStack[listDepthStack.length - 1] + 1;
+			listDepthStack[listDepthStack.length - 1] = depth;
+			var parent = currentPandocNodeParents[currentPandocNodeParents.length - 1];
+			if (parent.t === 'OrderedList'){
+				parent.c[1][depth] = [];
+			} else {
+				parent.c[depth] = [];
+			}
+			break;
+			case 'table':
+			inTable = true;
+			// This doesn't work for nested tables.
+			col = -1;
+			row = -1;
+			newNode.t = 'Table';
+			newNode.c[0] = [];
+			newNode.c[1] = []; // Should have {t: "AlignDefault"} for every column
+			newNode.c[2] = []; // Should have a 0 for every column
+			newNode.c[3] = []; // Column Titles
+			newNode.c[4] = []; // Column content
+			var columns = node.attrs.columns;
+			for (var i = 0; i < columns; i++) {
+				newNode.c[1].push({ t: 'AlignDefault' });
+				newNode.c[2].push(0);
+			}
+			break;
+			case 'table_row':
+			newNode.t = 'DoNotAddThisNode';
+			row++;
+			col = -1;
+			break;
+			case 'table_cell':
+			col++;
+			newNode.t = 'Plain';
+			break;
 			case 'block_embed': // Cases: Image in table
 			case 'embed':
-				newNode.t = 'Image';
-				newNode.c[0] = ['', [], []];
-				// if has width & height
-				if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
-					var widthHeightPercentage = '' + node.attrs.size;
-					newNode.c[0][2] = [['width', widthHeightPercentage], ['height', widthHeightPercentage]]
-				}
-				var alignment = node.attrs.align; // is either left, right or full
-				// alignment is not fully supported in pandoc quite yet
-				var caption = node.attrs.caption;
-				if (!caption) {
-					caption = node.content && node.content[0] && node.content[0].content[0] ? node.content[0].content[0].text : '';
-				}
-				newNode.c[1] = caption ? createTextNodes(caption) : [];
-				newNode.c[2] = [node.attrs.url || node.attrs.data.content.url, node.attrs.figureName || ''];
-				break;
+			newNode.t = 'Image';
+			newNode.c[0] = ['', [], []];
+			// if has width & height
+			if (node.attrs && node.attrs.size) { // Images in the newer editor use embe not image
+				var widthHeightPercentage = '' + node.attrs.size;
+				newNode.c[0][2] = [['width', widthHeightPercentage], ['height', widthHeightPercentage]]
+			}
+			var alignment = node.attrs.align; // is either left, right or full
+			// alignment is not fully supported in pandoc quite yet
+			var caption = node.attrs.caption;
+			if (!caption) {
+				caption = node.content && node.content[0] && node.content[0].content[0] ? node.content[0].content[0].text : '';
+			}
+			newNode.c[1] = caption ? createTextNodes(caption) : [];
+			newNode.c[2] = [node.attrs.url || node.attrs.data.content.url, node.attrs.figureName || ''];
+			break;
 			case 'citations':
-				// Create a header node that goes above that says 'References'
+			// Create a header node that goes above that says 'References'
 
-				var aboveNode = { t: 'Header', c: [1, ['references', ['unnumbered'], []], [{ t:'Str', 'c':'References' }]]};
-				// insert this node at the root
-				blocks.push(aboveNode)
-				newNode.t = 'DoNotAddThisNode';
+			var aboveNode = { t: 'Header', c: [1, ['references', ['unnumbered'], []], [{ t:'Str', 'c':'References' }]]};
+			// insert this node at the root
+			blocks.push(aboveNode)
+			newNode.t = 'DoNotAddThisNode';
 
-				break;
+			break;
 			case 'reference':
-				// Footnote
-				var citationId = node.attrs.citationID;
+			// Footnote
+			var citationId = node.attrs.citationID;
 
-				newNode.t = 'Cite';
-				newNode.c = [
-					[
-						{
-							citationSuffix: [
-
-							],
-							citationNoteNum: 0,
-							citationMode: {
-								t: 'AuthorInText'
-							},
-							citationPrefix: [
-
-							],
-							citationId: citationId,
-							citationHash: 1 // Idk what this is
-						}
-					],
-					[]
-				];
-
-				break;
-			case 'citation':
-				newNode.t = 'DoNotAddThisNode';
-				var data = node.attrs.data;
-				bibData.push(data);
-				break;
-			case 'latex':
-				newNode.t = 'Math';
-				newNode.c = [
+			newNode.t = 'Cite';
+			newNode.c = [
+				[
 					{
-					t: 'InlineMath'
-					},
-					node.content[0].text
-				];
+						citationSuffix: [
 
-				break;
+						],
+						citationNoteNum: 0,
+						citationMode: {
+							t: 'AuthorInText'
+						},
+						citationPrefix: [
+
+						],
+						citationId: citationId,
+						citationHash: 1 // Idk what this is
+					}
+				],
+				[]
+			];
+
+			break;
+			case 'citation':
+			newNode.t = 'DoNotAddThisNode';
+			var data = node.attrs.data;
+			bibData.push(data);
+			break;
+			case 'latex':
+			newNode.t = 'Math';
+			newNode.c = [
+				{
+					t: 'InlineMath'
+				},
+				node.content[0].text
+			];
+
+			break;
 			case 'code_block':
-				newNode.t = 'CodeBlock';
-				newNode.c[0] = ['',[],[]];
-				newNode.c[1] = node.content[0].text;
-				break;
+			newNode.t = 'CodeBlock';
+			newNode.c[0] = ['',[],[]];
+			newNode.c[1] = node.content[0].text;
+			break;
 			default:
-				newNode.t = 'DoNotAddThisNode';
-				break;
+			newNode.t = 'DoNotAddThisNode';
+			break;
 		}
 
 		// Wrap all images in a para block, because Pandoc seems to do this,
@@ -367,84 +368,84 @@ function ppubToPandoc(ppub, options) {
 
 		switch (parent.t) {
 			case 'Table':
-				if (row < 1) {
-					if (!parent.c[3][col]) {
-						parent.c[3][col] = [];
-					}
-					parent.c[3][col].push(newNode);
-				} else {
-					if (!parent.c[4][row - 1]) {
-						parent.c[4][row - 1] = [];
-					}
-					if (!parent.c[4][row - 1][col]) {
-						parent.c[4][row - 1][col] = [];
-					}
-
-					parent.c[4][row - 1][col].push(newNode);
+			if (row < 1) {
+				if (!parent.c[3][col]) {
+					parent.c[3][col] = [];
 				}
-				currentPandocNodeParents.push(newNode);
-				break;
+				parent.c[3][col].push(newNode);
+			} else {
+				if (!parent.c[4][row - 1]) {
+					parent.c[4][row - 1] = [];
+				}
+				if (!parent.c[4][row - 1][col]) {
+					parent.c[4][row - 1][col] = [];
+				}
+
+				parent.c[4][row - 1][col].push(newNode);
+			}
+			currentPandocNodeParents.push(newNode);
+			break;
 			case 'Link':
 			case 'Code':
 			case 'Strikeout':
-				parent.c[1].push(newNode);
-				isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
-				break;
+			parent.c[1].push(newNode);
+			isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
+			break;
 			case 'BulletList':
-				var depth = listDepthStack[listDepthStack.length - 1];
-				if (depth === -1) {
-					depth = listDepthStack[listDepthStack.length - 2];
-				}
-				parent.c[depth].push(newNode);
-				currentPandocNodeParents.push(newNode); // Ahh may be buggy
+			var depth = listDepthStack[listDepthStack.length - 1];
+			if (depth === -1) {
+				depth = listDepthStack[listDepthStack.length - 2];
+			}
+			parent.c[depth].push(newNode);
+			currentPandocNodeParents.push(newNode); // Ahh may be buggy
 
-				break;
+			break;
 			case 'OrderedList':
-				var depth = listDepthStack[listDepthStack.length - 1];
-				if (depth === -1) {
-					depth = listDepthStack[listDepthStack.length - 2];
+			var depth = listDepthStack[listDepthStack.length - 1];
+			if (depth === -1) {
+				depth = listDepthStack[listDepthStack.length - 2];
 
-				}
-				parent.c[1][depth].push(newNode);
+			}
+			parent.c[1][depth].push(newNode);
 
-				currentPandocNodeParents.push(newNode); // Ahh may be buggy
-				break;
+			currentPandocNodeParents.push(newNode); // Ahh may be buggy
+			break;
 			case 'CodeBlock':
 			case 'Math':
-				// Don't do anything
-				break;
+			// Don't do anything
+			break;
 			case 'Cite':
-				parent.c.push(newNode);
-				break;
+			parent.c.push(newNode);
+			break;
 			case 'BlockQuote':
 			case 'Para':
 			case 'Emph':
 			case 'Strong':
 			case 'Plain':
-				parent.c.push(newNode);
-				if ((parent.t !== 'Para' && parent.t !== 'Plain') || (parent.t === 'Plain' && inTable)) {
-					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
-				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
-					currentPandocNodeParents.push(newNode);
-				} else if (parent.t === 'Para' || parent.t === 'Plain') {
-					// Wasn't doing this to Plain before, not sure why.
-					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
-				} else if (parent.t === 'Note') {
-					currentPandocNodeParents.push(newNode);
-				}
-				break;
-			case 'Note':
-				parent.c.push(newNode);
+			parent.c.push(newNode);
+			if ((parent.t !== 'Para' && parent.t !== 'Plain') || (parent.t === 'Plain' && inTable)) {
+				isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
+			} else if (parent.t === 'Emph' || parent.t === 'Strong') {
 				currentPandocNodeParents.push(newNode);
-				break;
+			} else if (parent.t === 'Para' || parent.t === 'Plain') {
+				// Wasn't doing this to Plain before, not sure why.
+				isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
+			} else if (parent.t === 'Note') {
+				currentPandocNodeParents.push(newNode);
+			}
+			break;
+			case 'Note':
+			parent.c.push(newNode);
+			currentPandocNodeParents.push(newNode);
+			break;
 			case 'Div':
-				parent.c[1].push(newNode);
-				break;
+			parent.c[1].push(newNode);
+			break;
 			case 'Image':
-				return;
+			return;
 			default:
-				parent.c[2].push(newNode);
-				break;
+			parent.c[2].push(newNode);
+			break;
 		}
 
 	}
@@ -465,6 +466,10 @@ function ppubToPandoc(ppub, options) {
 			throw new Error('Conversion failed');
 		}
 
+		for (var i =0; i< bibData.length; i++){
+			bibData[i].label = bibData[i].id;
+		}
+
 		var bibContents = csltoBibtex(bibData);
 
 		return write(bibFile, bibContents)
@@ -476,123 +481,130 @@ function ppubToPandoc(ppub, options) {
 				0,
 				4
 			];
-			pandocJSON.meta = {
-				author: {
-					t: 'MetaList',
-					c: [
-						{
-							t: 'MetaInlines',
-							c: [
-								{
-									t: 'Str',
-									c: 'Lucien'
-								},
-								{
-									t: 'Space'
-								},
-								{
-									t: 'Str',
-									c: 'William'
-								}
-							]
-						}
-					]
-				},
-				title: {
-					t: 'MetaInlines',
-					c: [
-						{
-							t: 'Str',
-							c: 'An'
-						},
-						{
-							t: 'Space'
-						},
-						{
-							t: 'Str',
-							c: 'Optimizing'
-						}
-					]
-				}
+			pandocJSON.meta = {};
+
+			pandocJSON.meta.author = {
+				t: 'MetaList',
+				c: [
+					{
+						t: 'MetaInlines',
+						c: [
+							{
+								t: 'Str',
+								c: 'Lucien'
+							},
+							{
+								t: 'Space'
+							},
+							{
+								t: 'Str',
+								c: 'William'
+							}
+						]
+					}
+				]
 			};
 
-			return requestPromise('https://gist.githubusercontent.com/hassanshaikley/3919ecf56ec915cffc1ac573fa3fdc50/raw/05c5a190131354235b742176c7ec088c1f08fbc3/metadata.json')
-		})
-		.then(function(htmlContent) {
-			var metadata = JSON.parse(htmlContent);
-			if(metadata['degree']) {
+			if (metadata['author']) {
+				pandocJSON.meta.author = {
+					t: 'MetaList',
+					c: []
+				}
+				for (var i = 0; i < metadata.author.length; i++){
+					var author = {
+						t: 'MetaInlines',
+						c: createTextNodes(metadata.author[i])
+					}
+					pandocJSON.meta.author.c.push(author)
+				}
+			}
+
+			if (!metadata.title) {
+				metadata.title = 'Untitled';
+			}
+
+			if (metadata['title']) {
+
+				pandocJSON.meta.title = {
+
+					t: 'MetaInlines',
+					c: createTextNodes(metadata.title)
+
+				}
+			}
+			if (metadata['degree']) {
 				pandocJSON.meta.pubdegree = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['degree'])
 				};
 			}
-			if(metadata['university']) {
+			if (metadata['university']) {
 				pandocJSON.meta.pubuniversity = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['university'])
 				};
 			}
-			if(metadata['date']) {
+			if (metadata['date']) {
 				pandocJSON.meta.pubdate = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['date'])
 				};
 			}
-			if(metadata['supervisor-name']) {
+			if (metadata['supervisor-name']) {
 				pandocJSON.meta.pubsupervisorname = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['supervisor-name'])
 				};
 			}
-			if(metadata['supervisor-title']) {
+			if (metadata['supervisor-title']) {
 				pandocJSON.meta.pubsupervisortitle = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['supervisor-title'])
 				};
 			}
-			if(metadata['department-chairman-name']) {
+			if (metadata['department-chairman-name']) {
 				pandocJSON.meta.pubchairmanname = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['department-chairman-name'])
 				};
 			}
-			if(metadata['department-chairman-title']) {
+			if (metadata['department-chairman-title']) {
 				pandocJSON.meta.pubchairmantitle = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['department-chairman-title'])
 				};
 			}
-			if(metadata['acknowledgements']) {
+			if (metadata['acknowledgements']) {
 				pandocJSON.meta.pubacknowledgements = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['acknowledgements'])
 				};
 			}
-			if(metadata['abstract']) {
+			if (metadata['abstract']) {
 				pandocJSON.meta.pubabstract = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['abstract'])
 				};
 			}
-			if(metadata['degree-month']) {
+			if (metadata['degree-month']) {
 				pandocJSON.meta.pubdegreemonth = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['degree-month'])
 				};
 			}
-			if(metadata['degree-year']) {
+			if (metadata['degree-year']) {
 				pandocJSON.meta.pubdegreeyear = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['degree-year'])
 				};
 			}
-			if(metadata['thesis-date']) {
+			if (metadata['thesis-date']) {
 				pandocJSON.meta.pubthesisdate = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['thesis-date'])
 				};
 			}
-			if(metadata['department']) {
+			if (metadata['department']) {
 				pandocJSON.meta.pubdepartment = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['department'])
