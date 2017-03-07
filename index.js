@@ -483,7 +483,7 @@ function ppubToPandoc(ppub, options, metadata) {
 			];
 			pandocJSON.meta = {};
 
-			pandocJSON.meta.author = {
+			pandocJSON.meta.authors = {
 				t: 'MetaList',
 				c: [
 					{
@@ -505,17 +505,17 @@ function ppubToPandoc(ppub, options, metadata) {
 				]
 			};
 
-			if (metadata['author']) {
+			if (metadata['authors']) {
 				pandocJSON.meta.author = {
 					t: 'MetaList',
 					c: []
 				}
-				for (var i = 0; i < metadata.author.length; i++){
+				for (var i = 0; i < metadata.authors.length; i++){
 					var author = {
 						t: 'MetaInlines',
-						c: createTextNodes(metadata.author[i])
+						c: createTextNodes(metadata.authors[i])
 					}
-					pandocJSON.meta.author.c.push(author)
+					pandocJSON.meta.authors.c.push(author)
 				}
 			}
 
