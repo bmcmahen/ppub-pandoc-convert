@@ -4,7 +4,7 @@ var fs = require('fs');
 var execPromise = require('child-process-promise').exec;
 var requestPromise = require('request-promise');
 
-var csltoBibtex = require('@pubpub/prose/dist/references/csltoBibtex').csltoBibtex;
+var csltoBibtex = require('@pubpub/prose/dist/references/csltobibtex').csltoBibtex;
 
 /*
  * @options { bibFile }
@@ -62,12 +62,7 @@ function ppubToPandoc(ppub, options) {
 			case 'article':
 				newNode.t = 'DoNotAddThisNode';
 				break;
-			case 'block_embed': // Cases: Image in table
-				newNode.t = 'Image';
-				newNode.c[0] = ['', [], []];
-				newNode.c[1] = [];
-				newNode.c[2] = [node.attrs.data.content.url, ''];
-				break;
+
 			case 'heading':
 				var level = node.attrs.level;
 				newNode.t = 'Header';
@@ -194,6 +189,18 @@ function ppubToPandoc(ppub, options) {
 				col++;
 				newNode.t = 'Plain';
 				break;
+			case 'block_embed': // Cases: Image in table
+				newNode.t = 'Image';
+				newNode.c[0] = ['', [], []];
+				var caption = attrs.caption;
+				if (!caption) {
+					caption = node.content && node.content[0] && node.content[0].content[0] ? node.content[0].content[0].text : '';
+				}
+
+				newNode.c[1] = caption ? createTextNodes(caption) : [];
+
+				newNode.c[2] = [node.attrs.data.content.url, ''];
+				break;
 			case 'embed':
 				newNode.t = 'Image';
 				newNode.c[0] = ['', [], []];
@@ -261,7 +268,6 @@ function ppubToPandoc(ppub, options) {
 				newNode.c[1] = node.content[0].text;
 				break;
 			default:
-				red(`Uh oh...Unprocessed node of type ${node.type}`);
 				newNode.t = 'DoNotAddThisNode';
 				break;
 		}
@@ -299,8 +305,6 @@ function ppubToPandoc(ppub, options) {
 				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
 				var newNodes = createTextNodes(node.text);
 
-
-				yellow(`PARENT: ${JSON.stringify(parent)}`);
 
 				for (var i in newNodes) {
 					addNode(newNodes[i]);
@@ -383,7 +387,6 @@ function ppubToPandoc(ppub, options) {
 
 					parent.c[4][row - 1][col].push(newNode);
 				}
-				green(`pushing ${JSON.stringify(newNode)}`);
 				currentPandocNodeParents.push(newNode);
 				break;
 			case 'Link':
@@ -427,7 +430,6 @@ function ppubToPandoc(ppub, options) {
 				if ((parent.t !== 'Para' && parent.t !== 'Plain') || (parent.t === 'Plain' && inTable)) {
 					isLeafNode(newNode) ? undefined : currentPandocNodeParents.push(newNode);
 				} else if (parent.t === 'Emph' || parent.t === 'Strong') {
-					green(`pushing3: ${JSON.stringify(newNode)}`);
 					currentPandocNodeParents.push(newNode);
 				} else if (parent.t === 'Para' || parent.t === 'Plain') {
 					// Wasn't doing this to Plain before, not sure why.
@@ -443,6 +445,8 @@ function ppubToPandoc(ppub, options) {
 			case 'Div':
 				parent.c[1].push(newNode);
 				break;
+			case 'Image':
+				return;
 			default:
 				parent.c[2].push(newNode);
 				break;
@@ -599,6 +603,7 @@ function ppubToPandoc(ppub, options) {
 					c: createTextNodes(metadata['department'])
 				};
 			}
+			console.log(JSON.stringify(pandocJSON))
 			return pandocJSON;
 		})
 		.catch(function(error) {
