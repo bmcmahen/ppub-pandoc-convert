@@ -19,7 +19,7 @@
 					},
 					{
 						"t": "Str",
-						"c": "Test"
+						"c": "Complete"
 					},
 					{
 						"t": "Space"
@@ -36,49 +36,7 @@
 			"c": [
 				{
 					"t": "Str",
-					"c": "Abstract:"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "Here"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "we"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "have"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "created"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "a"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "test"
+					"c": "A"
 				},
 				{
 					"t": "Space"
@@ -92,63 +50,39 @@
 				},
 				{
 					"t": "Str",
-					"c": "to"
+					"c": "with"
 				},
 				{
 					"t": "Space"
 				},
 				{
 					"t": "Str",
-					"c": "show"
+					"c": "many"
 				},
 				{
 					"t": "Space"
 				},
 				{
 					"t": "Str",
-					"c": "how"
+					"c": "citations"
 				},
 				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "Pubs"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "look"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "when"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "output"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "to"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "LaTeX."
+					"t": "Cite",
+					"c": [
+						[
+							{
+								"citationSuffix": [],
+								"citationNoteNum": 0,
+								"citationMode": {
+									"t": "AuthorInText"
+								},
+								"citationPrefix": [],
+								"citationId": "73599909",
+								"citationHash": 1
+							}
+						],
+						[]
+					]
 				}
 			]
 		},
@@ -168,7 +102,14 @@
 				[
 					{
 						"t": "Str",
-						"c": "Introduction"
+						"c": "The"
+					},
+					{
+						"t": "Space"
+					},
+					{
+						"t": "Str",
+						"c": "Alligator"
 					}
 				]
 			]
@@ -176,209 +117,6 @@
 		{
 			"t": "Para",
 			"c": [
-				{
-					"t": "Str",
-					"c": "Here"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "we"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "introduce"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "the"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "subject"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "matter"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "and"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "talk"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "more"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "about"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "things"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "like"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "how"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "screwed"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "we"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "are"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "for"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "instance."
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "How"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "bad"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "things"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "are"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "in"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "this"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "world"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "except"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "for"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "the"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "internet."
-				},
-				{
-					"t": "Space"
-				},
 				{
 					"t": "Str",
 					"c": "The"
@@ -388,35 +126,7 @@
 				},
 				{
 					"t": "Str",
-					"c": "internet"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "is"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "pretty"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "cool."
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": ""
+					"c": "alligator "
 				},
 				{
 					"t": "Cite",
@@ -429,435 +139,192 @@
 									"t": "AuthorInText"
 								},
 								"citationPrefix": [],
-								"citationId": "item1",
+								"citationId": "28675934",
 								"citationHash": 1
 							}
 						],
 						[]
 					]
+				},
+				{
+					"t": "Str",
+					"c": " is"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "scary."
 				}
 			]
 		},
 		{
-			"t": "Para",
-			"c": []
-		},
-		{
-			"t": "Header",
+			"t": "BulletList",
 			"c": [
-				4,
-				[
-					"",
-					[],
-					[]
-				],
 				[
 					{
-						"t": "Str",
-						"c": "Why"
-					},
-					{
-						"t": "Space"
-					},
-					{
-						"t": "Str",
-						"c": "is"
-					},
-					{
-						"t": "Space"
-					},
-					{
-						"t": "Str",
-						"c": "the"
-					},
-					{
-						"t": "Space"
-					},
-					{
-						"t": "Str",
-						"c": "internet"
-					},
-					{
-						"t": "Space"
-					},
-					{
-						"t": "Str",
-						"c": "cool?"
-					}
-				]
-			]
-		},
-		{
-			"t": "Para",
-			"c": [
-				{
-					"t": "Str",
-					"c": "Because"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "I"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "said"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "so."
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": ""
-				},
-				{
-					"t": "Cite",
-					"c": [
-						[
+						"t": "Plain",
+						"c": [
 							{
-								"citationSuffix": [],
-								"citationNoteNum": 0,
-								"citationMode": {
-									"t": "AuthorInText"
-								},
-								"citationPrefix": [],
-								"citationId": "item1",
-								"citationHash": 1
+								"t": "Str",
+								"c": "Because"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "it"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "is"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "big"
 							}
-						],
-						[]
-					]
-				},
-				{
-					"t": "Str",
-					"c": ""
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "Does"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "that"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "make"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "sense?"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "Or"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "does"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "it"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "not"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "make"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "sense."
-				},
-				{
-					"t": "Superscript",
-					"c": [
-						{
-							"t": "Str",
-							"c": ""
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "it"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "better"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "god"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "damn"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "make"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "sense."
-						}
-					]
-				}
-			]
-		},
-		{
-			"t": "Header",
-			"c": [
-				2,
-				[
-					"",
-					[],
-					[]
+						]
+					}
 				],
 				[
 					{
-						"t": "Str",
-						"c": "Body"
+						"t": "Plain",
+						"c": [
+							{
+								"t": "Str",
+								"c": "It"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "is"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "old"
+							}
+						]
+					}
+				],
+				[
+					{
+						"t": "Plain",
+						"c": [
+							{
+								"t": "Str",
+								"c": "It"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "is"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "like"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "dinosaur."
+							}
+						]
+					}
+				],
+				[
+					{
+						"t": "Plain",
+						"c": [
+							{
+								"t": "Str",
+								"c": "It"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "is"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "only"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "known"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "animal"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "to"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "breed"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "with"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "the"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "robot"
+							}
+						]
 					}
 				]
-			]
-		},
-		{
-			"t": "Para",
-			"c": [
-				{
-					"t": "Str",
-					"c": "A"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "wise"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "man"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "once"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "said"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": ""
-				}
-			]
-		},
-		{
-			"t": "BlockQuote",
-			"c": [
-				{
-					"t": "Para",
-					"c": [
-						{
-							"t": "Str",
-							"c": "I"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "don’t"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "want"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "to"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "live"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "on"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "this"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "planet"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "anymore."
-						}
-					]
-				}
-			]
-		},
-		{
-			"t": "Para",
-			"c": [
-				{
-					"t": "Str",
-					"c": "Every"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "day"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "I"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "wonder"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "how"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "to"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": ""
-				}
-			]
-		},
-		{
-			"t": "CodeBlock",
-			"c": [
-				[
-					"",
-					[],
-					[]
-				],
-				"var p = hassan.getLife()\np.relaxCircumstance();\n"
 			]
 		},
 		{
@@ -895,14 +362,14 @@
 					"c": [
 						{
 							"t": "Str",
-							"c": "Hassan"
+							"c": "Lucien"
 						},
 						{
 							"t": "Space"
 						},
 						{
 							"t": "Str",
-							"c": "Sherbly"
+							"c": "William"
 						}
 					]
 				}
@@ -913,30 +380,7 @@
 			"c": [
 				{
 					"t": "Str",
-					"c": "An"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "AmazingnessOk"
-				}
-			]
-		},
-		"herpaderp": {
-			"t": "MetaInlines",
-			"c": [
-				{
-					"t": "Str",
-					"c": "AHERPA"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "DERPA"
+					"c": "Untitled"
 				}
 			]
 		}

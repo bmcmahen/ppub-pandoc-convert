@@ -1,1 +1,232 @@
-{"type":"doc","content":[{"type":"ordered_list","attrs":{"order":1},"content":[{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"first"}]},{"type":"ordered_list","attrs":{"order":1},"content":[{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"first nest"}]},{"type":"ordered_list","attrs":{"order":1},"content":[{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"second nest"}]}]},{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"another item"}]}]}]}]},{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"idk bro"}]}]}]}]},{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"first level"}]}]},{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"first level"}]}]}]},{"type":"citations","content":[{"type":"citation"}]}]}
+{
+  "type": "doc",
+  "attrs": {
+    "meta": {}
+  },
+  "content": [
+    {
+      "type": "article",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Nested Ordered Lists"
+            }
+          ]
+        },
+        {
+          "type": "ordered_list",
+          "attrs": {
+            "order": 1
+          },
+          "content": [
+            {
+              "type": "list_item",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "A list "
+                    }
+                  ]
+                },
+                {
+                  "type": "ordered_list",
+                  "attrs": {
+                    "order": 1
+                  },
+                  "content": [
+                    {
+                      "type": "list_item",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "A list within the list"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "ordered_list",
+                          "attrs": {
+                            "order": 1
+                          },
+                          "content": [
+                            {
+                              "type": "list_item",
+                              "content": [
+                                {
+                                  "type": "paragraph",
+                                  "content": [
+                                    {
+                                      "type": "text",
+                                      "text": "a list within the list within the list"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "list_item",
+                              "content": [
+                                {
+                                  "type": "paragraph",
+                                  "content": [
+                                    {
+                                      "type": "text",
+                                      "text": "again"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "list_item",
+                              "content": [
+                                {
+                                  "type": "paragraph",
+                                  "content": [
+                                    {
+                                      "type": "text",
+                                      "text": "again"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list_item",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": " back"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list_item",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "again"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "list_item",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "backkk"
+                    }
+                  ]
+                },
+                {
+                  "type": "ordered_list",
+                  "attrs": {
+                    "order": 1
+                  },
+                  "content": [
+                    {
+                      "type": "list_item",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "forward"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list_item",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "again"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "list_item",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "again"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "(:"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "citations",
+      "content": [
+        {
+          "type": "citation",
+          "attrs": {
+            "data": {},
+            "citationID": null
+          }
+        }
+      ]
+    }
+  ]
+}

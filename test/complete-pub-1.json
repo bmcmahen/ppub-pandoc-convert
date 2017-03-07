@@ -1,179 +1,179 @@
 {
-   "type":"doc",
-   "content":[
-      {
-         "type":"heading",
-         "attrs":{
-            "level":1
-         },
-         "content":[
+  "type": "doc",
+  "attrs": {
+    "meta": {}
+  },
+  "content": [
+    {
+      "type": "article",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 1
+          },
+          "content": [
             {
-               "type":"text",
-               "text":"A Test Pub"
+              "type": "text",
+              "text": "A Complete Pub"
             }
-         ]
-      },
-      {
-         "type":"paragraph",
-         "content":[
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
             {
-               "type":"text",
-               "text":"Abstract: Here we have created a test pub to show how Pubs look when output to LaTeX."
-            }
-         ]
-      },
-      {
-         "type":"paragraph"
-      },
-      {
-         "type":"heading",
-         "attrs":{
-            "level":2
-         },
-         "content":[
-            {
-               "type":"text",
-               "text":"Introduction"
-            }
-         ]
-      },
-      {
-         "type":"paragraph",
-         "content":[
-            {
-               "type":"text",
-               "text":"Here we introduce the subject matter and talk more about things like how screwed we are for instance. How bad things are in this world except for the internet. The internet is pretty cool. "
+              "type": "text",
+              "text": "A pub with many citations"
             },
             {
-               "type":"reference",
-               "attrs":{
-                  "citationID":"1"
-               }
+              "type": "reference",
+              "attrs": {
+                "citationID": 73599909,
+                "referenceID": 50794430
+              }
             }
-         ]
-      },
-      {
-         "type":"paragraph"
-      },
-      {
-         "type":"heading",
-         "attrs":{
-            "level":4
-         },
-         "content":[
+          ]
+        },
+        {
+          "type": "paragraph"
+        },
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 2
+          },
+          "content": [
             {
-               "type":"text",
-               "text":"Why is the internet cool?"
+              "type": "text",
+              "text": "The Alligator"
             }
-         ]
-      },
-      {
-         "type":"paragraph",
-         "content":[
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
             {
-               "type":"text",
-               "text":"Because I said so. "
+              "type": "text",
+              "text": "The alligator "
             },
             {
-               "type":"reference",
-               "attrs":{
-                  "citationID":"1"
-               }
+              "type": "reference",
+              "attrs": {
+                "citationID": 28675934,
+                "referenceID": 76381089
+              }
             },
             {
-               "type":"text",
-               "text":" Does that make sense? Or does it not make sense."
+              "type": "text",
+              "text": " is scary."
+            }
+          ]
+        },
+        {
+          "type": "bullet_list",
+          "content": [
+            {
+              "type": "list_item",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Because it is big"
+                    }
+                  ]
+                }
+              ]
             },
             {
-               "type":"text",
-               "marks":[
-                  {
-                     "type":"sup"
-                  }
-               ],
-               "text":" it better god damn make sense."
-            }
-         ]
-      },
-      {
-         "type":"heading",
-         "attrs":{
-            "level":2
-         },
-         "content":[
-            {
-               "type":"text",
-               "text":"Body"
-            }
-         ]
-      },
-      {
-         "type":"paragraph",
-         "content":[
-            {
-               "type":"text",
-               "text":"A wise man once said "
-            }
-         ]
-      },
-      {
-         "type":"blockquote",
-         "content":[
-            {
-               "type":"paragraph",
-               "content":[
-                  {
-                     "type":"text",
-                     "text":"I don’t want to live on this planet anymore."
-                  }
-               ]
-            }
-         ]
-      },
-      {
-         "type":"paragraph",
-         "content":[
-            {
-               "type":"text",
-               "text":"Every day I wonder how to "
-            }
-         ]
-      },
-      {
-         "type":"code_block",
-         "content":[
-            {
-               "type":"text",
-               "text":"var p = hassan.getLife()\np.relaxCircumstance();\n"
-            }
-         ]
-      },
-      {
-         "type":"citations",
-         "content":[
-            {
-               "type":"citation",
-               "attrs":{
-                  "data":{
-                     "title":"Absolute Truths",
-                     "author":"Hassan Shaikley",
-                     "journal":"Journal of Bigly",
-                     "year":"2017"
-                  }
-               }
+              "type": "list_item",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "It is old"
+                    }
+                  ]
+                }
+              ]
             },
             {
-               "type":"citation",
-               "attrs":{
-                  "data":{
-                     "title":"The Internet is So Cool",
-                     "author":"Jeffery Dahmer",
-                     "journal":"Associated Press",
-                     "year":"1994"
-                  }
-               }
+              "type": "list_item",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "It is like dinosaur."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "list_item",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "It is only known animal to breed with the robot"
+                    }
+                  ]
+                }
+              ]
             }
-         ]
-      }
-   ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "citations",
+      "content": [
+        {
+          "type": "citation",
+          "attrs": {
+            "data": {
+              "type": "article-journal",
+              "id": 28675934,
+              "author": [
+                {
+                  "family": "Gator",
+                  "given": "Maester Le"
+                }
+              ],
+              "title": "Alligator, the Bird",
+              "year": "1991",
+              "container-title": "Journal of OK Bro"
+            },
+            "citationID": 28675934
+          }
+        },
+        {
+          "type": "citation",
+          "attrs": {
+            "data": {
+              "type": "article-journal",
+              "id": 73599909,
+              "author": [
+                {
+                  "given": "a good author jason"
+                }
+              ],
+              "title": "a good book",
+              "year": "2019",
+              "container-title": "journal of good"
+            },
+            "citationID": 73599909
+          }
+        }
+      ]
+    }
+  ]
 }
