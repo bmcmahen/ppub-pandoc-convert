@@ -1,32 +1,94 @@
 {
-   "type":"doc",
-   "content":[
-      {
-         "type":"citations",
-         "content":[
+  "type": "doc",
+  "attrs": {
+    "meta": {}
+  },
+  "content": [
+    {
+      "type": "article",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
             {
-               "type":"citation",
-               "attrs":{
-                  "data":{
-                     "title":"birds are good",
-                     "author":"jeffry dahmer",
-                     "journal":"journal or berd",
-                     "year":"2013"
-                  }
-               }
+              "type": "text",
+              "text": "A pub with many citations"
             },
             {
-               "type":"citation",
-               "attrs":{
-                  "data":{
-                     "title":"special carsgud",
-                     "author":"hassan sherbly",
-                     "journal":"jods",
-                     "year":"1991"
-                  }
-               }
+              "type": "reference",
+              "attrs": {
+                "citationID": 73599909,
+                "referenceID": 50794430
+              }
             }
-         ]
-      }
-   ]
+          ]
+        },
+        {
+          "type": "paragraph"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "The alligator "
+            },
+            {
+              "type": "reference",
+              "attrs": {
+                "citationID": 28675934,
+                "referenceID": 76381089
+              }
+            },
+            {
+              "type": "text",
+              "text": " is scary."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "citations",
+      "content": [
+        {
+          "type": "citation",
+          "attrs": {
+            "data": {
+              "type": "article-journal",
+              "id": 28675934,
+              "author": [
+                {
+                  "family": "Gator",
+                  "given": "Maester Le"
+                }
+              ],
+              "title": "Alligator, the Bird",
+              "year": "1991",
+              "container-title": "Journal of OK Bro"
+            },
+            "citationID": 28675934
+          }
+        },
+        {
+          "type": "citation",
+          "attrs": {
+            "data": {
+              "type": "article-journal",
+              "id": 73599909,
+              "author": [
+                {
+                  "given": "a good author jason"
+                }
+              ],
+              "title": "a good book",
+              "year": "2019",
+              "container-title": "journal of good"
+            },
+            "citationID": 73599909
+          }
+        }
+      ]
+    }
+  ]
 }

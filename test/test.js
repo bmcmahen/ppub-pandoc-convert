@@ -1,4 +1,4 @@
-var convert = require('../index.js').pubToPandoc;
+var convert = require('../index.js').ppubToPandoc;
 var chai = require('chai');
 var expect = chai.expect;
 
@@ -281,22 +281,7 @@ describe('Convert docJSON to PandocAST', function() {
 			})
 			.then(done, done);
 		});
-		it('bibliography', (done) => {
-			const testName = 'bibliography';
-			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
-			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/bib/${testName}.bib` })
-			.then((result) => {
-				return write(pandocFile, JSON.stringify(result, null, '\t'));
-			})
-			.then(function() {
-				return execPromise(`pandoc -f JSON ${pandocFile} --filter=pandoc-citeproc -t markdown-simple_tables+pipe_tables --atx-headers -o ${markdownFile}`);
-			})
-			.then(function(result) {
-				expect(result).to.exist;
-			})
-			.then(done, done);
-		});
+
 		it('code block', (done) => {
 			const testName = 'codeblock';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;

@@ -219,7 +219,7 @@ function ppubToPandoc(ppub, options, metadata) {
 			break;
 			case 'reference':
 			// Footnote
-			var citationId = node.attrs.citationID;
+			var citationId = node.attrs.citationID + '';
 
 			newNode.t = 'Cite';
 			newNode.c = [
