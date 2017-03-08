@@ -9,12 +9,22 @@ or
 `node index.js --toPpub test/toPpub/bold.json`
 
 
-## Currently supported metadata:
+
+# pandocToPpub
+
+### progress
+
+The pandocToPpub convertor is complete.
+
+## currently supported metadata:
 
 - author
 - title
 
-# --toPandoc converter progress
+
+# ppubToPandoc
+
+### progress
 
 Note: These are the only parts that are completed so far.
 
