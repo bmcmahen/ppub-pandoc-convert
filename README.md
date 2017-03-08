@@ -10,12 +10,12 @@ You can either `require('./index').pandocToPpub` OR `.pandocToPpub` or run on th
 
 The pandocToPpub converter is complete.
 
-## currently supported metadata:
+## Currently supported metadata
 
 - author
 - title
 
-The below metadata work for the MIT Thesis Template
+The below metadata work for the MIT Thesis Template:
 
 - university
 - degree
