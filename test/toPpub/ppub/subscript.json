@@ -6,12 +6,12 @@
 			"content": [
 				{
 					"type": "text",
-					"text": "subscript"
-				}
-			],
-			"marks": [
-				{
-					"type": "sub"
+					"text": "subscript",
+					"marks": [
+						{
+							"type": "sub"
+						}
+					]
 				}
 			]
 		}

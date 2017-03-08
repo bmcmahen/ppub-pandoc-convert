@@ -4,8 +4,13 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Str",
-					"c": "superscript"
+					"t": "Superscript",
+					"c": [
+						{
+							"t": "Str",
+							"c": "superscript"
+						}
+					]
 				}
 			]
 		}

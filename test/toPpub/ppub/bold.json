@@ -6,12 +6,12 @@
 			"content": [
 				{
 					"type": "text",
-					"text": "Simple bold example"
-				}
-			],
-			"marks": [
-				{
-					"type": "strong"
+					"text": "Simple bold example",
+					"marks": [
+						{
+							"type": "strong"
+						}
+					]
 				}
 			]
 		}

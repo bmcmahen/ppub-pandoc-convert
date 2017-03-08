@@ -4,22 +4,27 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Str",
-					"c": "Simple"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "bold"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "example"
+					"t": "Strong",
+					"c": [
+						{
+							"t": "Str",
+							"c": "Simple"
+						},
+						{
+							"t": "Space"
+						},
+						{
+							"t": "Str",
+							"c": "bold"
+						},
+						{
+							"t": "Space"
+						},
+						{
+							"t": "Str",
+							"c": "example"
+						}
+					]
 				}
 			]
 		}

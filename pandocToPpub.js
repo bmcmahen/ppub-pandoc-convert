@@ -1,3 +1,8 @@
+/*
+ *
+ */
+
+
 var colors = require('colors')
 
 function isInline(nodeType) {
@@ -200,8 +205,8 @@ function startTraversePandoc(pandoc) {
 	return finalPpub;
 }
 
-if (process.argv[2]) {
-	startTraversePandoc(require(`./${process.argv[2]}`));
-} else {
+// if (process.argv[2]) {
+	// startTraversePandoc(require(`./${process.argv[2]}`));
+// } else {
 	exports.pandocToPpub = startTraversePandoc;
-}
+// }

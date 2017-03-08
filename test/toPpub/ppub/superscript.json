@@ -6,12 +6,12 @@
 			"content": [
 				{
 					"type": "text",
-					"text": "superscript"
-				}
-			],
-			"marks": [
-				{
-					"type": "sup"
+					"text": "superscript",
+					"marks": [
+						{
+							"type": "sup"
+						}
+					]
 				}
 			]
 		}

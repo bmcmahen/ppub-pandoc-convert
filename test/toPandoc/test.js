@@ -1,11 +1,11 @@
-var convert = require('../../index.js').ppubToPandoc;
+var convert = require('../../ppubToPandoc.js').ppubToPandoc;
 var chai = require('chai');
 var expect = chai.expect;
 
 var write = require('fs-writefile-promise');
 var execPromise = require('child-process-promise').exec;
 
-var convertPandocToPpub = require('../../pandoc-to-ppub').pandocToPpub;
+var convertPandocToPpub = require('../../pandocToPpub').pandocToPpub;
 
 describe('Convert docJSON to PandocAST', function() {
 	describe(', successful to: ', function() {
