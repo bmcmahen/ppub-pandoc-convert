@@ -106,9 +106,12 @@ function startTraversePandoc(pandoc) {
 	function handleMark(element) {
 		var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
 		console.log("Adding mark " + JSON.stringify(element))
-		if (!currentPpubParent.marks) {
-			currentPpubParent.marks = [];
+		var lastRecentTextNode = currentPpubParent.content[currentPpubParent.content.length-1] || { type: 'text', text: '' };
+		console.log(lastRecentTextNode)
+		if (!lastRecentTextNode.marks) {
+			lastRecentTextNode.marks = [];
 		}
+		currentPpubParent.content.push(lastRecentTextNode)
 		var newMark;
 		switch (element.t) {
 			case 'Code':
@@ -135,7 +138,7 @@ function startTraversePandoc(pandoc) {
 				break;
 		}
 
-		currentPpubParent.marks.push({ type: newMark });
+		lastRecentTextNode.marks.push({ type: newMark });
 
 	}
 
@@ -148,15 +151,16 @@ function startTraversePandoc(pandoc) {
 		console.log(`element is ${JSON.stringify(element)}`)
 
 		if (!lastContentItem) {
-			newNode = { type: 'text', text: '' };
-			addNode(newNode);
-			lastContentItem = newNode;
+			lastContentItem = { type: 'text', text: '' };
+			addNode(lastContentItem);
 		}
 
 		if (element.t === 'Space') {
 			lastContentItem.text = lastContentItem.text.concat(' ');
-		} else {
+		} else if (element.t === 'Str') {
 			lastContentItem.text = lastContentItem.text.concat(element.c);
+		} else {
+			console.log(colors.red("Unimplemented elem type!! " + element.t))
 		}
 	}
 
