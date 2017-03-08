@@ -108,8 +108,12 @@ function startTraversePandoc(pandoc) {
 		}
 		var newMark;
 		switch (element.t) {
+			case 'Code':
+				newMark = 'code';
+				currentPpubParent.content.push(element.c[1]);
+				break;
 			case 'Subscript':
-				newMark = "sub";
+				newMark = 'sub';
 				break;
 			case 'Superscript':
 				newMark = 'sup';
@@ -124,11 +128,11 @@ function startTraversePandoc(pandoc) {
 				newMark = 'strike';
 				break;
 			default:
-				console.log("Mark of type " + element.t  + " not found")
+				console.log(colors.red("Mark of type " + element.t  + " not found"))
 				break;
 		}
 
-		currentPpubParent.marks.push({type: newMark});
+		currentPpubParent.marks.push({ type: newMark });
 
 	}
 
@@ -168,6 +172,7 @@ function startTraversePandoc(pandoc) {
 				case 'Superscript':
 				case 'Subscript':
 				case 'SmallCaps':
+				case 'Code':
 					handleMark(elements[i]);
 
 					handleInline(elements[i].c)
