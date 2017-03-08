@@ -31,7 +31,7 @@ function startTraversePandoc(pandoc) {
 	}];
 
 	function traversePandoc(elements) {
-		console.log('Traversing Array: ' + JSON.stringify(elements))
+		console.log('Traversing Array: ' + JSON.stringify(elements));
 		for (let i = 0; i < elements.length; i++) {
 			var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
 			console.log('currentppub parent is ' + JSON.stringify(currentPpubParent));
@@ -62,7 +62,10 @@ function startTraversePandoc(pandoc) {
 						break;
 					case 'Header':
 						var newNode = { type: 'heading', content: [] };
+						addNode(newNode);
+						ppubNodeParents.push(newNode);
 						handleInline(elements[i].c[2]);
+						ppubNodeParents.pop();
 						break;
 					case 'HorizontalRule':
 						//BUILD THE ELEMENT HERE
@@ -90,15 +93,17 @@ function startTraversePandoc(pandoc) {
 	function addNode(newNode) {
 		// Not convinced this is optimal
 		var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
-
+		currentPpubParent.content.push(newNode);
 	}
 
-	function handleString(element) {
+	function handleStr(element) {
 		var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
-		console.log(`current ppub parent: ${JSON.stringify(currentPpubParent)}`)
 		var lastContentItem = currentPpubParent.content[currentPpubParent.content.length - 1];
+
+		console.log(`current ppub parent: ${JSON.stringify(currentPpubParent)}`)
 		console.log(`last content item: ${JSON.stringify(lastContentItem)}`)
 		console.log(`element is ${JSON.stringify(element)}`)
+
 		if (!lastContentItem) {
 			newNode = { type: 'text', text: '' };
 			addNode(newNode);
@@ -106,9 +111,9 @@ function startTraversePandoc(pandoc) {
 		}
 
 		if (element.t === 'Space') {
-			lastContentItem.text.concat(' ');
+			lastContentItem.text = lastContentItem.text.concat(' ');
 		} else {
-			lastContentItem.text.concat(element.c);
+			lastContentItem.text = lastContentItem.text.concat(element.c);
 		}
 	}
 
@@ -116,8 +121,9 @@ function startTraversePandoc(pandoc) {
 		console.log(colors.blue('handleInline ' + JSON.stringify(elements)))
 		for (var i = 0; i < elements.length; i++) {
 			switch (elements[i].t) {
+				case 'Space':
 				case 'Str':
-					handleString(elements[i])
+					handleStr(elements[i])
 					console.log('Hit String')
 					break;
 				case 'Emph':
