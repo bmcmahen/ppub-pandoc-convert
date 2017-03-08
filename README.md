@@ -2,9 +2,7 @@
 
 ## A converter between ppub and pandoc
 
-You can either `require('./index').pandocToPpub` OR `.pandocToPpub` or run on the command line like:
-
-`node index.js [--toPandoc OR --toPpub] [filename].json`
+You can either `require('./index').pandocToPpub` OR `.pandocToPpub` or run on the command line like `node index.js [--toPandoc OR --toPpub] [filename].json`
 
 # pandocToPpub
 
