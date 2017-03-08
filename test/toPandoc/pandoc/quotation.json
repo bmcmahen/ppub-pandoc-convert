@@ -54,36 +54,5 @@
 		0,
 		4
 	],
-	"meta": {
-		"authors": {
-			"t": "MetaList",
-			"c": [
-				{
-					"t": "MetaInlines",
-					"c": [
-						{
-							"t": "Str",
-							"c": "Lucien"
-						},
-						{
-							"t": "Space"
-						},
-						{
-							"t": "Str",
-							"c": "William"
-						}
-					]
-				}
-			]
-		},
-		"title": {
-			"t": "MetaInlines",
-			"c": [
-				{
-					"t": "Str",
-					"c": "Untitled"
-				}
-			]
-		}
-	}
+	"meta": {}
 }

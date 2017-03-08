@@ -1,14 +1,12 @@
 {
 	"blocks": [
 		{
-			"t": "CodeBlock",
+			"t": "Para",
 			"c": [
-				[
-					"",
-					[],
-					[]
-				],
-				"a block\n\n"
+				{
+					"t": "Str",
+					"c": "superscript"
+				}
 			]
 		}
 	],
