@@ -8,13 +8,28 @@ You can either `require('./index').pandocToPpub` OR `.pandocToPpub` or run on th
 
 ### Progress
 
-The pandocToPpub convertor is complete.
+The pandocToPpub converter is complete.
 
 ## currently supported metadata:
 
 - author
 - title
 
+The below metadata work for the MIT Thesis Template
+
+- university
+- degree
+- date
+- supervisor-name
+- supervisor-title
+- department-chairman-name
+- department-chairman-title
+- acknowledgements
+- abstract
+- degree-month
+- degree-year
+- thesis-date
+- department
 
 # ppubToPandoc
 
@@ -22,7 +37,7 @@ The pandocToPpub convertor is complete.
 
 These are the only parts that have been completed so far:
 
-- Headers
+- Header
 - Paragraph
 - Code
 - Strong, Italic, Substring, Superscript, Strikethrough
