@@ -61,7 +61,7 @@ function startTraversePandoc(pandoc) {
 						traversePandoc(elements[i].c[1][0])
 						break;
 					case 'Header':
-						var newNode = { type: 'heading', content: [] };
+						var newNode = { type: 'heading', attrs: { level: elements[i].c[0] }, content: [] };
 						addNode(newNode);
 						ppubNodeParents.push(newNode);
 						handleInline(elements[i].c[2]);
