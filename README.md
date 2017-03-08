@@ -20,7 +20,7 @@ The pandocToPpub convertor is complete.
 
 ### Progress
 
-Note: These are the only parts that are completed so far.
+These are the only parts that have been completed so far:
 
 - Headers
 - Paragraph
