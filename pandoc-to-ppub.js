@@ -92,6 +92,7 @@ function startTraversePandoc(pandoc) {
 		console.log(colors.cyan(JSON.stringify(ppubNodeParents[0], null, '\t')))
 		console.log('\n')
 
+		return ppubNodeParents[0];
 	}
 
 	function addNode(newNode) {
@@ -195,5 +196,5 @@ function startTraversePandoc(pandoc) {
 if (process.argv[2]) {
 	startTraversePandoc(require(`./${process.argv[2]}`));
 } else {
-	exports.ppubToPandoc = startTraversePandoc;
+	exports.pandocToPpub = startTraversePandoc;
 }
