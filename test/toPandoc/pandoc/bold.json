@@ -15,14 +15,47 @@
 					"c": ""
 				},
 				{
-					"t": "Superscript",
+					"t": "Strong",
 					"c": [
 						{
 							"t": "Str",
-							"c": "superscript"
+							"c": "Simple"
+						},
+						{
+							"t": "Space"
+						},
+						{
+							"t": "Str",
+							"c": "bold"
+						},
+						{
+							"t": "Space"
+						},
+						{
+							"t": "Str",
+							"c": "example"
 						}
 					]
 				}
+			]
+		},
+		{
+			"t": "Header",
+			"c": [
+				1,
+				[
+					"references",
+					[
+						"unnumbered"
+					],
+					[]
+				],
+				[
+					{
+						"t": "Str",
+						"c": "References"
+					}
+				]
 			]
 		}
 	],
@@ -33,7 +66,7 @@
 		4
 	],
 	"meta": {
-		"author": {
+		"authors": {
 			"t": "MetaList",
 			"c": [
 				{

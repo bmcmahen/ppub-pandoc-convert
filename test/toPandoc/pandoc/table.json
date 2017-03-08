@@ -1,16 +1,20 @@
 {
 	"blocks": [
 		{
-			"t": "OrderedList",
+			"t": "Table",
 			"c": [
+				[],
 				[
-					1,
 					{
-						"t": "DefaultStyle"
+						"t": "AlignDefault"
 					},
 					{
-						"t": "Period"
+						"t": "AlignDefault"
 					}
+				],
+				[
+					0,
+					0
 				],
 				[
 					[
@@ -19,14 +23,7 @@
 							"c": [
 								{
 									"t": "Str",
-									"c": "OL"
-								},
-								{
-									"t": "Space"
-								},
-								{
-									"t": "Str",
-									"c": "1"
+									"c": "simple"
 								}
 							]
 						}
@@ -37,17 +34,36 @@
 							"c": [
 								{
 									"t": "Str",
-									"c": "OL"
-								},
-								{
-									"t": "Space"
-								},
-								{
-									"t": "Str",
-									"c": "2"
+									"c": "table"
 								}
 							]
 						}
+					]
+				],
+				[
+					[
+						[
+							{
+								"t": "Plain",
+								"c": [
+									{
+										"t": "Str",
+										"c": "example"
+									}
+								]
+							}
+						],
+						[
+							{
+								"t": "Plain",
+								"c": [
+									{
+										"t": "Str",
+										"c": "okpls"
+									}
+								]
+							}
+						]
 					]
 				]
 			]
@@ -79,7 +95,7 @@
 		4
 	],
 	"meta": {
-		"author": {
+		"authors": {
 			"t": "MetaList",
 			"c": [
 				{

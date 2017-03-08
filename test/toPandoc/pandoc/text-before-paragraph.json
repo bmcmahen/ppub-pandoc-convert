@@ -4,46 +4,36 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Emph",
-					"c": [
-						{
-							"t": "Strong",
-							"c": [
-								{
-									"t": "Str",
-									"c": ""
-								},
-								{
-									"t": "Space"
-								},
-								{
-									"t": "Str",
-									"c": "Simple"
-								},
-								{
-									"t": "Space"
-								},
-								{
-									"t": "Str",
-									"c": "bold"
-								},
-								{
-									"t": "Space"
-								},
-								{
-									"t": "Str",
-									"c": "italic"
-								},
-								{
-									"t": "Space"
-								},
-								{
-									"t": "Str",
-									"c": "example"
-								}
-							]
-						}
-					]
+					"t": "Str",
+					"c": ""
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "space"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "before"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "first"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "word"
 				}
 			]
 		},
@@ -74,7 +64,7 @@
 		4
 	],
 	"meta": {
-		"author": {
+		"authors": {
 			"t": "MetaList",
 			"c": [
 				{

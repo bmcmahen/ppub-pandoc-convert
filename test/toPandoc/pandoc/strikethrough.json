@@ -4,39 +4,20 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Str",
-					"c": "some"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "text"
-				}
-			]
-		},
-		{
-			"t": "Para",
-			"c": []
-		},
-		{
-			"t": "Para",
-			"c": []
-		},
-		{
-			"t": "Para",
-			"c": [
-				{
-					"t": "Str",
-					"c": "more"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "text"
+					"t": "Strikeout",
+					"c": [
+						{
+							"t": "Str",
+							"c": "strikethrough"
+						},
+						{
+							"t": "Space"
+						},
+						{
+							"t": "Str",
+							"c": "text"
+						}
+					]
 				}
 			]
 		},
@@ -67,7 +48,7 @@
 		4
 	],
 	"meta": {
-		"author": {
+		"authors": {
 			"t": "MetaList",
 			"c": [
 				{

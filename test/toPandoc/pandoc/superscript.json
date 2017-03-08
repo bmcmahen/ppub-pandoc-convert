@@ -4,33 +4,25 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Subscript",
+					"t": "Str",
+					"c": ""
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": ""
+				},
+				{
+					"t": "Superscript",
 					"c": [
 						{
 							"t": "Str",
-							"c": "subscript"
+							"c": "superscript"
 						}
 					]
 				}
-			]
-		},
-		{
-			"t": "Header",
-			"c": [
-				1,
-				[
-					"references",
-					[
-						"unnumbered"
-					],
-					[]
-				],
-				[
-					{
-						"t": "Str",
-						"c": "References"
-					}
-				]
 			]
 		}
 	],
@@ -41,7 +33,7 @@
 		4
 	],
 	"meta": {
-		"author": {
+		"authors": {
 			"t": "MetaList",
 			"c": [
 				{

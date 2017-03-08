@@ -4,14 +4,60 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Code",
+					"t": "Image",
 					"c": [
 						[
 							"",
 							[],
-							[]
+							[
+								[
+									"width",
+									"50%"
+								],
+								[
+									"height",
+									"50%"
+								]
+							]
 						],
-						"some code"
+						[
+							{
+								"t": "Str",
+								"c": "Hi"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "this"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "is"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "a"
+							},
+							{
+								"t": "Space"
+							},
+							{
+								"t": "Str",
+								"c": "caption"
+							}
+						],
+						[
+							"https://assets.pubpub.org/ozevzqjn/1484174143170.jpg",
+							""
+						]
 					]
 				}
 			]
@@ -43,7 +89,7 @@
 		4
 	],
 	"meta": {
-		"author": {
+		"authors": {
 			"t": "MetaList",
 			"c": [
 				{

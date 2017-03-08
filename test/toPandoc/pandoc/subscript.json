@@ -4,36 +4,13 @@
 			"t": "Para",
 			"c": [
 				{
-					"t": "Str",
-					"c": ""
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "space"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "before"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "first"
-				},
-				{
-					"t": "Space"
-				},
-				{
-					"t": "Str",
-					"c": "word"
+					"t": "Subscript",
+					"c": [
+						{
+							"t": "Str",
+							"c": "subscript"
+						}
+					]
 				}
 			]
 		},
@@ -64,7 +41,7 @@
 		4
 	],
 	"meta": {
-		"author": {
+		"authors": {
 			"t": "MetaList",
 			"c": [
 				{
