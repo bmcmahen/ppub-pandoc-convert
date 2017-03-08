@@ -1,18 +1,14 @@
-You can either import
+# ppub-pandoc-convert
 
-Or run on the command line like:
+## A converter between ppub and pandoc
 
-`node index.js --toPandoc test/toPandoc/bold.json`
+You can either `require('./index').pandocToPpub` OR `.pandocToPpub` or run on the command line like:
 
-or
-
-`node index.js --toPpub test/toPpub/bold.json`
-
-
+`node index.js [--toPandoc OR --toPpub] [filename].json`
 
 # pandocToPpub
 
-### progress
+### Progress
 
 The pandocToPpub convertor is complete.
 
@@ -24,7 +20,7 @@ The pandocToPpub convertor is complete.
 
 # ppubToPandoc
 
-### progress
+### Progress
 
 Note: These are the only parts that are completed so far.
 
