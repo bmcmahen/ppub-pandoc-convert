@@ -483,33 +483,12 @@ function ppubToPandoc(ppub, options, metadata) {
 			];
 			pandocJSON.meta = {};
 
-			pandocJSON.meta.authors = {
-				t: 'MetaList',
-				c: [
-					{
-						t: 'MetaInlines',
-						c: [
-							{
-								t: 'Str',
-								c: 'Lucien'
-							},
-							{
-								t: 'Space'
-							},
-							{
-								t: 'Str',
-								c: 'William'
-							}
-						]
-					}
-				]
-			};
-
 			if (metadata['authors']) {
 				pandocJSON.meta.author = {
 					t: 'MetaList',
 					c: []
 				}
+
 				for (var i = 0; i < metadata.authors.length; i++){
 					var author = {
 						t: 'MetaInlines',
@@ -519,9 +498,9 @@ function ppubToPandoc(ppub, options, metadata) {
 				}
 			}
 
-			if (!metadata.title) {
-				metadata.title = 'Untitled';
-			}
+			// if (!metadata.title) {
+			// 	metadata.title = 'Untitled';
+			// }
 
 			if (metadata['title']) {
 
@@ -610,7 +589,7 @@ function ppubToPandoc(ppub, options, metadata) {
 					c: createTextNodes(metadata['department'])
 				};
 			}
-			// console.log(JSON.stringify(pandocJSON))
+			console.log(JSON.stringify(pandocJSON))
 			return pandocJSON;
 		})
 		.catch(function(error) {
