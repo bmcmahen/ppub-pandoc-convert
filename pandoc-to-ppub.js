@@ -87,13 +87,49 @@ function startTraversePandoc(pandoc) {
 				console.log(colors.red('Unknown ' + JSON.stringify(elements[i])))
 			}
 		}
+		console.log('\n\n\n')
 		console.log(colors.yellow(JSON.stringify(ppubNodeParents)))
+		console.log(colors.cyan(JSON.stringify(ppubNodeParents[0], null, '\t')))
+		console.log('\n')
+
 	}
 
 	function addNode(newNode) {
 		// Not convinced this is optimal
 		var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
 		currentPpubParent.content.push(newNode);
+	}
+
+	function handleMark(element) {
+		var currentPpubParent = ppubNodeParents[ppubNodeParents.length - 1];
+		console.log("Adding mark " + JSON.stringify(element))
+		if (!currentPpubParent.marks) {
+			currentPpubParent.marks = [];
+		}
+		var newMark;
+		switch (element.t) {
+			case 'Subscript':
+				newMark = "sub";
+				break;
+			case 'Superscript':
+				newMark = 'sup';
+				break;
+			case 'Emph':
+				newMark = 'em';
+				break;
+			case 'Strong':
+				newMark = 'strong';
+				break;
+			case 'Strikeout':
+				newMark = 'strike';
+				break;
+			default:
+				console.log("Mark of type " + element.t  + " not found")
+				break;
+		}
+
+		currentPpubParent.marks.push({type: newMark});
+
 	}
 
 	function handleStr(element) {
@@ -132,6 +168,9 @@ function startTraversePandoc(pandoc) {
 				case 'Superscript':
 				case 'Subscript':
 				case 'SmallCaps':
+					handleMark(elements[i]);
+
+					handleInline(elements[i].c)
 					// Handle the creation of the above types
 					// c[0] is an inline elements
 					break;
