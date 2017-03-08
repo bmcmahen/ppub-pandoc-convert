@@ -30,6 +30,8 @@ function startTraversePandoc(pandoc) {
 		content: []
 	}];
 
+	var finalPpub;
+
 	function traversePandoc(elements) {
 		console.log('Traversing Array: ' + JSON.stringify(elements));
 		for (let i = 0; i < elements.length; i++) {
@@ -92,7 +94,7 @@ function startTraversePandoc(pandoc) {
 		console.log(colors.cyan(JSON.stringify(ppubNodeParents[0], null, '\t')))
 		console.log('\n')
 
-		return ppubNodeParents[0];
+		finalPpub =  ppubNodeParents[0];
 	}
 
 	function addNode(newNode) {
@@ -191,6 +193,7 @@ function startTraversePandoc(pandoc) {
 
 
 	traversePandoc(pandoc.blocks);
+	return finalPpub;
 }
 
 if (process.argv[2]) {
