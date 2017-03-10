@@ -18,7 +18,7 @@ describe('Convert Pandoc to Ppub', function() {
 
 		write(ppubFile, JSON.stringify(ppub, null, '\t'))
 		.then(() => {
-			return convertPpubToPandoc(ppub);
+			return convertPpubToPandoc(ppub, {});
 		})
 		.then((newPandoc) => {
 			return write(newPandocFile, JSON.stringify(newPandoc, null, '\t'));
@@ -37,7 +37,7 @@ describe('Convert Pandoc to Ppub', function() {
 
 		write(ppubFile, JSON.stringify(ppub, null, '\t'))
 		.then(() => {
-			return convertPpubToPandoc(ppub);
+			return convertPpubToPandoc(ppub, {});
 		})
 		.then((newPandoc) => {
 			return write(newPandocFile, JSON.stringify(newPandoc, null, '\t'));
@@ -56,7 +56,7 @@ describe('Convert Pandoc to Ppub', function() {
 
 		write(ppubFile, JSON.stringify(ppub, null, '\t'))
 		.then(() => {
-			return convertPpubToPandoc(ppub);
+			return convertPpubToPandoc(ppub, {});
 		})
 		.then((newPandoc) => {
 			return write(newPandocFile, JSON.stringify(newPandoc, null, '\t'));
@@ -75,7 +75,7 @@ describe('Convert Pandoc to Ppub', function() {
 
 		write(ppubFile, JSON.stringify(ppub, null, '\t'))
 		.then(() => {
-			return convertPpubToPandoc(ppub);
+			return convertPpubToPandoc(ppub, {});
 		})
 		.then((newPandoc) => {
 			return write(newPandocFile, JSON.stringify(newPandoc, null, '\t'));
