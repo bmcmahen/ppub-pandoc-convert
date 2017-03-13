@@ -3,11 +3,6 @@
  */
 
 var write = require('fs-writefile-promise');
-var colors = require('colors');
-var fs = require('fs');
-var execPromise = require('child-process-promise').exec;
-var requestPromise = require('request-promise');
-
 var csltoBibtex = require('@pubpub/prose/dist/references/csltobibtex').csltoBibtex;
 
 /*
@@ -302,7 +297,7 @@ function ppubToPandoc(ppub, options) {
 				}
 			}
 			if (!isCode) {
-				var parent = currentPandocNodeParents[currentPandocNodeParents.length-1];
+				var parent = currentPandocNodeParents[currentPandocNodeParents.length - 1];
 				var newNodes = createTextNodes(node.text);
 
 
@@ -470,7 +465,8 @@ function ppubToPandoc(ppub, options) {
 			throw new Error('Conversion failed');
 		}
 
-		for (var i =0; i< bibData.length; i++){
+
+		for (var i =0; i < bibData.length; i++) {
 			bibData[i].label = bibData[i].id;
 		}
 
@@ -488,7 +484,7 @@ function ppubToPandoc(ppub, options) {
 			pandocJSON.meta = {};
 
 			if (metadata['authors']) {
-				pandocJSON.meta.author = {
+				pandocJSON.meta.authors = {
 					t: 'MetaList',
 					c: []
 				}
