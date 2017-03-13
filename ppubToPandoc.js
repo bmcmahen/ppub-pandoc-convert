@@ -23,7 +23,7 @@ function ppubToPandoc(ppub, options) {
 	var bibFile = (options && options.bibFile) ? options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
-	var metadata = options.metadata || {};
+	var metadata = (typeof options !== 'undefined' && options.metadata)? options.metadata : {};
 
 	function isLeafNode(node) {
 		if (node.t === 'Str' || node.t === 'Space' || node.t === 'Cite') {
@@ -461,12 +461,13 @@ function ppubToPandoc(ppub, options) {
 	*********************************************************************/
 
 	function finish(fl) {
+		var i;
 		if (blocks.length === 0) {
 			throw new Error('Conversion failed');
 		}
 
 
-		for (var i =0; i < bibData.length; i++) {
+		for (i = 0; i < bibData.length; i++) {
 			bibData[i].label = bibData[i].id;
 		}
 
@@ -484,17 +485,17 @@ function ppubToPandoc(ppub, options) {
 			pandocJSON.meta = {};
 
 			if (metadata['authors']) {
-				pandocJSON.meta.authors = {
+				pandocJSON.meta.author = {
 					t: 'MetaList',
 					c: []
-				}
+				};
 
 				for (var i = 0; i < metadata.authors.length; i++){
 					var author = {
 						t: 'MetaInlines',
 						c: createTextNodes(metadata.authors[i])
-					}
-					pandocJSON.meta.authors.c.push(author)
+					};
+					pandocJSON.meta.author.c.push(author);
 				}
 			}
 
@@ -509,7 +510,7 @@ function ppubToPandoc(ppub, options) {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata.title)
 
-				}
+				};
 			}
 			if (metadata['degree']) {
 				pandocJSON.meta.pubdegree = {
@@ -589,12 +590,12 @@ function ppubToPandoc(ppub, options) {
 					c: createTextNodes(metadata['department'])
 				};
 			}
-			console.log(JSON.stringify(pandocJSON))
+			console.log(JSON.stringify(pandocJSON));
 			return pandocJSON;
 		})
 		.catch(function(error) {
-			console.log(error)
-		})
+			console.log(error);
+		});
 	}
 
 	scanFragment(ppub, 0);
