@@ -72,13 +72,14 @@ describe('Convert docJSON to PandocAST', function() {
 			.then(function(result) {
 				expect(result).to.exist;
 			})
+
 			.then(done, done);
 		});
 		it('simple strikethrough', (done) => {
 			const testName = 'strikethrough';
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
-			convert(require(`./${testName}.json`), {bibFile: `test/toPandoc/bib/${testName}.bib` })
+			convert(require(`./${testName}.json`), { bibFile: `test/toPandoc/bib/${testName}.bib` })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
@@ -320,6 +321,27 @@ describe('Convert docJSON to PandocAST', function() {
 			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
 			const markdownFile = `${__dirname}/md/${testName}.md`;
 			convert(require(`./${testName}.json`), {bibFile: `test/toPandoc/bib/${testName}.bib` })
+			.then((result) => {
+				return write(pandocFile, JSON.stringify(result, null, '\t'));
+			})
+			.then(function() {
+				return execPromise(`pandoc -f JSON ${pandocFile} --filter=pandoc-citeproc -t markdown-simple_tables+pipe_tables --atx-headers -o ${markdownFile}`);
+			})
+			.then(function(result) {
+				expect(result).to.exist;
+			})
+			.then(done, done);
+		});
+
+		it('metadata', (done) => {
+			const testName = 'metadata';
+			const pandocFile = `${__dirname}/pandoc/${testName}.json`;
+			const markdownFile = `${__dirname}/md/${testName}.md`;
+			const metadata = {
+				title: 'A Great Title',
+				authors: ['John Snow']
+			};
+			convert(require(`./${testName}.json`), { bibFile: `test/toPandoc/bib/${testName}.bib`, metadata: metadata })
 			.then((result) => {
 				return write(pandocFile, JSON.stringify(result, null, '\t'));
 			})
