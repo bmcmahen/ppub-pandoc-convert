@@ -463,6 +463,10 @@ reserved.\par\permission}}
 % department chairman, not thesis committee chairman
 \def\chairman#1#2{\gdef\@chairmanname{#1}\gdef\@chairmantitle{#2}}
 
+\def\pubreaderone#1#2{\gdef\@pubreaderonename{#1}\gdef\@pubreaderonetitle{#2}}
+\def\pubreadertwo#1#2{\gdef\@pubreadertwoname{#1}\gdef\@pubreadertwotitle{#2}}
+
+
 %% `upcase' documentclass option: \choosecase is defined either as a dummy or
 %% a macro to change the (expanded) argument to uppercase.
 \def\maketitle{\begin{titlepage}
@@ -553,3 +557,40 @@ requirements for the degree of \\
 
 \def\abstract{\subsection*{Abstract}\small\def\baselinestretch{1}\@normalsize}
 \def\endabstract{\par}
+
+
+
+
+
+
+
+% this environment should probably be called readers.
+% it is the reader page
+
+\def\readerpage{\cleardoublepage
+\begin{center}{\large{\bf \@title} \\
+by \\
+\@author \\[\baselineskip]}
+\par
+\def\baselinestretch{1}\@normalsize
+\end{center}
+The following people served as readers for this thesis:
+\par
+\signature{Thesis Reader}{\@pubreaderonename \\ \@pubreaderonetitle}
+\par
+\signature{Thesis Reader}{\@pubreadertwoname \\ \@pubreadertwotitle}
+\par
+
+\begin{reader}}
+
+
+\def\endreaderpage{\end{reader}\noindent}
+
+% \def\permission{\par\noindent{\centering
+%   The author hereby grants to MIT permission to reproduce and to
+%   distribute publicly paper and electronic copies of this thesis
+%   document in whole or in part in any medium now known or hereafter
+%   created.}\par}
+
+\def\reader{\subsection*{Reader Page}\small\def\baselinestretch{1}\@normalsize}
+\def\endreader{\par}

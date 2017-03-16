@@ -265,6 +265,19 @@ $pubabstract$
 \end{abstractpage}
 $endif$
 
+$if(pubreaderonename)$
+\pubreaderone{$pubreaderonename$}{$pubreaderonetitle$}
+$endif$
+$if(pubreadertwoname)$
+\pubreadertwo{$pubreadertwoname$}{$pubreadertwotitle$}
+$endif$
+
+$if(pubreaderonename)$
+\begin{readerpage}
+\end{readerpage}
+$endif$
+
+
 \cleardoublepage
 \section*{Acknowledgments}
 

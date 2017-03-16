@@ -513,10 +513,6 @@ function ppubToPandoc(ppub, options) {
 					pandocJSON.meta.pubprevdegrees.c.push(prevdegrees);
 				}
 
-				// pandocJSON.meta.pubprevdegrees = {
-				// 	t: 'MetaInlines',
-				// 	c: createTextNodes(metadata['past-degrees'])
-				// };
 			}
 
 			// if (!metadata.title) {
@@ -610,6 +606,33 @@ function ppubToPandoc(ppub, options) {
 					c: createTextNodes(metadata['department'])
 				};
 			}
+
+			if (metadata['reader-one-name']) {
+				pandocJSON.meta.pubreaderonename = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata['reader-one-name'])
+				};
+			}
+			if (metadata['reader-one-title']) {
+				pandocJSON.meta.pubreaderonetitle = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata['reader-one-title'])
+				};
+			}
+
+			if (metadata['reader-two-name']) {
+				pandocJSON.meta.pubreadertwoname = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata['reader-two-name'])
+				};
+			}
+			if (metadata['reader-two-title']) {
+				pandocJSON.meta.pubreadertwotitle = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata['reader-two-title'])
+				};
+			}
+
 			console.log(JSON.stringify(pandocJSON));
 			return pandocJSON;
 		})
