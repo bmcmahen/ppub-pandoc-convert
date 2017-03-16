@@ -13,7 +13,7 @@
 % changed doublespace into setspace for 2e compliance
 %
 % Revision 1.4  2001/02/08 18:57:13  boojum
-% turned two newpages into cleardoublepages
+% turned two newpages into clearpages
 %
 % Revision 1.3  2000/08/14 14:53:29  boojum
 % commented out footheight, which is relevant for drafthead
@@ -345,7 +345,7 @@
    \@afterindentfalse		% Suppresses indent in first paragraph.  Change
    \secdef\@chapter\@schapter}	% to \@afterindenttrue to have indent.
 \else
-\def\chapter{\cleardoublepage	% Starts new page.
+\def\chapter{\clearpage	% Starts new page.
    \thispagestyle{plain}	% Page style of chapter page is 'plain'
    \global\@topnum\z@		% Prevents figures from going at top of page.
    \@afterindentfalse		% Suppresses indent in first paragraph.  Change
@@ -538,7 +538,7 @@ requirements for the degree of \\
 % paragraph skip is infinitely stretchable, so if you leave a blank line
 % between lines that you want space between, the space will stretch so
 % that the title page fills up the entire page.
-\def\titlepage{\cleardoublepage\centering
+\def\titlepage{\clearpage\centering
   \thispagestyle{empty}
   \parindent 0pt \parskip 10pt plus 1fil minus 1fil
   \def\baselinestretch{1}\@normalsize\vbox to \vsize\bgroup\vbox to 9in\bgroup}
@@ -567,7 +567,7 @@ requirements for the degree of \\
 % this environment should probably be called readers.
 % it is the reader page
 
-\def\readerpage{\cleardoublepage
+\def\readerpage{\clearpage
 \begin{center}{\large{\bf \@title} \\
 by \\
 \@author \\[\baselineskip]}
