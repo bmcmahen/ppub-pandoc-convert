@@ -1,5 +1,5 @@
-\documentclass[12pt,twoside]{mitthesis}
-\usepackage{lgrind}
+\documentclass[12pt,twoside]{templates/mitthesis}
+\usepackage{templates/lgrind}
 
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
@@ -201,6 +201,12 @@ $endif$
 
 $if(pubdepartment)$
 \department{$pubdepartment$}
+$endif$
+
+$if(pubprevdegrees)$
+% \prevdegrees{$pubprevdegrees$}
+\prevdegrees{$for(pubprevdegrees)$$pubprevdegrees$$sep$ \\ $endfor$}
+
 $endif$
 
 $if(pubuniversity)$

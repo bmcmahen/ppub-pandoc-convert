@@ -23,7 +23,7 @@ function ppubToPandoc(ppub, options) {
 	var bibFile = (options && options.bibFile) ? options.bibFile : Math.random().toString(36).substring(7)  + '.bib';
 	var refItemNumber = 1;
 	var listDepthStack = []; // A stack for keeping track of which node on a list we are on
-	var metadata = (typeof options !== 'undefined' && options.metadata)? options.metadata : {};
+	var metadata = (typeof options !== 'undefined' && options.metadata) ? options.metadata : {};
 
 	function isLeafNode(node) {
 		if (node.t === 'Str' || node.t === 'Space' || node.t === 'Cite') {
@@ -497,6 +497,26 @@ function ppubToPandoc(ppub, options) {
 					};
 					pandocJSON.meta.author.c.push(author);
 				}
+			}
+
+			if (metadata['past-degrees']) {
+				pandocJSON.meta.pubprevdegrees = {
+					t: 'MetaList',
+					c: []
+				};
+
+				for (var i = 0; i < metadata['past-degrees'].length; i++){
+					var prevdegrees = {
+						t: 'MetaInlines',
+						c: createTextNodes(metadata['past-degrees'][i])
+					};
+					pandocJSON.meta.pubprevdegrees.c.push(prevdegrees);
+				}
+
+				// pandocJSON.meta.pubprevdegrees = {
+				// 	t: 'MetaInlines',
+				// 	c: createTextNodes(metadata['past-degrees'])
+				// };
 			}
 
 			// if (!metadata.title) {

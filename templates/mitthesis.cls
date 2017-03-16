@@ -370,8 +370,8 @@
 
 % \title and \author already exist
 
-\def\prevdegrees#1{\gdef\@prevdegrees{#1}}
-\def\@prevdegrees{}
+\def\prevdegrees#1{\gdef\@pubprevdegrees{#1}}
+% \def\@prevdegrees{}
 
 \def\department#1{\gdef\@pubdepartment{#1}}
 
@@ -471,7 +471,7 @@ reserved.\par\permission}}
 by\par
 {\Large  \choosecase{\@author}}
 \par
-\@prevdegrees
+\choosecase{\@pubprevdegrees}
 \par
 
 \choosecase{Submitted to the Department of } \choosecase{\@pubdepartment} \\
