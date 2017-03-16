@@ -355,9 +355,12 @@ describe('Convert docJSON to PandocAST', function() {
 				department: 'Program in Media Arts and Sciences, School of Architecture and Planning',
 				'past-degrees': ['B.S. Boston University (2010)', 'M.S., Boston University (2011)'],
 				'reader-one-name': 'Patricia Maes',
-				'reader-one-title': 'Professor of Media Technology Program in Media Arts and Sciences',
+				'reader-one-title': 'Professor of Media Technology',
+				'reader-one-affiliation': 'Program in Media Arts and Sciences',
 				'reader-two-name': 'V. Michael Bove, Jr',
-				'reader-two-title': 'Principal Research Scientist Media Lab'
+				'reader-two-title': 'Principal Research Scientist',
+				'reader-two-affiliation': 'Media Lab'
+
 			};
 			convert(require(`./${testName}.json`), { bibFile: `test/toPandoc/bib/${testName}.bib`, metadata: metadata })
 			.then((result) => {

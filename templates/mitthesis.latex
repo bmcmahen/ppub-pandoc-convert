@@ -139,7 +139,7 @@ $endif$
 $if(numbersections)$
 \setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
 $else$
-\setcounter{secnumdepth}{0}
+\setcounter{secnumdepth}{4}
 $endif$
 $if(subparagraph)$
 $else$
@@ -266,10 +266,10 @@ $pubabstract$
 $endif$
 
 $if(pubreaderonename)$
-\pubreaderone{$pubreaderonename$}{$pubreaderonetitle$}
+\pubreaderone{$pubreaderonename$}{$pubreaderonetitle$}{$pubreaderoneaffiliation$}
 $endif$
 $if(pubreadertwoname)$
-\pubreadertwo{$pubreadertwoname$}{$pubreadertwotitle$}
+\pubreadertwo{$pubreadertwoname$}{$pubreadertwotitle$}{$pubreadertwoaffiliation$}
 $endif$
 
 $if(pubreaderonename)$

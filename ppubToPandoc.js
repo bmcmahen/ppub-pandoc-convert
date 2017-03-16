@@ -619,6 +619,12 @@ function ppubToPandoc(ppub, options) {
 					c: createTextNodes(metadata['reader-one-title'])
 				};
 			}
+			if (metadata['reader-one-affiliation']) {
+				pandocJSON.meta.pubreaderoneaffiliation = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata['reader-one-affiliation'])
+				};
+			}
 
 			if (metadata['reader-two-name']) {
 				pandocJSON.meta.pubreadertwoname = {
@@ -630,6 +636,13 @@ function ppubToPandoc(ppub, options) {
 				pandocJSON.meta.pubreadertwotitle = {
 					t: 'MetaInlines',
 					c: createTextNodes(metadata['reader-two-title'])
+				};
+			}
+
+			if (metadata['reader-two-affiliation']) {
+				pandocJSON.meta.pubreadertwoaffiliation = {
+					t: 'MetaInlines',
+					c: createTextNodes(metadata['reader-two-affiliation'])
 				};
 			}
 

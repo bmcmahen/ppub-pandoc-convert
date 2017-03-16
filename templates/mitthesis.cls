@@ -463,8 +463,8 @@ reserved.\par\permission}}
 % department chairman, not thesis committee chairman
 \def\chairman#1#2{\gdef\@chairmanname{#1}\gdef\@chairmantitle{#2}}
 
-\def\pubreaderone#1#2{\gdef\@pubreaderonename{#1}\gdef\@pubreaderonetitle{#2}}
-\def\pubreadertwo#1#2{\gdef\@pubreadertwoname{#1}\gdef\@pubreadertwotitle{#2}}
+\def\pubreaderone#1#2#3{\gdef\@pubreaderonename{#1}\gdef\@pubreaderonetitle{#2}\gdef\@pubreaderoneaffiliation{#3}}
+\def\pubreadertwo#1#2#3{\gdef\@pubreadertwoname{#1}\gdef\@pubreadertwotitle{#2}\gdef\@pubreadertwoaffiliation{#3}}
 
 
 %% `upcase' documentclass option: \choosecase is defined either as a dummy or
@@ -576,21 +576,16 @@ by \\
 \end{center}
 The following people served as readers for this thesis:
 \par
-\signature{Thesis Reader}{\@pubreaderonename \\ \@pubreaderonetitle}
+\signature{Thesis Reader}{\@pubreaderonename \\ \@pubreaderonetitle \\ \@pubreaderoneaffiliation}
 \par
-\signature{Thesis Reader}{\@pubreadertwoname \\ \@pubreadertwotitle}
+\signature{Thesis Reader}{\@pubreadertwoname \\ \@pubreadertwotitle \\ \@pubreadertwoaffiliation}
 \par
 
-\begin{reader}}
+}
 
 
-\def\endreaderpage{\end{reader}\noindent}
+\def\endreaderpage{\noindent}
 
-% \def\permission{\par\noindent{\centering
-%   The author hereby grants to MIT permission to reproduce and to
-%   distribute publicly paper and electronic copies of this thesis
-%   document in whole or in part in any medium now known or hereafter
-%   created.}\par}
 
 \def\reader{\subsection*{Reader Page}\small\def\baselinestretch{1}\@normalsize}
 \def\endreader{\par}

@@ -4856,10 +4856,12 @@
 				{
 					"t": "Str",
 					"c": "Technology"
-				},
-				{
-					"t": "Space"
-				},
+				}
+			]
+		},
+		"pubreaderoneaffiliation": {
+			"t": "MetaInlines",
+			"c": [
 				{
 					"t": "Str",
 					"c": "Program"
@@ -4951,10 +4953,12 @@
 				{
 					"t": "Str",
 					"c": "Scientist"
-				},
-				{
-					"t": "Space"
-				},
+				}
+			]
+		},
+		"pubreadertwoaffiliation": {
+			"t": "MetaInlines",
+			"c": [
 				{
 					"t": "Str",
 					"c": "Media"
