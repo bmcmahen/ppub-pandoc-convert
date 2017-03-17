@@ -359,7 +359,13 @@ describe('Convert docJSON to PandocAST', function() {
 				'reader-one-affiliation': 'Program in Media Arts and Sciences',
 				'reader-two-name': 'V. Michael Bove, Jr',
 				'reader-two-title': 'Principal Research Scientist',
-				'reader-two-affiliation': 'Media Lab'
+				'reader-two-affiliation': 'Media Lab',
+				'pub-readers': [
+					{ name: 'Patricia Maes', title: 'Professor of Media Technology', affiliation:  'Program in Media Arts and Sciences' },
+					{ name: 'Goerge Sweg', title: 'Professor of Fun', affiliation:  'Media Arts and Sciences' },
+					{ name: 'Johnaothon Lolsworthy', title: 'Professor of Terror', affiliation:  'Program of Letters and Predation' },
+					{ name: 'V. Michael Bove, Jr', title: 'Principal Research Scientist', affiliation: 'Media Lab' }
+				]
 
 			};
 			convert(require(`./${testName}.json`), { bibFile: `test/toPandoc/bib/${testName}.bib`, metadata: metadata })

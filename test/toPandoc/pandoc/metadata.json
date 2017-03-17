@@ -4971,6 +4971,310 @@
 					"c": "Lab"
 				}
 			]
+		},
+		"pubreaders-0-name": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Patricia"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Maes"
+				}
+			]
+		},
+		"pubreaders-0-title": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Professor"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "of"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Media"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Technology"
+				}
+			]
+		},
+		"pubreaders-0-affiliation": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Program"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "in"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Media"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Arts"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "and"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Sciences"
+				}
+			]
+		},
+		"pubreaders-1-name": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Goerge"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Sweg"
+				}
+			]
+		},
+		"pubreaders-1-title": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Professor"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "of"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Fun"
+				}
+			]
+		},
+		"pubreaders-1-affiliation": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Media"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Arts"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "and"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Sciences"
+				}
+			]
+		},
+		"pubreaders-2-name": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Johnaothon"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Lolsworthy"
+				}
+			]
+		},
+		"pubreaders-2-title": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Professor"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "of"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Terror"
+				}
+			]
+		},
+		"pubreaders-2-affiliation": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Program"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "of"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Letters"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "and"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Predation"
+				}
+			]
+		},
+		"pubreaders-3-name": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "V."
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Michael"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Bove,"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Jr"
+				}
+			]
+		},
+		"pubreaders-3-title": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Principal"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Research"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Scientist"
+				}
+			]
+		},
+		"pubreaders-3-affiliation": {
+			"t": "MetaInlines",
+			"c": [
+				{
+					"t": "Str",
+					"c": "Media"
+				},
+				{
+					"t": "Space"
+				},
+				{
+					"t": "Str",
+					"c": "Lab"
+				}
+			]
 		}
 	}
 }

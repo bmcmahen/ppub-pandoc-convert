@@ -265,20 +265,32 @@ $pubabstract$
 \end{abstractpage}
 $endif$
 
-$if(pubreaderonename)$
-\pubreaderone{$pubreaderonename$}{$pubreaderonetitle$}{$pubreaderoneaffiliation$}
-$endif$
-$if(pubreadertwoname)$
-\pubreadertwo{$pubreadertwoname$}{$pubreadertwotitle$}{$pubreadertwoaffiliation$}
+
+$if(pubreaders-0-name)$
+\pubreaderzero{$pubreaders-0-name$}{$pubreaders-0-title$}{$pubreaders-0-affiliation$}
 $endif$
 
-$if(pubreaderonename)$
+$if(pubreaders-1-name)$
+\pubreaderone{$pubreaders-1-name$}{$pubreaders-1-title$}{$pubreaders-1-affiliation$}
+$endif$
+
+$if(pubreaders-2-name)$
+\pubreadertwo{$pubreaders-2-name$}{$pubreaders-2-title$}{$pubreaders-2-affiliation$}
+$endif$
+
+$if(pubreaders-3-name)$
+\pubreaderthree{$pubreaders-3-name$}{$pubreaders-3-title$}{$pubreaders-3-affiliation$}
+$endif$
+
+
+$if(pubreaders-0-name)$
 \begin{readerpage}
 \end{readerpage}
+\clearpage
 $endif$
 
 
-\cleardoublepage
+\clearpage
 \section*{Acknowledgments}
 
 $pubacknowledgements$

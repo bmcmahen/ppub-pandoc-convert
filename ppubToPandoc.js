@@ -646,6 +646,26 @@ function ppubToPandoc(ppub, options) {
 				};
 			}
 
+			if (metadata['pub-readers']) {
+
+				for (var i = 0; i < metadata['pub-readers'].length; i++){
+
+					pandocJSON.meta["pubreaders-"+i+"-name"] = {
+						t: 'MetaInlines',
+						c: createTextNodes(metadata['pub-readers'][i].name)
+					};
+					pandocJSON.meta["pubreaders-"+i+"-title"] = {
+						t: 'MetaInlines',
+						c: createTextNodes(metadata['pub-readers'][i].title)
+					};
+					pandocJSON.meta["pubreaders-"+i+"-affiliation"] = {
+						t: 'MetaInlines',
+						c: createTextNodes(metadata['pub-readers'][i].affiliation)
+					};
+				}
+
+			}
+
 			console.log(JSON.stringify(pandocJSON));
 			return pandocJSON;
 		})

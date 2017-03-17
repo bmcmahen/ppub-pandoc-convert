@@ -463,8 +463,10 @@ reserved.\par\permission}}
 % department chairman, not thesis committee chairman
 \def\chairman#1#2{\gdef\@chairmanname{#1}\gdef\@chairmantitle{#2}}
 
+\def\pubreaderzero#1#2#3{\gdef\@pubreaderzeroname{#1}\gdef\@pubreaderzerotitle{#2}\gdef\@pubreaderzeroaffiliation{#3}}
 \def\pubreaderone#1#2#3{\gdef\@pubreaderonename{#1}\gdef\@pubreaderonetitle{#2}\gdef\@pubreaderoneaffiliation{#3}}
 \def\pubreadertwo#1#2#3{\gdef\@pubreadertwoname{#1}\gdef\@pubreadertwotitle{#2}\gdef\@pubreadertwoaffiliation{#3}}
+\def\pubreaderthree#1#2#3{\gdef\@pubreaderthreename{#1}\gdef\@pubreaderthreetitle{#2}\gdef\@pubreaderthreeaffiliation{#3}}
 
 
 %% `upcase' documentclass option: \choosecase is defined either as a dummy or
@@ -576,9 +578,13 @@ by \\
 \end{center}
 The following people served as readers for this thesis:
 \par
+\signature{Thesis Reader}{\@pubreaderzeroname \\ \@pubreaderzerotitle \\ \@pubreaderzeroaffiliation}
+\par
 \signature{Thesis Reader}{\@pubreaderonename \\ \@pubreaderonetitle \\ \@pubreaderoneaffiliation}
 \par
 \signature{Thesis Reader}{\@pubreadertwoname \\ \@pubreadertwotitle \\ \@pubreadertwoaffiliation}
+\par
+\signature{Thesis Reader}{\@pubreaderthreename \\ \@pubreaderthreetitle \\ \@pubreaderthreeaffiliation}
 \par
 
 }
